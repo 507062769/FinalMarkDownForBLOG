@@ -12,8 +12,8 @@ export default function App() {
     fetchData();
   }, []);
   return (
-    <div className="w-2/3 mx-auto">
+    <>
       <MarkDownForCustom data={data} />
-    </div>
+    </>
   );
 }

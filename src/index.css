@@ -1,4 +1,0 @@
-/* 会与md样式冲突，先注释掉，后期出问题再解开 */
-/* @tailwind base; */
-@tailwind components;
-@tailwind utilities;
