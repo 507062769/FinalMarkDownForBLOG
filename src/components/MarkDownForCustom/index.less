@@ -7,21 +7,52 @@
   top: 0;
   background-color: #f3f2ee;
   border-radius: 40px;
-  padding: 20px;
+  padding: 20px 0;
   margin-right: 20px;
-  height: 100vh;
+  // height: 100vh;
+  height: 100%;
   overflow: scroll;
   a {
     display: block;
     width: 100%;
+    word-break: break-all;
   }
-  p:hover {
-    background-color: aqua;
+  p {
+    box-sizing: border-box;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 10px;
+    overflow: hidden;
+  }
+  p:hover,
+  .active {
+    background-color: #dadada;
   }
   .H1-stylesheet {
     font-weight: 700;
+    font-size: larger;
   }
   .H2-stylesheet {
     padding-left: 20px;
+    font-size: large;
+  }
+  .H3-stylesheet {
+    padding-left: 30px;
+    font-size: medium;
+  }
+  .H4-stylesheet {
+    padding-left: 40px;
+    font-size: smaller;
+  }
+  .H5-stylesheet {
+    padding-left: 50px;
+    font-size: small;
+  }
+  .H6-stylesheet {
+    padding-left: 60px;
+    font-size: small;
+  }
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
