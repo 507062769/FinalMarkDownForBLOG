@@ -1,14 +1,17 @@
+import { useState } from "react";
 import {
   CommentOutlined,
   FrownOutlined,
   SmileOutlined,
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
-import { Drawer, FloatButton } from "antd";
+import { FloatButton } from "antd";
 import { animateScroll } from "react-scroll";
 import "./index.less";
+import Comment from "../Comment";
 
 export default function ButtonList() {
+  const [isShowComment, setIsShowComment] = useState<boolean>(false);
   return (
     <>
       <FloatButton.Group
@@ -27,6 +30,7 @@ export default function ButtonList() {
           className="icon-button"
           tooltip={<span>评论</span>}
           badge={{ count: 5, color: "#282c34" }}
+          onClick={() => setIsShowComment(true)}
         />
         <FloatButton
           icon={<SmileOutlined />}
@@ -41,6 +45,10 @@ export default function ButtonList() {
           badge={{ count: 5, color: "red" }}
         />
       </FloatButton.Group>
+      <Comment
+        isShowComment={isShowComment}
+        setIsShowComment={setIsShowComment}
+      />
     </>
   );
 }

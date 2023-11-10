@@ -76,7 +76,7 @@ export default function MarkDownForCustom(props: { data: string }) {
       <div className=" flex mx-auto">
         <div
           id="SliderNav"
-          className=" w-3/12 box-border p-4`"
+          className=" w-4/12 box-border p-4`"
           onClick={(e: any) => {
             if (!e.target?.dataset?.pagetop) return;
             animateScroll.scrollTo(e.target?.dataset?.pagetop, {
@@ -85,7 +85,7 @@ export default function MarkDownForCustom(props: { data: string }) {
           }}
         ></div>
         <div
-          className="p-7 w-9/12"
+          className="p-7 w-8/12"
           style={{ backgroundColor: "#f3f2ee" }}
           id="write"
         >

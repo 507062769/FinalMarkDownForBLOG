@@ -2,6 +2,7 @@
 // @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import "@/styles/global.less";
 
 body {
   padding: 0;
@@ -20,4 +21,10 @@ a {
 img {
   width: 100%;
   height: 100%;
+}
+
+#CommentBody {
+  a:hover {
+    color: @primary-hover-color;
+  }
 }
