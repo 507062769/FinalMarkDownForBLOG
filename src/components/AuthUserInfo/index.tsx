@@ -4,7 +4,7 @@ import "./index.less";
 export default function AuthUserInfo() {
   return (
     <>
-      <div className="w-full box-border ml-5 p-6" id="AuthInfo">
+      <div className="box-border ml-5 p-6" id="AuthInfo">
         <img src={userImg} alt="头像" id="AuthImg" />
         <p>用户名：xxxxxxxx</p>
         <p>注册时间：2023 - 12 - 01</p>

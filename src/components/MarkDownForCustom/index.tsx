@@ -3,7 +3,7 @@ import remarkGfm from "remark-gfm";
 import row from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { animateScroll, scroller } from "react-scroll";
+import { animateScroll } from "react-scroll";
 // 引入md样式文件，仅在当前页面生效
 import "../../styles/onedark.css";
 // import "../../styles/newsprint.css";
@@ -88,12 +88,6 @@ export default function MarkDownForCustom(props: { data: string }) {
           className="p-7 w-9/12"
           style={{ backgroundColor: "#f3f2ee" }}
           id="write"
-          onScroll={(e) => {
-            scroller.scrollTo("SliderNav", {
-              duration: 500,
-              offset: -100,
-            });
-          }}
         >
           <ReactMarkdown
             children={props?.data}
