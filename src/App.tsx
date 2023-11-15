@@ -1,11 +1,9 @@
-import ButtonList from "./components/ButtonList";
-import PageComponent from "./components/PageComponent";
+import AuthPage from "./page/AuthPage";
 
 export default function App() {
   return (
     <>
-      <PageComponent />
-      <ButtonList />
+      <AuthPage />
     </>
   );
 }

@@ -19,7 +19,7 @@ export default function CommentTextHeader() {
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
         placeholder="发表你的评论"
-        autoSize={{ minRows: 3, maxRows: 3 }}
+        autoSize={{ minRows: 3, maxRows: 4 }}
         showCount
         allowClear
         maxLength={100}
