@@ -1,61 +1,69 @@
+import ButtonList from "./component/ButtonList";
 import PageComponent from "./component/PageComponent";
 import "./index.less";
 
 // 页面加载完成后开始动画
 setTimeout(() => {
   window.addEventListener("load", () => {
-    // 创建一个雪花元素
-    function createSnowflakes() {
-      const snowflake = document.createElement("span");
-      snowflake.className = "snowflake";
-      snowflake.innerHTML = "&#10052;"; // 雪花的字符或图标
-      snowflake.style.left = Math.random() * 90 + "vw";
-      snowflake.style.top = Math.random() * 1000 + "vh";
-      snowflake.style.animationDuration = Math.random() * 10 + 5 + "s";
-      snowflake.style.opacity = Math.random() + "";
-      snowflake.style.fontSize = Math.random() * 50 + "px";
-      return snowflake;
+    var canvas = document.getElementById("snowCanvas");
+    var ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    var snowflakes = [];
+
+    function createSnowflake() {
+      return {
+        x: Math.random() * canvas.width,
+        y: 0,
+        radius: Math.random() * 3 + 1,
+        speedX: Math.random() * 2 - 1,
+        speedY: Math.random() * 3 + 1,
+      };
     }
 
-    // 添加雪花到页面
-    function addSnowflake() {
-      const snowflakeContainer = document.getElementById("snowflakeContainer")!;
-      snowflakeContainer.style.height = window.getComputedStyle(
-        document.querySelector("#PageComponent")!
-      ).height;
-      const snowflake = createSnowflakes();
-      snowflakeContainer.appendChild(snowflake);
-
-      // 雪花动画结束后移除元素
-      snowflake.addEventListener("animationend", () => {
-        snowflakeContainer.removeChild(snowflake);
-      });
+    for (var i = 0; i < 100; i++) {
+      snowflakes.push(createSnowflake());
     }
 
-    // 初始化
-    function init() {
-      const numSnowflakes = 1000; // 雪花数量
-
-      // 创建多个雪花
-      for (let i = 0; i < numSnowflakes; i++) {
-        addSnowflake();
+    function drawSnowflakes() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "white";
+      for (var i = 0; i < snowflakes.length; i++) {
+        var snowflake = snowflakes[i];
+        ctx.beginPath();
+        ctx.arc(snowflake.x, snowflake.y, snowflake.radius, 0, Math.PI * 2);
+        ctx.fill();
+        snowflake.x += snowflake.speedX;
+        snowflake.y += snowflake.speedY;
+        if (snowflake.y > canvas.height) {
+          snowflake.y = 0;
+        }
+        if (snowflake.x > canvas.width) {
+          snowflake.x = 0;
+        } else if (snowflake.x < 0) {
+          snowflake.x = canvas.width;
+        }
       }
     }
-    init();
-    console.log(
-      window.getComputedStyle(document.querySelector("#PageComponent")!).height
-    );
-    const snows = document.querySelectorAll(".snowflake");
-    setInterval(() => {
-      console.log(snows[0].style);
-    }, 1000);
+
+    function update() {
+      drawSnowflakes();
+      setTimeout(update, 10); // 每秒钟更新 30 次，模拟 requestAnimationFrame
+    }
+
+    update();
   });
+  // console.log(document.querySelector(".container-snow"));
+  // document.querySelector(".container-snow")?.addEventListener("scroll", (e) => {
+  //   console.log(e);
+  // });
 }, 100);
 
 export default function AuthPage() {
   return (
     <>
-      <div
+      {/* <div
         style={{
           overflow: "hidden",
           backgroundColor: "#000",
@@ -67,10 +75,17 @@ export default function AuthPage() {
           zIndex: "-1",
         }}
         id="snowflakeContainer"
-      ></div>
-      <div id="PageComponent">
-        <PageComponent />
+      ></div> */}
+      <canvas id="snowCanvas" />
+      <div className="container-snow" id="ContainerSnow">
+        <div id="PageComponent">
+          <PageComponent />
+          <ButtonList />
+        </div>
       </div>
+      {/* <div id="PageComponent">
+        <PageComponent />
+      </div> */}
     </>
   );
 }

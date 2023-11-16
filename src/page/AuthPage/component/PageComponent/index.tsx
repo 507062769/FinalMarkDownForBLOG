@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { testFn } from "@/apis/test";
 import MarkDownForCustom from "../MarkDownForCustom";
 import AuthUserInfo from "../AuthUserInfo";
-import ButtonList from "../ButtonList";
 
 export default function PageComponent() {
   const [data, setData] = useState<string>("");
@@ -22,7 +21,6 @@ export default function PageComponent() {
         </div>
         <div className=" w-2/12">
           <AuthUserInfo />
-          <ButtonList />
         </div>
       </div>
     </>

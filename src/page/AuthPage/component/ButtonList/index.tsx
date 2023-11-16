@@ -6,7 +6,6 @@ import {
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
 import { FloatButton } from "antd";
-import { animateScroll } from "react-scroll";
 import "./index.less";
 import Comment from "../Comment";
 
@@ -21,7 +20,8 @@ export default function ButtonList() {
       >
         <FloatButton.BackTop
           icon={<VerticalAlignTopOutlined />}
-          onClick={() => animateScroll.scrollToTop({ duration: "1000" })}
+          visibilityHeight={400}
+          target={() => document.querySelector(".container-snow") as any}
           className="icon-button"
           tooltip={<span>回到顶部</span>}
         />

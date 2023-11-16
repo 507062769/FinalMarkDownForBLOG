@@ -1,12 +1,12 @@
-.snowflake {
-  position: absolute;
-  color: #fff;
-  font-size: 22px;
-  user-select: none;
-  // animation-name: snowfall;
-  // animation-timing-function: linear;
-  // animation-iteration-count: infinite;
-}
+// .snowflake {
+//   position: absolute;
+//   color: #fff;
+//   font-size: 22px;
+//   user-select: none;
+//   animation-name: snowfall;
+//   animation-timing-function: cubic-bezier(0.2, -2, 1, 2);
+//   animation-iteration-count: infinite;
+// }
 // @keyframes snowfall {
 //   0% {
 //     transform: translateY(0);
@@ -15,3 +15,20 @@
 //     transform: translateY(-1000px);
 //   }
 // }
+
+canvas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  background: black;
+  z-index: -1;
+}
+
+.container-snow {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}

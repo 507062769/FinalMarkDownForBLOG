@@ -26,28 +26,34 @@ setTimeout(() => {
     if (sliderNav) {
       sliderNav.innerHTML = htmlStr;
     }
-    // document.querySelectorAll("p[data-pageTop]").forEach((item) => {
-    //   item.addEventListener("click", () => {
-    //     document.querySelector("#SliderNav .active")?.classList.remove("active");
-    //     item.classList.add("active");
-    //   });
-    // });
+    document.querySelectorAll("p[data-pageTop]").forEach((item) => {
+      item.addEventListener("click", () => {
+        setTimeout(() => {
+          console.log(1231312);
+          document
+            .querySelector("#SliderNav .active")
+            ?.classList.remove("active");
+          item.classList.add("active");
+        }, 100);
+      });
+    });
 
     // active 跟随页面滑动
     let smoothValue = 0; //  记录当前page的位置
     let isSmoothBottomDirection = true; //  是否为下滑，默认为下滑
 
-    window.addEventListener("scroll", () => {
+    const snows = document.querySelector(".container-snow")!;
+    snows.addEventListener("scroll", (e) => {
       // 判断滑动的方向
-      if (!(window.scrollY > smoothValue)) {
+      if (!(e.target.scrollTop > smoothValue)) {
         isSmoothBottomDirection = false;
       } else {
         isSmoothBottomDirection = true;
       }
 
-      // console.log(isSmoothBottomDirection);
+      console.log(isSmoothBottomDirection);
       let currentElement = document.querySelector<any>("#SliderNav .active");
-      let currentPageY = window.scrollY;
+      let currentPageY = snows.scrollTop;
       // 如果是向下滑动，则进行切换类操作
       if (
         isSmoothBottomDirection &&
@@ -65,7 +71,7 @@ setTimeout(() => {
         currentElement = currentElement?.previousElementSibling;
         currentElement?.classList.add("active");
       }
-      smoothValue = window.scrollY;
+      smoothValue = e.target.scrollTop;
     });
   };
 }, 100);
@@ -81,6 +87,7 @@ export default function MarkDownForCustom(props: { data: string }) {
             if (!e.target?.dataset?.pagetop) return;
             animateScroll.scrollTo(e.target?.dataset?.pagetop, {
               duration: 500,
+              containerId: "ContainerSnow",
             });
           }}
         ></div>
