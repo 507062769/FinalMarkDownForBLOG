@@ -6,63 +6,15 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Badge, Button, Tabs } from "antd";
 import Modal from "antd/es/modal/Modal";
-import { createStyles, useTheme } from "antd-style";
 import { useState } from "react";
-import TabPane from "antd/es/tabs/TabPane";
-
-const useStyle = createStyles(({ token }) => ({
-  "my-modal-body": {
-    background: token["blue-1"],
-    padding: token.paddingSM,
-  },
-  "my-modal-mask": {
-    boxShadow: `inset 0 0 15px #fff`,
-  },
-  "my-modal-header": {
-    // borderBottom: `1px dotted ${token.colorPrimary}`,
-    textAlign: "center",
-    opacity: "0",
-  },
-  "my-modal-footer": {
-    color: token.colorPrimary,
-  },
-  "my-modal-content": {
-    border: "1px solid #333",
-  },
-}));
+import Login from "./component/Login";
+import Register from "./component/Register";
+import useModalStyle from "./useModalStyle";
 
 export default function UserInfo() {
-  const { styles } = useStyle();
-  const token = useTheme();
   const [open, setOpen] = useState<boolean>(false);
-  const [tabkey, setTabKey] = useState<string>("登录");
-  const classNames = {
-    body: styles["my-modal-body"],
-    mask: styles["my-modal-mask"],
-    header: styles["my-modal-header"],
-    footer: styles["my-modal-footer"],
-    content: styles["my-modal-content"],
-  };
-  const modalStyles = {
-    header: {
-      borderLeft: `5px solid ${token.colorPrimary}`,
-      borderRadius: 0,
-      paddingInlineStart: 5,
-    },
-    body: {
-      // boxShadow: "inset 0 0 5px #999",
-      borderRadius: 5,
-    },
-    mask: {
-      backdropFilter: "blur(10px)",
-    },
-    footer: {
-      borderTop: "1px solid #333",
-    },
-    content: {
-      boxShadow: "0 0 30px #999",
-    },
-  };
+  const [_, setTabKey] = useState<string>("登录");
+  const { classNames, modalStyles } = useModalStyle();
   const isLogin = false;
   return (
     <section
@@ -108,6 +60,7 @@ export default function UserInfo() {
         创作
       </Button>
       <Modal
+        destroyOnClose
         title="登录"
         open={open}
         onCancel={() => setOpen(false)}
@@ -115,10 +68,13 @@ export default function UserInfo() {
         classNames={classNames}
         styles={modalStyles}
       >
-        <Tabs activeKey={tabkey} onChange={setTabKey}>
-          <TabPane key="登录" tab="登录" />
-          <TabPane key="注册" tab="注册" />
-        </Tabs>
+        <Tabs
+          items={[
+            { key: "login", label: "登录", children: <Login /> },
+            { key: "register", label: "注册", children: <Register /> },
+          ]}
+          onChange={setTabKey}
+        ></Tabs>
       </Modal>
     </section>
   );

@@ -15,7 +15,7 @@ export default function MarkDownForCustom(props: { data: string }) {
     setTimeout(() => {
       const headerTitle = document.querySelectorAll<
         Element & { offsetTop: number }
-      >("h1,h2,h3,h4,h5,h6");
+      >("#write h1,h2,h3,h4,h5,h6");
       let htmlStr = "";
       headerTitle.forEach((item, index) => {
         // console.log(item.tagName, item.id);
@@ -75,7 +75,6 @@ export default function MarkDownForCustom(props: { data: string }) {
         }
         smoothValue = e.target.scrollTop;
       });
-      setIsRenderSuccess(true);
     }, 100);
   }, []);
   return (

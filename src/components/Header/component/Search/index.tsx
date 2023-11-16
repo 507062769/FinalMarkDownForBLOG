@@ -8,7 +8,7 @@ export default function Search() {
   };
   return (
     <Search
-      placeholder="input search text"
+      placeholder="输入搜索内容"
       allowClear
       enterButton={"搜索"}
       size="large"

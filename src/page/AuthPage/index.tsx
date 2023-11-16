@@ -32,7 +32,7 @@ export default function AuthPage() {
 
       function drawSnowflakes() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "white";
+        ctx.fillStyle = "skyblue";
         for (var i = 0; i < snowflakes.length; i++) {
           var snowflake = snowflakes[i];
           ctx.beginPath();
@@ -53,7 +53,7 @@ export default function AuthPage() {
 
       function update() {
         drawSnowflakes();
-        setTimeout(update, 10); // 每秒钟更新 30 次，模拟 requestAnimationFrame
+        setTimeout(update, 10);
       }
 
       // console.log(document.querySelector(".container-snow"));
@@ -61,7 +61,7 @@ export default function AuthPage() {
       //   console.log(e);
       update();
       // });
-    }, 10);
+    }, 500);
   }, []);
   return (
     <>
