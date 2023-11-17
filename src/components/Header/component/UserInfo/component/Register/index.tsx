@@ -1,45 +1,75 @@
+import { useState, useRef, useEffect } from "react";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
+  KeyOutlined,
   LockOutlined,
-  MediumOutlined,
-  UserOutlined,
+  QqOutlined,
 } from "@ant-design/icons";
 import { Button, Form, Input } from "antd";
 import Password from "antd/es/input/Password";
 
 export default function Register() {
+  const [isDisabledCodeBtn, setIDisabledCodeBtn] = useState<boolean>(false);
+  const [countDown, setCountDown] = useState<number>(5);
+  const timer = useRef<any>(null);
+  useEffect(() => {
+    return () => clearInterval(timer.current);
+  }, []);
   return (
     <>
       <Form labelAlign="left" labelCol={{ span: 4 }} className="w-full">
         <Form.Item
-          name="email"
-          label="email"
+          name="qq"
+          label="QQ"
           rules={[
-            { required: true, message: "请输入邮箱" },
-            { max: 10, message: "请输入合法的QQ邮箱" },
+            { required: true, message: "请输入QQ" },
+            { max: 12, message: "请输入合法的QQ" },
           ]}
         >
           <Input
-            type="number"
-            placeholder="QQ邮箱"
-            prefix={<MediumOutlined />}
+            type="Number"
+            placeholder="QQ号"
+            prefix={<QqOutlined />}
             addonAfter={<span>@qq.com</span>}
           />
         </Form.Item>
         <Form.Item
-          name="username"
-          label="User"
+          name="code"
+          label="Code"
           rules={[
-            { required: true, message: "请输入QQ号或账号" },
-            { max: 10, message: "QQ号或账号不能超过10个字符" },
+            { required: true, message: "请输入验证码" },
+            { max: 6, message: "请输入6位验证码" },
           ]}
-          colon
         >
           <Input
-            type="text"
-            prefix={<UserOutlined />}
-            placeholder="请输入QQ号或账号"
+            type="Number"
+            placeholder="验证码"
+            prefix={<KeyOutlined />}
+            max={6}
+            addonAfter={
+              <a
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (isDisabledCodeBtn) return;
+                  console.log(111111);
+                  setIDisabledCodeBtn(true);
+                  clearInterval(timer.current);
+                  timer.current = setInterval(() => {
+                    console.log(countDown);
+                    if (countDown < 1) {
+                      console.log(1111);
+                      setCountDown(5);
+                      setIDisabledCodeBtn(false);
+                      clearInterval(timer.current);
+                    }
+                    setCountDown((countDown) => countDown - 1);
+                  }, 1000);
+                }}
+              >
+                {isDisabledCodeBtn ? `${countDown}秒后再重试` : "发送验证码"}
+              </a>
+            }
           />
         </Form.Item>
         <Form.Item
@@ -59,7 +89,7 @@ export default function Register() {
         </Form.Item>
         <Form.Item
           name="confirmPassword"
-          label="confirm"
+          label="Confirm"
           dependencies={["password"]}
           rules={[
             { required: true, message: "请再次输入密码" },
