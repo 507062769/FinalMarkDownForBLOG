@@ -39,8 +39,8 @@ export default function Login() {
           }
         />
       </Form.Item>
-      <Form.Item className="text-right pr-5">
-        <span>忘记密码</span>
+      <Form.Item className="text-right">
+        <Button type="link">忘记密码</Button>
       </Form.Item>
       <Form.Item className="text-center" label="">
         <Button type="primary" htmlType="submit" className="w-full">

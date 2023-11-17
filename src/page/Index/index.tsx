@@ -79,11 +79,11 @@ window.addEventListener("DOMContentLoaded", () => {
 export default function Index() {
   return (
     <>
-      <canvas id="snowCanvas" />
-      <div className="container-snow">
+      {/* <canvas id="snowCanvas" /> */}
+      <div className="container-snow" id="ContainerSnow">
         <Header />
         <Outlet />
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </>
   );

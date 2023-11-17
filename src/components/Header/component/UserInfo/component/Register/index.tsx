@@ -6,7 +6,7 @@ import {
   LockOutlined,
   QqOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import Password from "antd/es/input/Password";
 
 export default function Register() {
@@ -16,6 +16,15 @@ export default function Register() {
   useEffect(() => {
     return () => clearInterval(timer.current);
   }, []);
+
+  useEffect(() => {
+    if (countDown < 1) {
+      setCountDown(5);
+      setIDisabledCodeBtn(false);
+      clearInterval(timer.current);
+    }
+  }, [countDown]);
+
   return (
     <>
       <Form labelAlign="left" labelCol={{ span: 4 }} className="w-full">
@@ -51,18 +60,13 @@ export default function Register() {
               <a
                 onClick={(e) => {
                   e.preventDefault();
-                  if (isDisabledCodeBtn) return;
-                  console.log(111111);
+                  if (isDisabledCodeBtn) {
+                    message.warning("稍后重试");
+                    return;
+                  }
                   setIDisabledCodeBtn(true);
                   clearInterval(timer.current);
                   timer.current = setInterval(() => {
-                    console.log(countDown);
-                    if (countDown < 1) {
-                      console.log(1111);
-                      setCountDown(5);
-                      setIDisabledCodeBtn(false);
-                      clearInterval(timer.current);
-                    }
                     setCountDown((countDown) => countDown - 1);
                   }, 1000);
                 }}
