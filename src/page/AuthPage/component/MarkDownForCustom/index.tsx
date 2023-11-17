@@ -24,6 +24,9 @@ export default function MarkDownForCustom(props: { data: string }) {
           index === 0 ? "active" : ""
         }" data-pageTop=${item?.offsetTop}>${item.innerHTML}</p>`;
       });
+      if (headerTitle.length === 0) {
+        htmlStr = `<p class="H1-stylesheet active" data-pageTop="0">暂无标题</p>`;
+      }
       const sliderNav = document.querySelector("#SliderNav");
       if (sliderNav) {
         sliderNav.innerHTML = htmlStr;

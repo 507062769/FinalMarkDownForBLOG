@@ -1,6 +1,7 @@
 import UserImg from "@/assets/imgUser.jpg";
 import {
   PlusCircleOutlined,
+  SettingOutlined,
   StopOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -15,7 +16,7 @@ export default function UserInfo() {
   const [open, setOpen] = useState<boolean>(false);
   const [_, setTabKey] = useState<string>("登录");
   const { classNames, modalStyles } = useModalStyle();
-  const isLogin = false;
+  const isLogin = true;
   return (
     <section
       className="flex justify-between h-16"
@@ -31,6 +32,10 @@ export default function UserInfo() {
               <li>
                 <UserOutlined className="mr-2" />
                 个人中心
+              </li>
+              <li>
+                <SettingOutlined className="mr-2" />
+                个人设置
               </li>
               <li>
                 <StopOutlined className="mr-2" />
