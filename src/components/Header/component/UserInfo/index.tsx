@@ -7,10 +7,11 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Badge, Button, Tabs } from "antd";
 import Modal from "antd/es/modal/Modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "./component/Login";
 import Register from "./component/Register";
 import useModalStyle from "./useModalStyle";
+import { Link } from "react-router-dom";
 
 export default function UserInfo() {
   const [open, setOpen] = useState<boolean>(false);
@@ -53,6 +54,11 @@ export default function UserInfo() {
           </p>
         )}
       </div>
+      <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
+        <Link to="/">
+          <span className="text-base">首页</span>
+        </Link>
+      </p>
       <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
         <Badge count={1} color="#1677ff" size="small">
           <span className="text-base">消息</span>

@@ -1,7 +1,9 @@
 import Header from "@/components/Header";
 import { Outlet } from "react-router-dom";
 import "./index.less";
-import Footer from "@/components/Footer";
+import { FloatButton } from "antd";
+import ButtonList from "../AuthPage/component/ButtonList";
+import { VerticalAlignTopOutlined } from "@ant-design/icons";
 const snowsColor = [
   "#FF4500", // 橙红色
   "#FF8C00", // 暗橙色
@@ -85,6 +87,14 @@ export default function Index() {
         <Outlet />
         {/* <Footer /> */}
       </div>
+      <FloatButton.BackTop
+        icon={<VerticalAlignTopOutlined />}
+        visibilityHeight={400}
+        target={() => document.querySelector(".container-snow") as any}
+        className="icon-button"
+        tooltip={<span>回到顶部</span>}
+        style={{ right: "15%", bottom: "30%" }}
+      />
     </>
   );
 }

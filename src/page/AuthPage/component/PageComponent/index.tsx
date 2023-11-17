@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { testFn } from "@/apis/test";
 import MarkDownForCustom from "../MarkDownForCustom";
-import AuthUserInfo from "../AuthUserInfo";
+import AuthUserInfo from "@/components/AuthUserInfo";
 
 export default function PageComponent() {
   const [data, setData] = useState<string>("");
