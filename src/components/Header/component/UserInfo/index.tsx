@@ -19,7 +19,9 @@ export default function UserInfo() {
   return (
     <section
       className="flex justify-between h-16"
-      style={{ lineHeight: "64px" }}
+      style={{
+        lineHeight: "64px",
+      }}
     >
       <div className="relative text-center" id="Login">
         {isLogin ? (
@@ -50,6 +52,9 @@ export default function UserInfo() {
         <Badge count={1} color="#1677ff" size="small">
           <span className="text-base">消息</span>
         </Badge>
+      </p>
+      <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
+        <span className="text-base">随笔</span>
       </p>
       <Button
         type="primary"

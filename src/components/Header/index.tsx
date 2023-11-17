@@ -4,7 +4,13 @@ import "./index.less";
 
 export default function Header() {
   return (
-    <header className=" h-16 flex box-border px-10 justify-between mb-7">
+    <header
+      className=" h-16 flex box-border px-10 justify-between mb-7"
+      style={{
+        border: "1px solid white",
+        boxShadow: "0 0 20px 4px rgba(0, 0, 0, 0.3)",
+      }}
+    >
       <h1 className="w-1/5 m-0 ">
         {/* <a href="http://127.0.0.1:5173" id="Logo">
           首页
