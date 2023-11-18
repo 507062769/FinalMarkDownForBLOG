@@ -1,9 +1,8 @@
 import Header from "@/components/Header";
 import { Outlet } from "react-router-dom";
 import "./index.less";
-import { FloatButton } from "antd";
-import ButtonList from "../AuthPage/component/ButtonList";
-import { VerticalAlignTopOutlined } from "@ant-design/icons";
+import Footer from "@/components/Footer";
+import ButtonList from "../PageComponent/component/ButtonList";
 const snowsColor = [
   "#FF4500", // 橙红色
   "#FF8C00", // 暗橙色
@@ -81,20 +80,13 @@ window.addEventListener("DOMContentLoaded", () => {
 export default function Index() {
   return (
     <>
-      {/* <canvas id="snowCanvas" /> */}
+      <canvas id="snowCanvas" />
       <div className="container-snow" id="ContainerSnow">
         <Header />
         <Outlet />
-        {/* <Footer /> */}
+        <Footer />
       </div>
-      <FloatButton.BackTop
-        icon={<VerticalAlignTopOutlined />}
-        visibilityHeight={400}
-        target={() => document.querySelector(".container-snow") as any}
-        className="icon-button"
-        tooltip={<span>回到顶部</span>}
-        style={{ right: "15%", bottom: "30%" }}
-      />
+      <ButtonList />
     </>
   );
 }

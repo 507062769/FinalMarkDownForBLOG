@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthPage from "./page/AuthPage";
 import Home from "./page/Home";
 import Index from "@/page/Index";
+import PageComponent from "./page/PageComponent";
 
 export default function App() {
   return (
@@ -9,7 +9,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Index />}>
           <Route index element={<Home />} />
-          <Route path="page" element={<AuthPage />} />
+          <Route path="page" element={<PageComponent />} />
         </Route>
       </Routes>
     </BrowserRouter>

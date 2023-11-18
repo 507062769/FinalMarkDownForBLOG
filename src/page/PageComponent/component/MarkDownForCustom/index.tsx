@@ -48,7 +48,7 @@ export default function MarkDownForCustom(props: { data: string }) {
       let isSmoothBottomDirection = true; //  是否为下滑，默认为下滑
 
       const snows = document.querySelector(".container-snow")!;
-      snows.addEventListener("scroll", (e) => {
+      snows.addEventListener("scroll", (e: any) => {
         // 判断滑动的方向
         if (!(e.target.scrollTop > smoothValue)) {
           isSmoothBottomDirection = false;
@@ -78,7 +78,7 @@ export default function MarkDownForCustom(props: { data: string }) {
         }
         smoothValue = e.target.scrollTop;
       });
-    }, 100);
+    }, 500);
   }, []);
   return (
     <>

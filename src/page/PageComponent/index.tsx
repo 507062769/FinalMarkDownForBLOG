@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { testFn } from "@/apis/test";
-import MarkDownForCustom from "../MarkDownForCustom";
+import MarkDownForCustom from "@/page/PageComponent/component/MarkDownForCustom";
 import AuthUserInfo from "@/components/AuthUserInfo";
 
 export default function PageComponent() {

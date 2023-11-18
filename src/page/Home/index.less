@@ -1,0 +1,53 @@
+@import "@/styles/global.less";
+
+#Swiper {
+  position: absolute;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: all 0.3s linear;
+  li {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    // display: none;
+    span {
+      box-sizing: border-box;
+      display: block;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      padding-left: 30px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 32px;
+    }
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.swiper-btn {
+  position: absolute !important;
+  width: 50px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+  font-size: 40px;
+  color: white;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  // z-index: 1;
+  &:hover {
+    color: @primary-hover-color;
+  }
+}
+
+.right-btn {
+  right: 0;
+}

@@ -13,14 +13,14 @@ export default function Header() {
     >
       <div className="flex w-11/12 justify-between mx-auto">
         <h1 className="w-1/5 m-0 ">
-          {/* <a href="http://127.0.0.1:5173" id="Logo">
-          首页
-        </a> */}
+          <a href="http://127.0.0.1:5173" id="Logo">
+            首页
+          </a>
         </h1>
         <div className="w-2/5 pt-3">
           <Search />
         </div>
-        <div className="w-1/5">
+        <div className="w-3/12">
           <UserInfo />
         </div>
       </div>
