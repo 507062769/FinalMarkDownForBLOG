@@ -51,3 +51,18 @@
 .right-btn {
   right: 0;
 }
+
+#FatherContainer {
+  background: transparent;
+}
+
+.small-page {
+  height: 48%;
+  transition: all 0.3s linear;
+  &:hover {
+    transform: rotate(30deg) translateY(-10px);
+    box-shadow: 0px 0px 20px 4px rgba(0, 0, 0, 0.5);
+    border-bottom: 4px solid @primary-hover-color;
+    filter: blur(1px);
+  }
+}

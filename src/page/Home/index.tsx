@@ -16,16 +16,48 @@ export default function Home() {
   return (
     <>
       <div className=" flex w-11/12 mx-auto">
-        <div className="w-10/12 box-border">
+        <div className="w-10/12 box-border" id="FatherContainer">
           {/* 轮播图 */}
           <div className="w-full flex SwiperContainer">
             <div
-              className="swiper w-8/12 bg-slate-50 h-96 relative overflow-hidden"
+              className="swiper w-8/12  relative overflow-hidden"
               id="SwiperContainer"
             >
               <Swiper list={list} />
             </div>
-            <div className="box-border pl-5 bg-slate-700 w-4/12"></div>
+            <div
+              className="box-border p-5  w-4/12 flex flex-col justify-between"
+              style={{ boxShadow: "0px 0px 20px 4px rgba(0,0,0,.8)" }}
+            >
+              <article className="flex flex-col small-page">
+                <img src={th} className="h-5/6"></img>
+                <div
+                  className="h-1/6"
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    borderBottom: "4px solid white",
+                  }}
+                >
+                  这是一篇文章啊撒大声地撒大声地阿打算撒打啊d
+                </div>
+              </article>
+              <article className=" flex flex-col small-page">
+                <img src={th} className="h-5/6"></img>
+                <div
+                  className="h-1/6"
+                  style={{
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                    borderBottom: "4px solid white",
+                  }}
+                >
+                  这是一篇文章
+                </div>
+              </article>
+            </div>
           </div>
           {/* 轮播图end */}
           <PageList />
