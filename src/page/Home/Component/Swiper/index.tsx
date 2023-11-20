@@ -78,7 +78,15 @@ export default function Swiper({
         {list.map((item) => (
           <li key={item.title} className="float-left swiper-item">
             <img src={item.url} alt="图片" />
-            <span>{item.title}</span>
+            <span
+              style={{
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {item.title}
+            </span>
           </li>
         ))}
       </ul>
