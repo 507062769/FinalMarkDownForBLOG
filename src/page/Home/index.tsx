@@ -18,7 +18,7 @@ export default function Home() {
       <div className=" flex w-11/12 mx-auto">
         <div className="w-10/12 box-border">
           {/* 轮播图 */}
-          <div className="w-full flex">
+          <div className="w-full flex SwiperContainer">
             <div
               className="swiper w-8/12 bg-slate-50 h-96 relative overflow-hidden"
               id="SwiperContainer"
