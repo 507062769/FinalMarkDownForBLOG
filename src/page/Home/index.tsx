@@ -18,17 +18,17 @@ export default function Home() {
       <div className=" flex w-11/12 mx-auto">
         <div className="w-10/12 box-border" id="FatherContainer">
           {/* 轮播图 */}
-          <div className="w-full flex SwiperContainer">
+          <div
+            className="w-full flex SwiperContainer"
+            style={{ boxShadow: "0px 0px 20px 4px rgba(0,0,0,.8)" }}
+          >
             <div
               className="swiper w-8/12  relative overflow-hidden"
               id="SwiperContainer"
             >
               <Swiper list={list} />
             </div>
-            <div
-              className="box-border p-5  w-4/12 flex flex-col justify-between"
-              style={{ boxShadow: "0px 0px 20px 4px rgba(0,0,0,.8)" }}
-            >
+            <div className="box-border p-5  w-4/12 flex flex-col justify-between">
               <article className="flex flex-col small-page">
                 <img src={th} className="h-5/6"></img>
                 <div

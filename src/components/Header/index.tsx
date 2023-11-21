@@ -9,6 +9,8 @@ export default function Header() {
       style={{
         border: "1px solid white",
         boxShadow: "0 0 20px 4px rgba(0, 0, 0, 0.3)",
+        background: "transparent",
+        backdropFilter: "blur(10px)",
       }}
     >
       <div className="flex w-11/12 justify-between mx-auto">
