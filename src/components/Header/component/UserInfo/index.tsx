@@ -60,12 +60,16 @@ export default function UserInfo() {
         </Link>
       </p>
       <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
-        <Badge count={1} color="#1677ff" size="small">
-          <span className="text-base">消息</span>
-        </Badge>
+        <Link to={"message"}>
+          <Badge count={1} color="#1677ff" size="small">
+            <span className="text-base">消息</span>
+          </Badge>
+        </Link>
       </p>
       <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
-        <span className="text-base">随笔</span>
+        <Link to={"search"}>
+          <span className="text-base">随笔</span>
+        </Link>
       </p>
       <Button
         type="primary"
