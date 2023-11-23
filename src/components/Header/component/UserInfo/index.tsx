@@ -31,8 +31,10 @@ export default function UserInfo() {
             <Avatar src={UserImg} alt="用户头像" size="large" />
             <ul className="list-none m-0 p-0 w-32 -z-50" id="Menu">
               <li>
-                <UserOutlined className="mr-2" />
-                个人中心
+                <Link to={"user"}>
+                  <UserOutlined className="mr-2" />
+                  个人中心
+                </Link>
               </li>
               {/* <li>
                 <SettingOutlined className="mr-2" />
