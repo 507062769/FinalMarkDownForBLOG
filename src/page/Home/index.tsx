@@ -15,7 +15,7 @@ export default function Home() {
   ];
   return (
     <>
-      <div className=" flex w-11/12 mx-auto">
+      <div className=" flex w-11/12 mx-auto -z-40">
         <div className="w-10/12 box-border" id="FatherContainer">
           {/* 轮播图 */}
           <div

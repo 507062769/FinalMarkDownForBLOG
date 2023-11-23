@@ -16,24 +16,24 @@ header {
   #Login {
     #Menu {
       position: absolute;
-      padding: 20px 6px;
+      // padding: 20px 6px;
       box-shadow: 0px 0px 20px 1px rgba(0, 0, 0, 0.3);
       background-color: @primary-background;
       left: -46px;
-      top: -200px;
+      height: 0;
+      // transform: scale(0);
       transition: all 0.3s linear;
-      opacity: 0;
+      overflow: hidden;
       li {
         height: 40px;
         line-height: 40px;
         border-bottom: 1px solid #eaeaea;
+        cursor: pointer;
       }
     }
-    &:hover {
-      #Menu {
-        top: 64px;
-        opacity: 1;
-      }
+    &:hover #Menu {
+      // transform: scale(1);
+      height: 82px;
     }
   }
 }
