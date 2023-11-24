@@ -21,9 +21,20 @@ httpInstance.interceptors.response.use(
     return res.data.result;
   },
   (error) => {
-    message.error("响应失败");
+    message.error("网络错误");
     return Promise.reject(error);
   }
 );
 
-export default httpInstance;
+export type ClientError = {
+  code: number;
+  msg: string;
+};
+
+export const post = (url: string, data?: any) => {
+  return httpInstance.post(url, data);
+};
+
+export const get = (url: string, data: any) => {
+  return httpInstance.get(url, { params: data });
+};

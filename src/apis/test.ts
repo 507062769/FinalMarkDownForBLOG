@@ -1,5 +1,5 @@
-import request from "./index";
+import { post } from "./index";
 
 export function testFn() {
-  return request.post("/test/md");
+  return post("/test/md");
 }

@@ -34,7 +34,7 @@ export default function Swiper({
 
       const swiperLeft = parseFloat(swiper.style.left.split("px")[0]);
       swiper.style.left = swiperLeft - containerWidth + "px";
-      console.log(swiper.style.left);
+
       if (swiper.style.left === "-2917px") {
         swiper.style.left = "0px";
       }

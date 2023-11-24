@@ -8,11 +8,43 @@ import {
 } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import Password from "antd/es/input/Password";
+import { useForm } from "antd/es/form/Form";
+import { useFetchRegister, useGetCode } from "@/apis/userInfo";
+import passEncipher from "@/utils/passEncipher";
+import bcrypt from "bcryptjs";
 
 export default function Register() {
   const [isDisabledCodeBtn, setIDisabledCodeBtn] = useState<boolean>(false);
-  const [countDown, setCountDown] = useState<number>(5);
+  const [countDown, setCountDown] = useState<number>(60);
+  const [form] = useForm();
   const timer = useRef<any>(null);
+  const { mutateAsync: register, isLoading } = useFetchRegister();
+  const { mutateAsync: getCode } = useGetCode();
+
+  const checkCodeBtn = async (e: any) => {
+    e.preventDefault();
+    let isQQCheckSuccess = false;
+    await form
+      .validateFields(["qq"])
+      .then(() => {
+        isQQCheckSuccess = true;
+        return;
+      })
+      .catch(() => {});
+    if (!isQQCheckSuccess) {
+      return;
+    }
+    if (isDisabledCodeBtn) {
+      message.warning("稍后重试");
+      return;
+    }
+    await getCode({ qq: form.getFieldValue("qq") });
+    setIDisabledCodeBtn(true);
+    clearInterval(timer.current);
+    timer.current = setInterval(() => {
+      setCountDown((countDown) => countDown - 1);
+    }, 1000);
+  };
   useEffect(() => {
     return () => clearInterval(timer.current);
   }, []);
@@ -27,13 +59,29 @@ export default function Register() {
 
   return (
     <>
-      <Form labelAlign="left" labelCol={{ span: 4 }} className="w-full">
+      <Form
+        labelAlign="left"
+        labelCol={{ span: 4 }}
+        className="w-full"
+        form={form}
+        onFinish={async () => {
+          const { qq, code, password } = form.getFieldsValue([
+            "qq",
+            "code",
+            "password",
+          ]);
+          // 对密码进行加密
+          const { pass } = passEncipher(password);
+          await register({ qq, code, pass });
+        }}
+      >
         <Form.Item
           name="qq"
           label="QQ"
           rules={[
             { required: true, message: "请输入QQ" },
             { max: 12, message: "请输入合法的QQ" },
+            { min: 6, message: "请输入合法的QQ" },
           ]}
         >
           <Input
@@ -55,22 +103,8 @@ export default function Register() {
             type="Number"
             placeholder="验证码"
             prefix={<KeyOutlined />}
-            max={6}
             addonAfter={
-              <a
-                onClick={(e) => {
-                  e.preventDefault();
-                  if (isDisabledCodeBtn) {
-                    message.warning("稍后重试");
-                    return;
-                  }
-                  setIDisabledCodeBtn(true);
-                  clearInterval(timer.current);
-                  timer.current = setInterval(() => {
-                    setCountDown((countDown) => countDown - 1);
-                  }, 1000);
-                }}
-              >
+              <a onClick={checkCodeBtn}>
                 {isDisabledCodeBtn ? `${countDown}秒后再重试` : "发送验证码"}
               </a>
             }
@@ -118,7 +152,12 @@ export default function Register() {
           />
         </Form.Item>
         <Form.Item className="text-center" label="">
-          <Button type="primary" htmlType="submit" className="w-full">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full"
+            loading={isLoading}
+          >
             注册
           </Button>
         </Form.Item>
