@@ -51,7 +51,7 @@ export default function Register() {
 
   useEffect(() => {
     if (countDown < 1) {
-      setCountDown(5);
+      setCountDown(60);
       setIDisabledCodeBtn(false);
       clearInterval(timer.current);
     }
@@ -97,6 +97,7 @@ export default function Register() {
           rules={[
             { required: true, message: "请输入验证码" },
             { max: 6, message: "请输入6位验证码" },
+            { min: 6, message: "请输入6位验证码" },
           ]}
         >
           <Input
@@ -113,7 +114,11 @@ export default function Register() {
         <Form.Item
           name="password"
           label="Pass"
-          rules={[{ required: true, message: "请输入密码" }]}
+          rules={[
+            { required: true, message: "请输入密码" },
+            { max: 16, message: "密码最长16位" },
+            { min: 6, message: "密码最短6位" },
+          ]}
           colon
         >
           <Password
