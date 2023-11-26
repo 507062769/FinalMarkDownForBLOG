@@ -24,13 +24,10 @@ export default function Register() {
   const checkCodeBtn = async (e: any) => {
     e.preventDefault();
     let isQQCheckSuccess = false;
-    await form
-      .validateFields(["qq"])
-      .then(() => {
-        isQQCheckSuccess = true;
-        return;
-      })
-      .catch(() => {});
+    await form.validateFields(["qq"]).then(() => {
+      isQQCheckSuccess = true;
+      return;
+    });
     if (!isQQCheckSuccess) {
       return;
     }
@@ -38,7 +35,11 @@ export default function Register() {
       message.warning("稍后重试");
       return;
     }
-    await getCode({ qq: form.getFieldValue("qq") });
+    const codeRes = await getCode({ qq: form.getFieldValue("qq") });
+    if (codeRes?.isQQError) {
+      return;
+    }
+    message.success("验证码发送成功");
     setIDisabledCodeBtn(true);
     clearInterval(timer.current);
     timer.current = setInterval(() => {
