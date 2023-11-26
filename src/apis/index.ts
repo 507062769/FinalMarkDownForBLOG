@@ -21,6 +21,8 @@ httpInstance.interceptors.response.use(
     const { code, result, msg } = res.data;
     if (code === 301) {
       message.warning(msg);
+    } else if (code === 200) {
+      if (msg) message.success(msg);
     }
     return result;
   },

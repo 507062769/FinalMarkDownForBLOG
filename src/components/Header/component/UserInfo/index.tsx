@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 
 export default function UserInfo() {
   const [open, setOpen] = useState<boolean>(false);
-  const [_, setTabKey] = useState<string>("登录");
+  const [_, setTabKey] = useState<string>("login");
   const { classNames, modalStyles } = useModalStyle();
   const isLogin = false;
   return (

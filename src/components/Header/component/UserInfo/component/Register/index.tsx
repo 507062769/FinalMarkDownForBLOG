@@ -39,7 +39,6 @@ export default function Register() {
     if (codeRes?.isQQError) {
       return;
     }
-    message.success("验证码发送成功");
     setIDisabledCodeBtn(true);
     clearInterval(timer.current);
     timer.current = setInterval(() => {
