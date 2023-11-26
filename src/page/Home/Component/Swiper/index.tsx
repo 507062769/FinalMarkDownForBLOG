@@ -18,8 +18,8 @@ export default function Swiper({
 
   useEffect(() => {
     const swiperContainer = document.querySelector("#SwiperContainer") as any;
-    const containerWidth = parseFloat(
-      window.getComputedStyle(swiperContainer).width.split("px")[0]
+    const containerWidth = Math.ceil(
+      Number(window.getComputedStyle(swiperContainer).width.split("px")[0])
     );
     const swiperWidth = containerWidth * (list.length + 2);
     const swiper = document.querySelector("#Swiper")! as any;
@@ -32,18 +32,18 @@ export default function Swiper({
     const handleLeft = _.throttle(() => {
       // debugger;
 
-      const swiperLeft = parseFloat(swiper.style.left.split("px")[0]);
+      const swiperLeft = Math.ceil(swiper.style.left.split("px")[0]);
       swiper.style.left = swiperLeft - containerWidth + "px";
 
-      if (swiper.style.left === "-2917px") {
+      if (swiperLeft <= containerWidth * -3) {
         swiper.style.left = "0px";
       }
     }, 1000);
     const handleRight = _.throttle(() => {
-      const swiperLeft = parseFloat(swiper.style.left.split("px")[0]);
+      const swiperLeft = Math.ceil(swiper.style.left.split("px")[0]);
       swiper.style.left = swiperLeft + containerWidth + "px";
-      if (swiper.style.left === "729.25px") {
-        swiper.style.left = "-2187.75px";
+      if (swiperLeft >= 0) {
+        swiper.style.left = containerWidth * -3 + 'px';
       }
     }, 1000);
 

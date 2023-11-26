@@ -1,4 +1,4 @@
-import userImg from "@/assets/imgUser.jpg";
+import userImg from "@/assets/userImg.jpg";
 import "./index.less";
 
 export default function AuthUserInfo({ userId = 999 }: { userId?: number }) {
