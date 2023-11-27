@@ -11,7 +11,6 @@ import Password from "antd/es/input/Password";
 import { useForm } from "antd/es/form/Form";
 import { useFetchRegister, useGetCode } from "@/apis/userInfo";
 import passEncipher from "@/utils/passEncipher";
-import bcrypt from "bcryptjs";
 
 export default function Register() {
   const [isDisabledCodeBtn, setIDisabledCodeBtn] = useState<boolean>(false);

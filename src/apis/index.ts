@@ -1,5 +1,6 @@
 import axios from "axios";
 import { message } from "antd";
+import { measureMemory } from "vm";
 
 const httpInstance = axios.create({
   baseURL: "http://localhost:9876",
@@ -21,8 +22,8 @@ httpInstance.interceptors.response.use(
     const { code, result, msg } = res.data;
     if (code === 301) {
       message.warning(msg);
-    } else if (code === 200) {
-      if (msg) message.success(msg);
+    } else if (code === 200 && result.isShowMessage) {
+      message.success(msg);
     }
     return result;
   },

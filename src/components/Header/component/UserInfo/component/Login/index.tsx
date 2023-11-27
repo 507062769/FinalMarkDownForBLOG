@@ -1,20 +1,45 @@
+import { useFetchLogin } from "@/apis/userInfo";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
   LockOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
+import { useForm } from "antd/es/form/Form";
+import bcrypt from "bcryptjs";
 
 export default function Login() {
+  const [form] = useForm();
+  const { mutateAsync: login } = useFetchLogin();
   return (
-    <Form labelAlign="left" labelCol={{ span: 4 }} className="w-full">
+    <Form
+      form={form}
+      labelAlign="left"
+      labelCol={{ span: 4 }}
+      className="w-full"
+      onFinish={async () => {
+        const pass = form.getFieldValue("password");
+        const { pass: resPass } = await login({
+          qq: form.getFieldValue("username"),
+        });
+
+        const isSuccess = await bcrypt.compare(pass, resPass);
+        if (isSuccess) {
+          message.success("登录成功");
+          // 获取token
+        } else {
+          message.error("密码错误");
+        }
+      }}
+    >
       <Form.Item
         name="username"
-        label="User"
+        label="QQ"
         rules={[
-          { required: true, message: "请输入QQ号或账号" },
-          { max: 10, message: "QQ号或账号不能超过10个字符" },
+          { required: true, message: "请输入QQ" },
+          { max: 12, message: "请输入合法的QQ" },
+          { min: 6, message: "请输入合法的QQ" },
         ]}
         colon
       >
@@ -27,7 +52,11 @@ export default function Login() {
       <Form.Item
         name="password"
         label="Pass"
-        rules={[{ required: true, message: "请输入密码" }]}
+        rules={[
+          { required: true, message: "请输入密码" },
+          { max: 16, message: "密码最长16位" },
+          { min: 6, message: "密码最短6位" },
+        ]}
         colon
       >
         <Input.Password

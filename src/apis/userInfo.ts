@@ -18,3 +18,9 @@ export function useGetCode() {
     post("/user/code", data)
   );
 }
+
+export function useFetchLogin() {
+  return useMutation<any, ClientError, { qq: string }>((data) =>
+    post("/user/login", data)
+  );
+}
