@@ -14,8 +14,7 @@ import { createStyles, useTheme } from "antd-style";
 import { TabContext } from "@/Context/TabContextProvide";
 
 export default function UserInfo() {
-  const { tabKey, setTabKey } = useContext(TabContext);
-  const [open, setOpen] = useState(false);
+  const { tabKey, setTabKey, open, setOpen } = useContext(TabContext);
   const isLogin = false;
   const token = useTheme();
   const useStyle = createStyles(({ token }) => ({

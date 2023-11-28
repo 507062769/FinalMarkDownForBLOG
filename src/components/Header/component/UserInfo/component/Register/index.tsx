@@ -70,7 +70,10 @@ export default function Register() {
     if (isForget) {
       // 找回
       const res = await forget({ qq, code, pass });
-      console.log(res);
+      if (res?.isShowMessage) {
+        // 找回成功
+        setTabKey("login");
+      }
     } else {
       // 注册
 
