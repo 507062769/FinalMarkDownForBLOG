@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -8,22 +8,24 @@ import {
 } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import Password from "antd/es/input/Password";
-import { useForm } from "antd/es/form/Form";
 import { useFetchRegister, useGetCode } from "@/apis/userInfo";
 import passEncipher from "@/utils/passEncipher";
+import { useForm } from "antd/es/form/Form";
+import { TabContext } from "@/Context/TabContextProvide";
 
 export default function Register() {
+  const [registerForm] = useForm();
   const [isDisabledCodeBtn, setIDisabledCodeBtn] = useState<boolean>(false);
   const [countDown, setCountDown] = useState<number>(60);
-  const [form] = useForm();
   const timer = useRef<any>(null);
   const { mutateAsync: register, isLoading } = useFetchRegister();
   const { mutateAsync: getCode } = useGetCode();
+  const { setTabKey } = useContext(TabContext);
 
   const checkCodeBtn = async (e: any) => {
     e.preventDefault();
     let isQQCheckSuccess = false;
-    await form.validateFields(["qq"]).then(() => {
+    await registerForm.validateFields(["qq"]).then(() => {
       isQQCheckSuccess = true;
       return;
     });
@@ -34,7 +36,7 @@ export default function Register() {
       message.warning("稍后重试");
       return;
     }
-    const codeRes = await getCode({ qq: form.getFieldValue("qq") });
+    const codeRes = await getCode({ qq: registerForm.getFieldValue("qq") });
     if (codeRes?.isQQError) {
       return;
     }
@@ -62,16 +64,19 @@ export default function Register() {
         labelAlign="left"
         labelCol={{ span: 4 }}
         className="w-full"
-        form={form}
+        form={registerForm}
         onFinish={async () => {
-          const { qq, code, password } = form.getFieldsValue([
+          const { qq, code, password } = registerForm.getFieldsValue([
             "qq",
             "code",
             "password",
           ]);
           // 对密码进行加密
           const { pass } = passEncipher(password);
-          await register({ qq, code, pass });
+          const res = await register({ qq, code, pass });
+          if (res?.isShowMessage) {
+            setTabKey("login");
+          }
         }}
       >
         <Form.Item

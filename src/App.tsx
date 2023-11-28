@@ -5,6 +5,7 @@ import PageComponent from "./page/PageComponent";
 import Message from "./page/Message";
 import Search from "./page/Search";
 import UserControl from "./page/UserControl";
+import Create from "./page/Create";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="message" element={<Message />} />
           <Route path="search" element={<Search />} />
           <Route path="user" element={<UserControl />} />
+          <Route path="create" element={<Create />} />
         </Route>
       </Routes>
     </BrowserRouter>

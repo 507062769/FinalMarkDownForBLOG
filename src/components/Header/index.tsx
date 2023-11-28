@@ -1,3 +1,4 @@
+import { TabContextProvide } from "@/Context/TabContextProvide";
 import Search from "./component/Search";
 import UserInfo from "./component/UserInfo";
 import "./index.less";
@@ -23,7 +24,9 @@ export default function Header() {
           <Search />
         </div>
         <div className="w-3/12">
-          <UserInfo />
+          <TabContextProvide>
+            <UserInfo />
+          </TabContextProvide>
         </div>
       </div>
     </header>

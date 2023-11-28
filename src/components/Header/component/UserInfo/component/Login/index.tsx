@@ -6,22 +6,25 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
-import { useForm } from "antd/es/form/Form";
 import bcrypt from "bcryptjs";
+import { useForm } from "antd/es/form/Form";
+import { useContext } from "react";
+import { TabContext } from "@/Context/TabContextProvide";
 
 export default function Login() {
-  const [form] = useForm();
+  const [loginForm] = useForm();
+  const { setTabKey } = useContext(TabContext);
   const { mutateAsync: login } = useFetchLogin();
   return (
     <Form
-      form={form}
+      form={loginForm}
       labelAlign="left"
       labelCol={{ span: 4 }}
       className="w-full"
       onFinish={async () => {
-        const pass = form.getFieldValue("password");
+        const pass = loginForm.getFieldValue("password");
         const { pass: resPass } = await login({
-          qq: form.getFieldValue("username"),
+          qq: loginForm.getFieldValue("username"),
         });
 
         const isSuccess = await bcrypt.compare(pass, resPass);
@@ -69,7 +72,9 @@ export default function Login() {
         />
       </Form.Item>
       <Form.Item className="text-right">
-        <Button type="link">忘记密码</Button>
+        <Button type="link" onClick={() => setTabKey("forget")}>
+          忘记密码
+        </Button>
       </Form.Item>
       <Form.Item className="text-center" label="">
         <Button type="primary" htmlType="submit" className="w-full">
