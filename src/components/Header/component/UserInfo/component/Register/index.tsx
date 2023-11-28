@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext } from "react";
+import { useState, useRef, useEffect, useContext, useMemo } from "react";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -8,7 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import Password from "antd/es/input/Password";
-import { useFetchRegister, useGetCode } from "@/apis/userInfo";
+import { useFetchForget, useFetchRegister, useGetCode } from "@/apis/userInfo";
 import passEncipher from "@/utils/passEncipher";
 import { useForm } from "antd/es/form/Form";
 import { TabContext } from "@/Context/TabContextProvide";
@@ -19,8 +19,10 @@ export default function Register() {
   const [countDown, setCountDown] = useState<number>(60);
   const timer = useRef<any>(null);
   const { mutateAsync: register, isLoading } = useFetchRegister();
+  const { mutateAsync: forget, isLoading: isLoadingForget } = useFetchForget();
   const { mutateAsync: getCode } = useGetCode();
-  const { setTabKey } = useContext(TabContext);
+  const { setTabKey, tabKey } = useContext(TabContext);
+  const isForget = useMemo(() => tabKey === "forget", [tabKey]);
 
   const checkCodeBtn = async (e: any) => {
     e.preventDefault();
@@ -58,6 +60,28 @@ export default function Register() {
     }
   }, [countDown]);
 
+  const onFinish = async () => {
+    const { qq, code, password } = registerForm.getFieldsValue([
+      "qq",
+      "code",
+      "password",
+    ]);
+    const { pass } = passEncipher(password);
+    if (isForget) {
+      // 找回
+      const res = await forget({ qq, code, pass });
+      console.log(res);
+    } else {
+      // 注册
+
+      // 对密码进行加密
+      const res = await register({ qq, code, pass });
+      if (res?.isShowMessage) {
+        setTabKey("login");
+      }
+    }
+  };
+
   return (
     <>
       <Form
@@ -65,19 +89,7 @@ export default function Register() {
         labelCol={{ span: 4 }}
         className="w-full"
         form={registerForm}
-        onFinish={async () => {
-          const { qq, code, password } = registerForm.getFieldsValue([
-            "qq",
-            "code",
-            "password",
-          ]);
-          // 对密码进行加密
-          const { pass } = passEncipher(password);
-          const res = await register({ qq, code, pass });
-          if (res?.isShowMessage) {
-            setTabKey("login");
-          }
-        }}
+        onFinish={onFinish}
       >
         <Form.Item
           name="qq"
@@ -128,7 +140,7 @@ export default function Register() {
           <Password
             type="password"
             prefix={<LockOutlined />}
-            placeholder="请输入密码"
+            placeholder={`请输入${isForget ? "新" : ""}密码`}
             iconRender={(visible) =>
               visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
             }
@@ -154,7 +166,7 @@ export default function Register() {
           <Password
             type="password"
             prefix={<LockOutlined />}
-            placeholder="请再次输入密码"
+            placeholder={`请再次输入${isForget ? "新" : ""}密码`}
             iconRender={(visible) =>
               visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
             }
@@ -167,7 +179,7 @@ export default function Register() {
             className="w-full"
             loading={isLoading}
           >
-            注册
+            {isForget ? "找回密码" : "注册"}
           </Button>
         </Form.Item>
       </Form>

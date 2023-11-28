@@ -71,10 +71,15 @@ export default function Login() {
           }
         />
       </Form.Item>
-      <Form.Item className="text-right">
-        <Button type="link" onClick={() => setTabKey("forget")}>
-          忘记密码
-        </Button>
+      <Form.Item>
+        <div className="flex justify-between">
+          <Button type="link" onClick={() => setTabKey("register")}>
+            注册
+          </Button>
+          <Button type="link" onClick={() => setTabKey("forget")}>
+            忘记密码
+          </Button>
+        </div>
       </Form.Item>
       <Form.Item className="text-center" label="">
         <Button type="primary" htmlType="submit" className="w-full">

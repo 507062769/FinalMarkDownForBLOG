@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  createContext,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, createContext, useState } from "react";
 
 export const TabContext = createContext<{
   tabKey: string;
@@ -13,11 +7,7 @@ export const TabContext = createContext<{
 
 export function TabContextProvide(props: any) {
   const [tabKey, setTabKey] = useState("login");
-  console.log(props.children);
 
-  useEffect(() => {
-    console.log(tabKey);
-  }, [tabKey]);
   return (
     <TabContext.Provider
       value={{

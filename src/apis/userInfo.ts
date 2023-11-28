@@ -24,3 +24,9 @@ export function useFetchLogin() {
     post("/user/login", data)
   );
 }
+
+export function useFetchForget() {
+  return useMutation<any, ClientError, registerParma>((data) =>
+    post("/user/forget", data)
+  );
+}
