@@ -10,31 +10,35 @@ import bcrypt from "bcryptjs";
 import { useForm } from "antd/es/form/Form";
 import { useContext } from "react";
 import { TabContext } from "@/Context/TabContextProvide";
+import CryptoJS from "crypto-js";
+import { testLogin, testRegister } from "@/apis/test";
 
 export default function Login() {
   const [loginForm] = useForm();
   const { setTabKey } = useContext(TabContext);
   const { mutateAsync: login } = useFetchLogin();
+  const { mutateAsync: testr } = testRegister();
+  const { mutateAsync: testl } = testLogin();
+  const handleLogin = async () => {
+    const pass = loginForm.getFieldValue("password");
+    const { pass: resPass } = await login({
+      qq: loginForm.getFieldValue("username"),
+    });
+    const isSuccess = await bcrypt.compare(pass, resPass);
+    if (isSuccess) {
+      message.success("登录成功");
+      // 获取token
+    } else {
+      message.error("密码错误");
+    }
+  };
   return (
     <Form
       form={loginForm}
       labelAlign="left"
       labelCol={{ span: 4 }}
       className="w-full"
-      onFinish={async () => {
-        const pass = loginForm.getFieldValue("password");
-        const { pass: resPass } = await login({
-          qq: loginForm.getFieldValue("username"),
-        });
-
-        const isSuccess = await bcrypt.compare(pass, resPass);
-        if (isSuccess) {
-          message.success("登录成功");
-          // 获取token
-        } else {
-          message.error("密码错误");
-        }
-      }}
+      onFinish={handleLogin}
     >
       <Form.Item
         name="username"
@@ -84,6 +88,20 @@ export default function Login() {
       <Form.Item className="text-center" label="">
         <Button type="primary" htmlType="submit" className="w-full">
           登录
+        </Button>
+        <Button
+          htmlType="submit"
+          className="w-full"
+          onClick={async () => {
+            // const passsss = CryptoJS.SHA512(
+            //   CryptoJS.SHA512("123123").toString() + "front"
+            // ).toString();
+            const passssss = CryptoJS.PBKDF2("111", "front").toString();
+            console.log(passsss);
+            const res = await testr({ passsss });
+          }}
+        >
+          测试登录
         </Button>
       </Form.Item>
     </Form>
