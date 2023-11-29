@@ -10,10 +10,12 @@ import { useForm } from "antd/es/form/Form";
 import { useContext } from "react";
 import { TabContext } from "@/Context/TabContextProvide";
 import passEncipherTwo from "@/utils/passEncipherTwo";
+import { UserContext } from "@/Context/UserContextProvide";
 
 export default function Login() {
+  const { setToken, setIsLogin } = useContext(UserContext);
   const [loginForm] = useForm();
-  const { setTabKey } = useContext(TabContext);
+  const { setTabKey, setOpen } = useContext(TabContext);
   const { mutateAsync: login } = useFetchLogin();
   const { mutateAsync: getSalt } = fetchSalt();
   const handleLogin = async () => {
@@ -24,7 +26,14 @@ export default function Login() {
     // 加第二次盐，从数据库获取
     const { salt } = await getSalt({ qq: username, isCreate: false });
     const pass = await passEncipherTwo(password, username, salt);
-    await login({ qq: username, pass });
+    const res = await login({ qq: username, pass });
+    if (res.isLogin) {
+      // 登录成功
+      setIsLogin(true);
+      setToken(res.token);
+      setOpen(false);
+      localStorage.setItem("BLOG_TOKEN", res.token);
+    }
   };
   return (
     <Form

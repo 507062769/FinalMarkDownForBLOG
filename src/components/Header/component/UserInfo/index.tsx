@@ -1,5 +1,5 @@
 import UserImg from "@/assets/imgUser.jpg";
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import {
   PlusCircleOutlined,
   StopOutlined,
@@ -12,10 +12,11 @@ import Register from "./component/Register";
 import { Link } from "react-router-dom";
 import { createStyles, useTheme } from "antd-style";
 import { TabContext } from "@/Context/TabContextProvide";
+import { UserContext } from "@/Context/UserContextProvide";
 
 export default function UserInfo() {
   const { tabKey, setTabKey, open, setOpen } = useContext(TabContext);
-  const isLogin = false;
+  const { isLogin, setToken, setIsLogin } = useContext(UserContext);
   const token = useTheme();
   const useStyle = createStyles(({ token }) => ({
     "my-modal-mask": {
@@ -60,6 +61,10 @@ export default function UserInfo() {
       boxShadow: "0 0 30px #999",
     },
   };
+  useEffect(() => {
+    console.log(isLogin, "Header");
+  }, [isLogin]);
+
   return (
     <section
       className="flex justify-between h-16"
@@ -82,7 +87,13 @@ export default function UserInfo() {
                 <SettingOutlined className="mr-2" />
                 个人设置
               </li> */}
-              <li>
+              <li
+                onClick={() => {
+                  setToken("");
+                  setIsLogin(false);
+                  localStorage.removeItem("BLOG_TOKEN");
+                }}
+              >
                 <StopOutlined className="mr-2" />
                 退出登录
               </li>
