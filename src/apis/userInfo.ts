@@ -20,7 +20,7 @@ export function useGetCode() {
 }
 
 export function useFetchLogin() {
-  return useMutation<any, ClientError, { qq: string }>((data) =>
+  return useMutation<any, ClientError, { qq: String; pass: string }>((data) =>
     post("/user/login", data)
   );
 }
@@ -28,5 +28,11 @@ export function useFetchLogin() {
 export function useFetchForget() {
   return useMutation<any, ClientError, registerParma>((data) =>
     post("/user/forget", data)
+  );
+}
+
+export function fetchSalt() {
+  return useMutation<any, ClientError, { qq: string; isCreate: boolean }>(
+    (data) => post("/user/getsalt", data)
   );
 }

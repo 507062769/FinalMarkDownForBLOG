@@ -8,10 +8,15 @@ import {
 } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
 import Password from "antd/es/input/Password";
-import { useFetchForget, useFetchRegister, useGetCode } from "@/apis/userInfo";
-import passEncipher from "@/utils/passEncipher";
+import {
+  fetchSalt,
+  useFetchForget,
+  useFetchRegister,
+  useGetCode,
+} from "@/apis/userInfo";
 import { useForm } from "antd/es/form/Form";
 import { TabContext } from "@/Context/TabContextProvide";
+import passEncipherTwo from "@/utils/passEncipherTwo";
 
 export default function Register() {
   const [registerForm] = useForm();
@@ -20,6 +25,7 @@ export default function Register() {
   const timer = useRef<any>(null);
   const { mutateAsync: register, isLoading } = useFetchRegister();
   const { mutateAsync: forget, isLoading: isLoadingForget } = useFetchForget();
+  const { mutateAsync: getSalt } = fetchSalt();
   const { mutateAsync: getCode } = useGetCode();
   const { setTabKey, tabKey } = useContext(TabContext);
   const isForget = useMemo(() => tabKey === "forget", [tabKey]);
@@ -66,7 +72,10 @@ export default function Register() {
       "code",
       "password",
     ]);
-    const { pass } = passEncipher(password);
+    // 从数据库获取第二次盐值
+    const { salt } = await getSalt({ qq, isCreate: !isForget });
+    const pass = await passEncipherTwo(password, qq, salt);
+
     if (isForget) {
       // 找回
       const res = await forget({ qq, code, pass });
@@ -76,7 +85,6 @@ export default function Register() {
       }
     } else {
       // 注册
-
       // 对密码进行加密
       const res = await register({ qq, code, pass });
       if (res?.isShowMessage) {
@@ -180,7 +188,7 @@ export default function Register() {
             type="primary"
             htmlType="submit"
             className="w-full"
-            loading={isLoading}
+            loading={isForget ? isLoadingForget : isLoading}
           >
             {isForget ? "找回密码" : "注册"}
           </Button>

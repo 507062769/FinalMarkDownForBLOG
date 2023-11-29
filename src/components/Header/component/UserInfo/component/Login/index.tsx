@@ -1,36 +1,30 @@
-import { useFetchLogin } from "@/apis/userInfo";
+import { fetchSalt, useFetchLogin } from "@/apis/userInfo";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
   LockOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Form, Input, message } from "antd";
-import bcrypt from "bcryptjs";
+import { Button, Form, Input } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useContext } from "react";
 import { TabContext } from "@/Context/TabContextProvide";
-import CryptoJS from "crypto-js";
-import { testLogin, testRegister } from "@/apis/test";
+import passEncipherTwo from "@/utils/passEncipherTwo";
 
 export default function Login() {
   const [loginForm] = useForm();
   const { setTabKey } = useContext(TabContext);
   const { mutateAsync: login } = useFetchLogin();
-  const { mutateAsync: testr } = testRegister();
-  const { mutateAsync: testl } = testLogin();
+  const { mutateAsync: getSalt } = fetchSalt();
   const handleLogin = async () => {
-    const pass = loginForm.getFieldValue("password");
-    const { pass: resPass } = await login({
-      qq: loginForm.getFieldValue("username"),
-    });
-    const isSuccess = await bcrypt.compare(pass, resPass);
-    if (isSuccess) {
-      message.success("登录成功");
-      // 获取token
-    } else {
-      message.error("密码错误");
-    }
+    const { password, username } = loginForm.getFieldsValue([
+      "username",
+      "password",
+    ]);
+    // 加第二次盐，从数据库获取
+    const { salt } = await getSalt({ qq: username, isCreate: false });
+    const pass = await passEncipherTwo(password, username, salt);
+    await login({ qq: username, pass });
   };
   return (
     <Form
@@ -88,20 +82,6 @@ export default function Login() {
       <Form.Item className="text-center" label="">
         <Button type="primary" htmlType="submit" className="w-full">
           登录
-        </Button>
-        <Button
-          htmlType="submit"
-          className="w-full"
-          onClick={async () => {
-            // const passsss = CryptoJS.SHA512(
-            //   CryptoJS.SHA512("123123").toString() + "front"
-            // ).toString();
-            const passssss = CryptoJS.PBKDF2("111", "front").toString();
-            console.log(passsss);
-            const res = await testr({ passsss });
-          }}
-        >
-          测试登录
         </Button>
       </Form.Item>
     </Form>
