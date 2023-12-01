@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import { Outlet } from "react-router-dom";
 import "./index.less";
@@ -78,6 +79,9 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 export default function Index() {
+  useEffect(() => {
+    console.log(location.pathname);
+  }, [location.pathname]);
   return (
     <>
       {/* <canvas id="snowCanvas" /> */}

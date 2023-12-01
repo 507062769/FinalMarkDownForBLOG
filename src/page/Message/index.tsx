@@ -10,14 +10,7 @@ import { useEffect, useRef } from "react";
 export default function Message() {
   const { currentUserId, setCurrentUserId, userMessageList } = useUserMessage();
   const customMessage = useRef<any>(null);
-  const messageData = {
-    userImg: userImg2,
-    messageList: [
-      { isMe: false, msg: "你在干嘛" },
-      { isMe: false, msg: "吃饭了没" },
-      { isMe: true, msg: "吃了" },
-    ],
-  };
+  console.log("two");
   const startScrollBottom = () => {
     setTimeout(() => {
       if (customMessage.current) {

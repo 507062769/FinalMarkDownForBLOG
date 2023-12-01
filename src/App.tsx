@@ -39,7 +39,14 @@ export default function App() {
         <Route path="/" element={<Index />}>
           <Route index element={<Home />} />
           <Route path="page" element={<PageComponent />} />
-          <Route path="message" element={<Message />} />
+          <Route
+            path="message"
+            element={
+              <AuthGuard>
+                <Message />
+              </AuthGuard>
+            }
+          />
           <Route path="search" element={<Search />} />
           <Route
             path="user"
@@ -50,6 +57,7 @@ export default function App() {
             }
           />
           <Route path="create" element={<Create />} />
+          <Route path="*" element={<div>404</div>} />
         </Route>
       </Routes>
     </BrowserRouter>
