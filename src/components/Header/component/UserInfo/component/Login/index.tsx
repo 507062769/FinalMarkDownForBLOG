@@ -16,7 +16,7 @@ export default function Login() {
   const { setToken, setIsLogin } = useContext(UserContext);
   const [loginForm] = useForm();
   const { setTabKey, setOpen } = useContext(TabContext);
-  const { mutateAsync: login } = useFetchLogin();
+  const { mutateAsync: login, isLoading } = useFetchLogin();
   const { mutateAsync: getSalt } = fetchSalt();
   const handleLogin = async () => {
     const { password, username } = loginForm.getFieldsValue([
@@ -89,7 +89,12 @@ export default function Login() {
         </div>
       </Form.Item>
       <Form.Item className="text-center" label="">
-        <Button type="primary" htmlType="submit" className="w-full">
+        <Button
+          type="primary"
+          htmlType="submit"
+          className="w-full"
+          loading={isLoading}
+        >
           登录
         </Button>
       </Form.Item>

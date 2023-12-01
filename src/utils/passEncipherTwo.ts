@@ -9,11 +9,6 @@ export default async function passEncipherTwo(
   const passOne = CryptoJS.SHA512(password + qq).toString();
   // 加第二次盐，使用数据库中的盐
   const pass = CryptoJS.SHA512(passOne + salt).toString();
-  console.log("qq:", qq, "-----");
-  console.log("password:", password, "-----");
-  console.log("passOne:", passOne, "-----");
-  console.log("salt:", salt);
-  console.log("pass:", pass);
 
   return pass;
 }

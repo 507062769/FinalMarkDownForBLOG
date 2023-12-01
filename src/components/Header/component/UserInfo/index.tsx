@@ -61,9 +61,6 @@ export default function UserInfo() {
       boxShadow: "0 0 30px #999",
     },
   };
-  useEffect(() => {
-    console.log(isLogin, "Header");
-  }, [isLogin]);
 
   return (
     <section
