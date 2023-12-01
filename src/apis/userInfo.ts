@@ -36,3 +36,9 @@ export function fetchSalt() {
     (data) => post("/user/getsalt", data)
   );
 }
+
+export function fetchUpdateUserImg() {
+  return useMutation<any, ClientError, { qq: string; userImg: string }>(
+    (data) => post("/users/updateuserimg", data)
+  );
+}

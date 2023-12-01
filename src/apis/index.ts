@@ -4,6 +4,12 @@ import { message } from "antd";
 const httpInstance = axios.create({
   baseURL: "http://localhost:9876",
   timeout: 5000,
+  // 将token发往后端
+  headers: {
+    "X-Requested-With": "XMLHttpRequest",
+    "Content-Type": "application/json",
+    "X-Token": localStorage.getItem("BLOG_TOKEN") || "",
+  },
 });
 
 httpInstance.interceptors.request.use(

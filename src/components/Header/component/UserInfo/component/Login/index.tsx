@@ -11,9 +11,10 @@ import { useContext } from "react";
 import { TabContext } from "@/Context/TabContextProvide";
 import passEncipherTwo from "@/utils/passEncipherTwo";
 import { UserContext } from "@/Context/UserContextProvide";
+import moment from "moment";
 
 export default function Login() {
-  const { setToken, setIsLogin } = useContext(UserContext);
+  const { setToken, setIsLogin, setUserInfo } = useContext(UserContext);
   const [loginForm] = useForm();
   const { setTabKey, setOpen } = useContext(TabContext);
   const { mutateAsync: login, isLoading } = useFetchLogin();
@@ -32,6 +33,10 @@ export default function Login() {
       setIsLogin(true);
       setToken(res.token);
       setOpen(false);
+      setUserInfo({
+        ...res.userInfo,
+        registerDays: moment().diff(Number(res.userInfo.registerDate), "days"),
+      });
       localStorage.setItem("BLOG_TOKEN", res.token);
     }
   };

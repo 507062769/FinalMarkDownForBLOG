@@ -1,5 +1,4 @@
-import UserImg from "@/assets/imgUser.jpg";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import {
   PlusCircleOutlined,
   StopOutlined,
@@ -16,7 +15,7 @@ import { UserContext } from "@/Context/UserContextProvide";
 
 export default function UserInfo() {
   const { tabKey, setTabKey, open, setOpen } = useContext(TabContext);
-  const { isLogin, setToken, setIsLogin } = useContext(UserContext);
+  const { isLogin, setToken, setIsLogin, userInfo } = useContext(UserContext);
   const token = useTheme();
   const useStyle = createStyles(({ token }) => ({
     "my-modal-mask": {
@@ -72,7 +71,7 @@ export default function UserInfo() {
       <div className="relative text-center" id="Login">
         {isLogin ? (
           <>
-            <Avatar src={UserImg} alt="用户头像" size="large" />
+            <Avatar src={userInfo.userImg} alt="用户头像" size="large" />
             <ul className="list-none m-0 p-0 w-32 -z-50" id="Menu">
               <li>
                 <Link to={"user"}>

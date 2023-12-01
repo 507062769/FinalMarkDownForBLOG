@@ -10,9 +10,11 @@ import Create from "./page/Create";
 import { useQuery } from "react-query";
 import { post } from "./apis";
 import { UserContext } from "./Context/UserContextProvide";
+import moment from "moment";
+import _ from "lodash";
 
 export default function App() {
-  const { setIsLogin } = useContext(UserContext);
+  const { setIsLogin, setUserInfo } = useContext(UserContext);
   useQuery(
     ["token"],
     async () =>
@@ -22,6 +24,11 @@ export default function App() {
       retry: false,
       onSuccess: (data: any) => {
         setIsLogin(data?.isSuccess);
+        console.log(data);
+        setUserInfo({
+          ...(_.omit(data, "isSuccess") as any),
+          registerDays: moment().diff(Number(data.registerDate), "days"),
+        });
       },
     }
   );

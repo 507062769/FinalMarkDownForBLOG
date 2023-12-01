@@ -1,4 +1,5 @@
 import { UserContext } from "@/Context/UserContextProvide";
+import { fetchUpdateUserImg } from "@/apis/userInfo";
 import { AlertOutlined, ContainerOutlined } from "@ant-design/icons";
 import {
   Badge,
@@ -27,6 +28,7 @@ const beforeUpload = (file: RcFile) => {
 };
 
 export default function UserInfo() {
+  const { mutateAsync } = fetchUpdateUserImg();
   const [form] = useForm();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -37,12 +39,12 @@ export default function UserInfo() {
     vermicelliCount,
     pagesNumber,
     qq,
-    profession,
+    prefession,
     school,
     sex,
     desc,
   } = userInfo;
-  // const { } = useMemo(() => userInfo, [userInfo])
+
   return (
     <>
       <div className=" w-10/12  mx-auto" style={{ backgroundColor: "#f3f2ee" }}>
@@ -58,17 +60,23 @@ export default function UserInfo() {
               showUploadList={false}
               action="http://localhost:33450/upload"
               beforeUpload={beforeUpload}
-              onChange={({ file }: any) => {
+              onChange={async ({ file }: any) => {
                 if (file?.response) {
-                  setUserInfo({
-                    ...userInfo,
+                  // 将更换的头像更新至服务器
+                  const res = await mutateAsync({
                     userImg: file.response.url,
+                    qq: userInfo.qq,
                   });
+                  if (res.isUpdateSuccess) {
+                    setUserInfo({
+                      ...userInfo,
+                      userImg: file.response.url,
+                    });
+                  }
                 }
               }}
               maxCount={1}
             >
-              {/* https://q1.qlogo.cn/g?b=qq&nk=2458015575&s=5，对应着腾讯的头像 */}
               <img
                 src={userImg}
                 alt="头像"
@@ -108,7 +116,7 @@ export default function UserInfo() {
         <div className="p-10 text-base">
           <p>qq：{qq}</p>
           <p>学校：{school}</p>
-          <p>专业：{profession}</p>
+          <p>专业：{prefession}</p>
           <p>性别：{sex}</p>
           <Button
             type="primary"

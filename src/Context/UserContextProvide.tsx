@@ -6,9 +6,9 @@ type TUserInfo = {
   registerDays: number;
   vermicelliCount: number;
   pagesNumber: number;
-  qq: number;
+  qq: string;
   school: string;
-  profession: string;
+  prefession: string;
   sex: string;
   desc: string;
 };
@@ -25,18 +25,7 @@ export const UserContext = createContext<{
 export default function UserContextProvide(props: any) {
   const [isLogin, setIsLogin] = useState(false);
   const [token, setToken] = useState<string>("");
-  const [userInfo, setUserInfo] = useState<TUserInfo>({
-    userImg: "http://localhost:33450/uploads/user-2458015575.jpg",
-    userName: "这是一个用户名",
-    registerDays: 99,
-    vermicelliCount: 99,
-    pagesNumber: 99,
-    qq: 2458015575,
-    school: "这是一个学校",
-    profession: "这是一个职业",
-    sex: "男",
-    desc: "这是一个描述",
-  });
+  const [userInfo, setUserInfo] = useState<TUserInfo>({} as any);
 
   return (
     <UserContext.Provider
