@@ -12,19 +12,19 @@ import { post } from "./apis";
 import { UserContext } from "./Context/UserContextProvide";
 import moment from "moment";
 import _ from "lodash";
+import AuthGuard from "./components/AuthGuard";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
   useQuery(
     ["token"],
     async () =>
-      await post("/user/token", { token: localStorage.getItem("BLOG_TOKEN") }),
+      await post("/users/token", { token: localStorage.getItem("BLOG_TOKEN") }),
     {
       refetchOnWindowFocus: false,
       retry: false,
       onSuccess: (data: any) => {
         setIsLogin(data?.isSuccess);
-        console.log(data);
         setUserInfo({
           ...(_.omit(data, "isSuccess") as any),
           registerDays: moment().diff(Number(data.registerDate), "days"),
@@ -41,7 +41,14 @@ export default function App() {
           <Route path="page" element={<PageComponent />} />
           <Route path="message" element={<Message />} />
           <Route path="search" element={<Search />} />
-          <Route path="user" element={<UserControl />} />
+          <Route
+            path="user"
+            element={
+              <AuthGuard>
+                <UserControl />
+              </AuthGuard>
+            }
+          />
           <Route path="create" element={<Create />} />
         </Route>
       </Routes>
