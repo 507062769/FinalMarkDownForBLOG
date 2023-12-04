@@ -7,6 +7,7 @@ import {
   Form,
   Input,
   Modal,
+  Radio,
   Space,
   Upload,
   message,
@@ -148,6 +149,18 @@ export default function UserInfo() {
           </Form.Item>
           <Form.Item label="个性签名" name={"desc"}>
             <Input type="text" />
+          </Form.Item>
+          <Form.Item label="院校" name={"school"}>
+            <Input type="text" />
+          </Form.Item>
+          <Form.Item label="专业" name={"perfession"}>
+            <Input type="text" />
+          </Form.Item>
+          <Form.Item label="性别" name="sex">
+            <Radio.Group>
+              <Radio value="男">男</Radio>
+              <Radio value="女">女</Radio>
+            </Radio.Group>
           </Form.Item>
           <Button type="primary">确定</Button>
         </Form>
