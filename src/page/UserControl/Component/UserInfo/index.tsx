@@ -1,5 +1,5 @@
 import { UserContext } from "@/Context/UserContextProvide";
-import { fetchUpdateUserImg } from "@/apis/userInfo";
+import { fetchUpdateUserImg, fetchUpdateUserInfo } from "@/apis/userInfo";
 import { AlertOutlined, ContainerOutlined } from "@ant-design/icons";
 import {
   Badge,
@@ -8,6 +8,7 @@ import {
   Input,
   Modal,
   Radio,
+  Select,
   Space,
   Upload,
   message,
@@ -15,6 +16,8 @@ import {
 import { useForm } from "antd/es/form/Form";
 import { RcFile } from "antd/es/upload";
 import { useContext, useState } from "react";
+import { schoolList } from "@/utils/chinaUniversityList";
+import { majorList } from "@/utils/majorList";
 
 const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -33,6 +36,7 @@ export default function UserInfo() {
   const [form] = useForm();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const { userInfo, setUserInfo } = useContext(UserContext);
+  const { mutateAsync: updateUserInfo } = fetchUpdateUserInfo();
   const {
     userImg,
     userName,
@@ -43,8 +47,25 @@ export default function UserInfo() {
     prefession,
     school,
     sex,
-    desc,
+    description,
   } = userInfo;
+  const university: { label: string; value: string }[] = [];
+  const profession: { label: string; value: string }[] = [];
+  schoolList.forEach((item) => {
+    item.school.forEach((item) =>
+      university.push({ label: item.name, value: item.name })
+    );
+  });
+  majorList.forEach((item) => {
+    item.class.forEach((item) =>
+      profession.push({ label: item.name, value: item.name })
+    );
+  });
+
+  const filterOption = (
+    input: string,
+    option?: { label: string; value: string }
+  ) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
     <>
@@ -95,7 +116,7 @@ export default function UserInfo() {
               <p className="text-3xl my-6">{userName}</p>
             </Badge>
             <Space size={40}>
-              <span className="text-lg">{desc}</span>
+              <span className="text-lg">{description}</span>
               <span>
                 <AlertOutlined />
                 &nbsp;粉丝数量：
@@ -123,10 +144,6 @@ export default function UserInfo() {
             type="primary"
             onClick={() => {
               setIsEdit(true);
-              form.setFieldsValue({
-                username: userName,
-                desc,
-              });
             }}
           >
             编辑
@@ -139,7 +156,29 @@ export default function UserInfo() {
         title="编辑资料"
         footer={null}
       >
-        <Form form={form} labelCol={{ span: 4 }} wrapperCol={{ span: 16 }}>
+        <Form
+          form={form}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{
+            username: userName || "",
+            desc: description || "",
+            school: school !== "未填" ? school : "清华大学",
+            prefession: prefession !== "未填" ? prefession : "计算机科学与技术",
+            sex: sex !== "未填" ? sex : "男",
+          }}
+          onFinish={async () => {
+            const res = await updateUserInfo({ ...form.getFieldsValue(), qq });
+            if (res.isUpdateSuccess) {
+              // 修改成功
+              setUserInfo({
+                ...userInfo,
+                ...form.getFieldsValue(),
+              });
+              setIsEdit(false);
+            }
+          }}
+        >
           <Form.Item
             label="用户名"
             name={"username"}
@@ -151,10 +190,18 @@ export default function UserInfo() {
             <Input type="text" />
           </Form.Item>
           <Form.Item label="院校" name={"school"}>
-            <Input type="text" />
+            <Select
+              showSearch
+              options={university}
+              filterOption={filterOption}
+            />
           </Form.Item>
-          <Form.Item label="专业" name={"perfession"}>
-            <Input type="text" />
+          <Form.Item label="专业" name={"prefession"}>
+            <Select
+              showSearch
+              options={profession}
+              filterOption={filterOption}
+            />
           </Form.Item>
           <Form.Item label="性别" name="sex">
             <Radio.Group>
@@ -162,7 +209,9 @@ export default function UserInfo() {
               <Radio value="女">女</Radio>
             </Radio.Group>
           </Form.Item>
-          <Button type="primary">确定</Button>
+          <Button type="primary" htmlType="submit">
+            确定
+          </Button>
         </Form>
       </Modal>
     </>

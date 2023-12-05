@@ -10,7 +10,7 @@ type TUserInfo = {
   school: string;
   prefession: string;
   sex: string;
-  desc: string;
+  description: string;
 };
 
 export const UserContext = createContext<{

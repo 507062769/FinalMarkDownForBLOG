@@ -42,3 +42,17 @@ export function fetchUpdateUserImg() {
     (data) => post("/users/updateuserimg", data)
   );
 }
+
+export function fetchUpdateUserInfo() {
+  return useMutation<
+    any,
+    ClientError,
+    {
+      qq: string;
+      desc: string;
+      prefession: string;
+      sex: string;
+      school: string;
+    }
+  >((data) => post("/users/modify", data));
+}
