@@ -56,7 +56,14 @@ export default function App() {
               </AuthGuard>
             }
           />
-          <Route path="create" element={<Create />} />
+          <Route
+            path="create"
+            element={
+              <AuthGuard>
+                <Create />
+              </AuthGuard>
+            }
+          />
           <Route path="*" element={<div>404</div>} />
         </Route>
       </Routes>

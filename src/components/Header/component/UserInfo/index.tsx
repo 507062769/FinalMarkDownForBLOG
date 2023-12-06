@@ -4,7 +4,7 @@ import {
   StopOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Badge, Button, Tabs } from "antd";
+import { Avatar, Badge, Button, Tabs, message } from "antd";
 import Modal from "antd/es/modal/Modal";
 import Login from "./component/Login";
 import Register from "./component/Register";
@@ -12,11 +12,13 @@ import { Link } from "react-router-dom";
 import { createStyles, useTheme } from "antd-style";
 import { TabContext } from "@/Context/TabContextProvide";
 import { UserContext } from "@/Context/UserContextProvide";
+import { useNavigate } from "react-router-dom";
 
 export default function UserInfo() {
   const { tabKey, setTabKey, open, setOpen } = useContext(TabContext);
   const { isLogin, setToken, setIsLogin, userInfo } = useContext(UserContext);
   const token = useTheme();
+  const navigate = useNavigate();
   const useStyle = createStyles(({ token }) => ({
     "my-modal-mask": {
       boxShadow: `inset 0 0 15px #fff`,
@@ -127,6 +129,13 @@ export default function UserInfo() {
         icon={<PlusCircleOutlined />}
         className="h-10 mt-3"
         size="large"
+        onClick={() => {
+          if (isLogin && location.pathname !== "/create") {
+            navigate("/create");
+          } else if (!isLogin) {
+            message.warning("请先登录");
+          }
+        }}
       >
         创作
       </Button>

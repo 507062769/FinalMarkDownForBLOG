@@ -19,7 +19,7 @@ import { useContext, useState } from "react";
 import { schoolList } from "@/utils/chinaUniversityList";
 import { majorList } from "@/utils/majorList";
 
-const beforeUpload = (file: RcFile) => {
+export const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJpgOrPng) {
     message.error("只能上传图片文件");
