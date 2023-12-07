@@ -10,10 +10,11 @@ import {
   Upload,
   message,
 } from "antd";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { beforeUpload } from "@/page/UserControl/Component/UserInfo";
 import { RcFile, UploadFile, UploadProps } from "antd/es/upload";
 import { FileMarkdownOutlined, PlusOutlined } from "@ant-design/icons";
+import { fetchFile } from "@/apis";
 
 export default function UploadMd() {
   const [cover, setCover] = useState<any>();
@@ -24,6 +25,8 @@ export default function UploadMd() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const newImg = useRef<string[]>([]);
+
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -76,26 +79,16 @@ export default function UploadMd() {
   const handleChanges: UploadProps["onChange"] = ({ fileList: newFileList }) =>
     setFileList(newFileList);
 
-  const newImg = useMemo(() => {
-    return fileList?.map((item) => "(" + item?.response?.url + ")");
-  }, [fileList]);
-
   return (
     <>
       <Form
         labelCol={{ span: 4 }}
-        onFinish={() => {
+        onFinish={async () => {
           const formData = new FormData();
           formData.append("md", md);
           formData.append("localImgUrl", JSON.stringify(localImgUrl));
-          formData.append("fileList", JSON.stringify(newImg));
-          fetch("http://localhost:33450/md", {
-            method: "POST",
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => message.success("上传成功"))
-            .catch((err) => message.error("上传失败"));
+          formData.append("fileList", JSON.stringify(newImg.current));
+          await fetchFile("/md", formData);
         }}
       >
         <Form.Item
@@ -117,8 +110,13 @@ export default function UploadMd() {
             listType="picture-circle"
             className="avatar-uploader overflow-hidden "
             showUploadList={false}
-            action="http://localhost:33450/upload"
             beforeUpload={beforeUpload}
+            customRequest={async ({ file }) => {
+              const formData = new FormData();
+              formData.append("avatar", file);
+              const res = await fetchFile("/upload", formData);
+              setCover(res.url);
+            }}
             maxCount={1}
             onChange={async ({ file }: any) => {
               if (file?.response) {
@@ -146,6 +144,7 @@ export default function UploadMd() {
             showUploadList={false}
             action="http://localhost:33450/md"
             beforeUpload={beforeUploadMd}
+            customRequest={() => {}}
             onChange={({ file }) => {
               setMd(file);
             }}
@@ -191,13 +190,26 @@ export default function UploadMd() {
               <Upload
                 accept=".jpg,.png,.jpeg"
                 name="imgsformd"
-                action="http://localhost:33450/imgInMd"
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChanges}
                 multiple
                 maxCount={localImgUrl?.length}
+                customRequest={async ({ file }) => {
+                  const formData = new FormData();
+                  formData.append("imgsformd", file);
+                  const res = await fetchFile("/imgInMd", formData);
+                  setFileList(
+                    fileList.map((item) => {
+                      return {
+                        ...item,
+                        status: "done",
+                      };
+                    })
+                  );
+                  newImg.current.push(res.url);
+                }}
               >
                 {fileList.length >= localImgUrl!?.length ? null : uploadButton}
               </Upload>

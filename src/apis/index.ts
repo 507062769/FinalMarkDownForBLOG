@@ -1,8 +1,9 @@
 import axios from "axios";
 import { message } from "antd";
+const BASE_URL = "http://localhost:9876";
 
 const httpInstance = axios.create({
-  baseURL: "http://localhost:9876",
+  baseURL: BASE_URL,
   timeout: 5000,
   // 将token发往后端
   headers: {
@@ -49,4 +50,26 @@ export const post = (url: string, data?: any) => {
 
 export const get = (url: string, data: any) => {
   return httpInstance.get(url, { params: data });
+};
+
+export const fetchFile = async (url: string, data: any, param?: any) => {
+  const defaultConfig = {
+    method: "POST",
+    body: data,
+    headers: {
+      "X-Token": localStorage.getItem("BLOG_TOKEN") || "",
+    },
+    ...param,
+  };
+  try {
+    const response = await fetch(BASE_URL + "/files" + url, defaultConfig);
+    if (!response.ok) {
+      throw new Error("请求失败");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    throw new Error("请求出错");
+  }
 };
