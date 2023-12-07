@@ -34,7 +34,6 @@ export default function MarkDownForCustom(props: { data: string }) {
       document.querySelectorAll("p[data-pageTop]").forEach((item) => {
         item.addEventListener("click", () => {
           setTimeout(() => {
-            console.log(1231312);
             document
               .querySelector("#SliderNav .active")
               ?.classList.remove("active");
@@ -56,7 +55,7 @@ export default function MarkDownForCustom(props: { data: string }) {
           isSmoothBottomDirection = true;
         }
 
-        console.log(isSmoothBottomDirection);
+        // console.log(isSmoothBottomDirection);
         let currentElement = document.querySelector<any>("#SliderNav .active");
         let currentPageY = snows.scrollTop;
         // 如果是向下滑动，则进行切换类操作
@@ -85,13 +84,16 @@ export default function MarkDownForCustom(props: { data: string }) {
       <div className=" flex mx-auto">
         <div
           id="SliderNav"
-          className=" w-4/12 box-border p-4`"
+          className=" w-4/12 box-border p-4 h-full"
           onClick={(e: any) => {
             if (!e.target?.dataset?.pagetop) return;
-            animateScroll.scrollTo(e.target?.dataset?.pagetop, {
-              duration: 500,
-              containerId: "ContainerSnow",
-            });
+            animateScroll.scrollTo(
+              parseFloat(e.target?.dataset?.pagetop) - 70,
+              {
+                duration: 500,
+                containerId: "ContainerSnow",
+              }
+            );
           }}
         ></div>
         <div
@@ -120,6 +122,12 @@ export default function MarkDownForCustom(props: { data: string }) {
                     {children}
                   </code>
                 );
+              },
+              a(props) {
+                if (props?.href?.includes("http://localhost:9876/imgsForMd")) {
+                  return <img src={props?.href} />;
+                }
+                return <div>zheshia</div>;
               },
             }}
           />

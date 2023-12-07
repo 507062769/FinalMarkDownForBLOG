@@ -6,6 +6,7 @@ import "./index.less";
 export default function Header() {
   return (
     <header
+      id="MyHeader"
       className=" h-16 mb-7 z-50 sticky top-0"
       style={{
         border: "1px solid white",

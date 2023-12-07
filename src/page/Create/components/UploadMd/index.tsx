@@ -10,13 +10,16 @@ import {
   Upload,
   message,
 } from "antd";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { beforeUpload } from "@/page/UserControl/Component/UserInfo";
 import { RcFile, UploadFile, UploadProps } from "antd/es/upload";
 import { FileMarkdownOutlined, PlusOutlined } from "@ant-design/icons";
 import { fetchFile } from "@/apis";
+import { UserContext } from "@/Context/UserContextProvide";
+import { useForm } from "antd/es/form/Form";
 
 export default function UploadMd() {
+  const [form] = useForm();
   const [cover, setCover] = useState<any>();
   const [md, setMd] = useState<any>();
   const [localImgUrl, setLocalImageUrl] = useState<string[]>();
@@ -26,6 +29,7 @@ export default function UploadMd() {
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const newImg = useRef<string[]>([]);
+  const { userInfo } = useContext(UserContext);
 
   const uploadButton = (
     <div>
@@ -82,12 +86,16 @@ export default function UploadMd() {
   return (
     <>
       <Form
+        form={form}
         labelCol={{ span: 4 }}
         onFinish={async () => {
           const formData = new FormData();
           formData.append("md", md);
           formData.append("localImgUrl", JSON.stringify(localImgUrl));
           formData.append("fileList", JSON.stringify(newImg.current));
+          formData.append("cover", JSON.stringify(cover));
+          formData.append("title", JSON.stringify(form.getFieldValue("title")));
+          formData.append("qq", JSON.stringify(userInfo.qq));
           await fetchFile("/md", formData);
         }}
       >
@@ -208,7 +216,7 @@ export default function UploadMd() {
                       };
                     })
                   );
-                  newImg.current.push(res.url);
+                  newImg.current.push("(" + res.url + ")".replace(/\\/g, "/"));
                 }}
               >
                 {fileList.length >= localImgUrl!?.length ? null : uploadButton}

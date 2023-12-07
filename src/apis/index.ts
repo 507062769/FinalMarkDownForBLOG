@@ -49,7 +49,7 @@ export const post = (url: string, data?: any) => {
 };
 
 export const get = (url: string, data: any) => {
-  return httpInstance.get(url, { params: data });
+  return httpInstance.get<any>(url, { params: data });
 };
 
 export const fetchFile = async (url: string, data: any, param?: any) => {

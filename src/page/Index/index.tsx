@@ -79,12 +79,9 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 export default function Index() {
-  useEffect(() => {
-    console.log(location.pathname);
-  }, [location.pathname]);
   return (
     <>
-      {/* <canvas id="snowCanvas" /> */}
+      <canvas id="snowCanvas" />
       <div className="container-snow" id="ContainerSnow">
         <Header />
         <Outlet />
