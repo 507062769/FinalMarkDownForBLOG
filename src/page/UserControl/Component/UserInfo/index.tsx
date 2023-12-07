@@ -18,6 +18,8 @@ import { RcFile } from "antd/es/upload";
 import { useContext, useState } from "react";
 import { schoolList } from "@/utils/chinaUniversityList";
 import { majorList } from "@/utils/majorList";
+import { fetchFile } from "@/apis";
+import _ from "lodash";
 
 export const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
@@ -80,24 +82,18 @@ export default function UserInfo() {
               listType="picture-circle"
               className="avatar-uploader overflow-hidden  text-center h-full"
               showUploadList={false}
-              action="http://localhost:33450/upload"
               beforeUpload={beforeUpload}
-              onChange={async ({ file }: any) => {
-                if (file?.response) {
-                  // 将更换的头像更新至服务器
-                  const res = await mutateAsync({
-                    userImg: file.response.url,
-                    qq: userInfo.qq,
-                  });
-                  if (res.isUpdateSuccess) {
-                    setUserInfo({
-                      ...userInfo,
-                      userImg: file.response.url,
-                    });
-                  }
-                }
-              }}
               maxCount={1}
+              customRequest={async ({ file }) => {
+                const formData = new FormData();
+                formData.append("avatar", file);
+                formData.append("qq", qq);
+                const res = await fetchFile("/upload", formData);
+                setUserInfo({
+                  ...userInfo,
+                  userImg: res.url,
+                });
+              }}
             >
               <img
                 src={userImg}
