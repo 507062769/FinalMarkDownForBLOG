@@ -28,7 +28,9 @@ export default function UploadMd() {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const newImg = useRef<string[]>([]);
+  const newImg = useRef<{ fileName: string; url: string; localImg?: string }[]>(
+    []
+  );
   const { userInfo } = useContext(UserContext);
 
   const uploadButton = (
@@ -89,9 +91,32 @@ export default function UploadMd() {
         form={form}
         labelCol={{ span: 4 }}
         onFinish={async () => {
+          /**
+           * 点击的时候，此时的状态应当是这样的
+           * localImgUrl: 所有的本地完整url，是一个string[]
+           * fileList: 所有的映射，在这之
+           *
+           *
+           *
+           *
+           *
+           *
+           *
+           * 间经过处理，是一个{oldUrl, newUrl}[]，一一对应着本地url和新的url
+           * 此时只需要传递给后端一个数组就好了，然后后端读取这个数组的内容，然后在md中进行直接替换
+           * 这样形成了一对一的映射
+           */
+          localImgUrl?.forEach((item) => {
+            for (let i = 0; i < newImg.current.length; i++) {
+              if (item.includes(newImg.current[i].fileName)) {
+                newImg.current[i].localImg = item;
+                break;
+              }
+            }
+          });
           const formData = new FormData();
           formData.append("md", md);
-          formData.append("localImgUrl", JSON.stringify(localImgUrl));
+          // formData.append("localImgUrl", JSON.stringify(localImgUrl));
           formData.append("fileList", JSON.stringify(newImg.current));
           formData.append("cover", JSON.stringify(cover));
           formData.append("title", JSON.stringify(form.getFieldValue("title")));
@@ -208,6 +233,10 @@ export default function UploadMd() {
                   const formData = new FormData();
                   formData.append("imgsformd", file);
                   const res = await fetchFile("/imgInMd", formData);
+                  newImg.current.push({
+                    fileName: res.fileName,
+                    url: "(" + res.url + ")".replace(/\\/g, "/"),
+                  });
                   setFileList(
                     fileList.map((item) => {
                       return {
@@ -216,7 +245,44 @@ export default function UploadMd() {
                       };
                     })
                   );
-                  newImg.current.push("(" + res.url + ")".replace(/\\/g, "/"));
+                  /**
+                   * 思路，在上传图片的时候，只要选择的是对的图片，那么在后端可以拿到原来的该图片的名称，只不过拿不到，全路径而已
+                   * 那么在此时，上传图片完成时，可以进行一个映射，将文件名和新的在线的url进行一个地址映射
+                   * 比如原来的图片路径是D:\桌面\新建文件夹\Snipaste_2023-12-01_14-15-33.png，
+                   * 那么在后端可以拿到的是Snipaste_2023-12-01_14-15-33.png，另外还可以拿到一个新的在线的url地址
+                   * 此时将他们俩作为一个对象放在一起，存入fileList数组，这样就可以在上传完成后，拿到一个一一对应的
+                   * 另外在传递时，还有一个完整的路径，可以用于在做新旧图片路径时，做替换操作
+                   * 而替换时，并不是按照无无序的数组替换，而是按照fileList数组中的内容进行替换
+                   * fileList: [{oldImg: src, newImg: src}]
+                   * 那么通过检测当前md中是否存在着localImgUrl，中的元素，如果存在的话，则进行对比，使用循环，否则完成替换
+                   * for(file in fileList){       所有需要替换的路径与替换后的路径
+                   *    if (md.includes(fileList[file])){     如果路径中还存在着路径，需要进行替换
+                   *        // 好像还是无法进行准确替换，因为只能拿到文件名，无法拿到准确的路径，而在md中显示的是完整的路径名
+                   *    }
+                   * }
+                   *
+                   * tips：在上传的时候，由于使用了自定义上传，好像能拿到完整的路径，这个时候将路径带入后端，再随后端返回
+                   *       虽然有点笨，但好像能实现，另外的情况，这种情况需要确保上传的就是本地的图片
+                   *
+                   * tips: 好像有办法了，在能拿到文件名的情况下，进行一个匹配即可，因为在上传md的时候，其实可以拿到所有的本地url
+                   *       那么在拿到了本地url后，再对fileList进行遍历，通过判断本地url中是否包含fileList中的oldImg，这样就可以进行判
+                   *       断，是否是同一张图片，如果是同一张图片的话，则可以拿到新的url地址，那么此时，完整的本地地址有了，与其对应的
+                   *       新的url地址也有了，此时在后端中，就可以进行一一对应了，虽然步骤繁琐了一点，但却可以实现
+                   *
+                   * 伪代码：
+                   *       前置：点击上传时，做数据整理，fileList是存放着上传的本地文件名，和对应着的完整地址
+                   *       localImg存放着所有的本地地址，而且是完整的
+                   *       for(localimg in localImggs) {   遍历所有的本地完整url
+                   *          for(file in fileList)    { 遍历当前所有的本地文件名
+                   *              if(localimg.includes(file.oldImg)) {
+                   *                  说明匹配成功，那么此时file对应的newUrl就是这张本地url对应着的远程url
+                   *                  file.oldIMg = localImg      将只有一个文件名的地址替换为完整的url，则此时在后端可
+                   *                    以进行完美配对
+                   *              }
+                   *           }
+                   *       }
+                   *
+                   */
                 }}
               >
                 {fileList.length >= localImgUrl!?.length ? null : uploadButton}

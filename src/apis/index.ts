@@ -69,7 +69,6 @@ export const fetchFile = async (url: string, data: any, param?: any) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error(error);
-    throw new Error("请求出错");
+    throw new Error(error?.message);
   }
 };
