@@ -68,7 +68,7 @@ export const fetchFile = async (url: string, data: any, param?: any) => {
     }
     const data = await response.json();
     return data;
-  } catch (error) {
+  } catch (error: any) {
     throw new Error(error?.message);
   }
 };

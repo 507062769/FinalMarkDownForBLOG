@@ -13,10 +13,15 @@ import {
 import { useContext, useRef, useState } from "react";
 import { beforeUpload } from "@/page/UserControl/Component/UserInfo";
 import { RcFile, UploadFile, UploadProps } from "antd/es/upload";
-import { FileMarkdownOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  ExclamationCircleOutlined,
+  FileMarkdownOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { fetchFile } from "@/apis";
 import { UserContext } from "@/Context/UserContextProvide";
 import { useForm } from "antd/es/form/Form";
+import { useNavigate } from "react-router-dom";
 
 export default function UploadMd() {
   const [form] = useForm();
@@ -32,6 +37,7 @@ export default function UploadMd() {
     []
   );
   const { userInfo } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const uploadButton = (
     <div>
@@ -90,18 +96,12 @@ export default function UploadMd() {
       <Form
         form={form}
         labelCol={{ span: 4 }}
+        wrapperCol={{ span: 16 }}
         onFinish={async () => {
           /**
            * 点击的时候，此时的状态应当是这样的
            * localImgUrl: 所有的本地完整url，是一个string[]
            * fileList: 所有的映射，在这之
-           *
-           *
-           *
-           *
-           *
-           *
-           *
            * 间经过处理，是一个{oldUrl, newUrl}[]，一一对应着本地url和新的url
            * 此时只需要传递给后端一个数组就好了，然后后端读取这个数组的内容，然后在md中进行直接替换
            * 这样形成了一对一的映射
@@ -120,8 +120,15 @@ export default function UploadMd() {
           formData.append("fileList", JSON.stringify(newImg.current));
           formData.append("cover", JSON.stringify(cover));
           formData.append("title", JSON.stringify(form.getFieldValue("title")));
+          formData.append("desc", JSON.stringify(form.getFieldValue("desc")));
           formData.append("qq", JSON.stringify(userInfo.qq));
-          await fetchFile("/md", formData);
+          const res = await fetchFile("/md", formData);
+          if (res.code === 200) {
+            message.success("上传成功");
+            navigate("/user");
+          } else {
+            message.error("上传失败");
+          }
         }}
       >
         <Form.Item
@@ -131,6 +138,24 @@ export default function UploadMd() {
           wrapperCol={{ span: 8 }}
         >
           <Input placeholder="文章标题" />
+        </Form.Item>
+        <Form.Item
+          label="文章描述"
+          name={"desc"}
+          rules={[
+            { required: true, message: "请输入描述" },
+            { min: 10, message: "描述长度不能少于10个字符" },
+            { max: 200, message: "描述长度不能超过200个字符" },
+          ]}
+        >
+          <Input
+            placeholder="描述"
+            addonAfter={
+              <ExclamationCircleOutlined
+                onClick={() => message.info("用于在文章列表页展示")}
+              />
+            }
+          />
         </Form.Item>
         <Form.Item
           label="封面"

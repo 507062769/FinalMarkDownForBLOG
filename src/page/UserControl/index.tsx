@@ -7,7 +7,7 @@ export default function UserControl() {
   return (
     <div
       style={{ height: "calc(100vh - 154px)" }}
-      className=" w-11/12 mx-auto bg-white"
+      className=" w-11/12 mx-auto bg-white overflow-y-scroll"
     >
       <Tabs
         className="px-5"

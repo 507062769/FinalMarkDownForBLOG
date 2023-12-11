@@ -1,5 +1,5 @@
 import { UserContext } from "@/Context/UserContextProvide";
-import { fetchUpdateUserImg, fetchUpdateUserInfo } from "@/apis/userInfo";
+import { fetchUpdateUserInfo } from "@/apis/userInfo";
 import { AlertOutlined, ContainerOutlined } from "@ant-design/icons";
 import {
   Badge,
@@ -34,7 +34,6 @@ export const beforeUpload = (file: RcFile) => {
 };
 
 export default function UserInfo() {
-  const { mutateAsync } = fetchUpdateUserImg();
   const [form] = useForm();
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const { userInfo, setUserInfo } = useContext(UserContext);
@@ -71,9 +70,12 @@ export default function UserInfo() {
 
   return (
     <>
-      <div className=" w-10/12  mx-auto" style={{ backgroundColor: "#f3f2ee" }}>
+      <div
+        className=" w-10/12  mx-auto mt-5 h-full"
+        style={{ backgroundColor: "#f3f2ee" }}
+      >
         <header
-          className="flex flex-row justify-start"
+          className="flex flex-row justify-start h-44"
           style={{ borderBottom: "10px solid white" }}
         >
           <div className="w-52 box-border pt-4">
@@ -157,8 +159,8 @@ export default function UserInfo() {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           initialValues={{
-            username: userName || "",
-            desc: description || "",
+            userName: userName || "",
+            description: description || "",
             school: school !== "未填" ? school : "清华大学",
             prefession: prefession !== "未填" ? prefession : "计算机科学与技术",
             sex: sex !== "未填" ? sex : "男",
@@ -177,12 +179,12 @@ export default function UserInfo() {
         >
           <Form.Item
             label="用户名"
-            name={"username"}
+            name={"userName"}
             rules={[{ required: true, message: "非空" }]}
           >
             <Input type="text" />
           </Form.Item>
-          <Form.Item label="个性签名" name={"desc"}>
+          <Form.Item label="个性签名" name={"description"}>
             <Input type="text" />
           </Form.Item>
           <Form.Item label="院校" name={"school"}>
