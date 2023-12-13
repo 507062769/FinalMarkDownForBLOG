@@ -9,6 +9,9 @@ import _ from "lodash";
 export default function MarkDownForCustom(props: { data: string }) {
   useEffect(() => {
     setTimeout(() => {
+      const WriteContainer = document.querySelector("#WriteContainer") as any;
+      const sliderNav = document.querySelector("#SliderNav") as any;
+      const write = document.querySelector("#write") as any;
       const headerTitle = document.querySelectorAll<
         Element & { offsetTop: number }
       >("#write h1,h2,h3,h4,h5,h6");
@@ -21,9 +24,12 @@ export default function MarkDownForCustom(props: { data: string }) {
         }" data-pageTop=${item?.offsetTop}>${item.innerHTML}</p>`;
       });
       if (headerTitle.length === 0) {
-        htmlStr = `<p class="H1-stylesheet active" data-pageTop="0">暂无标题</p>`;
+        // htmlStr = `<p class="H1-stylesheet active" data-pageTop="0">暂无标题</p>`;
+        sliderNav.style.width = "0px";
+        sliderNav.style.opacity = "0";
+        // WriteContainer.style.justifyContent = "center";
+        write.style.width = "100%";
       }
-      const sliderNav = document.querySelector("#SliderNav");
       if (sliderNav) {
         sliderNav.innerHTML = htmlStr;
       }
@@ -43,7 +49,6 @@ export default function MarkDownForCustom(props: { data: string }) {
       let isSmoothBottomDirection = true; //  是否为下滑，默认为下滑
 
       const snows = document.querySelector(".container-snow")!;
-      const WriteContainer = document.querySelector("#WriteContainer");
 
       const multiple =
         Number(
@@ -89,7 +94,7 @@ export default function MarkDownForCustom(props: { data: string }) {
         // console.log(smoothValue * multiple);
         sliderNav.scrollTop = smoothValue * multiple;
       });
-    }, 500);
+    }, 1);
   }, []);
   return (
     <>
@@ -97,7 +102,7 @@ export default function MarkDownForCustom(props: { data: string }) {
         <div
           id="SliderNav"
           className=" w-4/12 box-border p-4"
-          style={{ height: "calc(100vh - 100px)" }}
+          style={{ height: "calc(100vh - 154px)" }}
           onClick={(e: any) => {
             if (!e.target?.dataset?.pagetop) return;
             animateScroll.scrollTo(
