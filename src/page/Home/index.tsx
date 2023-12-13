@@ -5,8 +5,17 @@ import th3 from "@/assets/th3.jpg";
 import AuthUserInfo from "@/components/AuthUserInfo";
 import PageList from "@/components/PageList";
 import Swiper from "./Component/Swiper";
+import { useQuery } from "react-query";
+import { get } from "@/apis";
 
 export default function Home() {
+  const { data } = useQuery(
+    ["indexmd"],
+    async () => await get("/page/indexmd"),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   const list = [
     { title: "Umi3", url: th, pageId: "1111" },
     { title: "React", url: th1, pageId: "2222" },
@@ -60,7 +69,7 @@ export default function Home() {
             </div>
           </div>
           {/* 轮播图end */}
-          <PageList />
+          <PageList data={data?.data} />
         </div>
         <div className="w-2/12">
           <AuthUserInfo />

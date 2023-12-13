@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { animateScroll } from "react-scroll";
 
 // import "@/styles/newsprint.css";
@@ -11,10 +11,10 @@ export default function MarkDownForCustom(props: { data: string }) {
     setTimeout(() => {
       const WriteContainer = document.querySelector("#WriteContainer") as any;
       const sliderNav = document.querySelector("#SliderNav") as any;
-      const write = document.querySelector("#write") as any;
       const headerTitle = document.querySelectorAll<
         Element & { offsetTop: number }
       >("#write h1,h2,h3,h4,h5,h6");
+      console.log(headerTitle.length);
       let htmlStr = "";
       headerTitle.forEach((item, index) => {
         // console.log(item.tagName, item.id);
@@ -25,12 +25,20 @@ export default function MarkDownForCustom(props: { data: string }) {
       });
       if (headerTitle.length === 0) {
         // htmlStr = `<p class="H1-stylesheet active" data-pageTop="0">暂无标题</p>`;
-        sliderNav.style.width = "0px";
+        console.log("走这了");
+
+        sliderNav.style.width = "0";
         sliderNav.style.opacity = "0";
         // WriteContainer.style.justifyContent = "center";
-        write.style.width = "100%";
+        write.style.width = "80%";
       }
+      // 由于会执行多次，由于一开始的时候，headerTitle.length === 0，所以会走if，设置了宽度和透明度，但是在最后一次，不会走if，但是此时的width和opacity还是0，所以需要设置回来
+      sliderNav.style.width = "33.33333%";
+      sliderNav.style.opacity = "1";
+
       if (sliderNav) {
+        console.log("设置页面");
+
         sliderNav.innerHTML = htmlStr;
       }
       document.querySelectorAll("p[data-pageTop]").forEach((item) => {
@@ -43,13 +51,10 @@ export default function MarkDownForCustom(props: { data: string }) {
           }, 600);
         });
       });
-
       // active 跟随页面滑动
       let smoothValue = 0; //  记录当前page的位置
       let isSmoothBottomDirection = true; //  是否为下滑，默认为下滑
-
       const snows = document.querySelector(".container-snow")!;
-
       const multiple =
         Number(
           window.getComputedStyle(sliderNav as any)["height"].split("px")[0]
@@ -59,7 +64,6 @@ export default function MarkDownForCustom(props: { data: string }) {
             .getComputedStyle(WriteContainer as any)
             ["height"].split("px")[0]
         );
-
       snows.addEventListener("scroll", (e: any) => {
         // 判断滑动的方向
         if (!(e.target.scrollTop > smoothValue)) {
@@ -67,7 +71,6 @@ export default function MarkDownForCustom(props: { data: string }) {
         } else {
           isSmoothBottomDirection = true;
         }
-
         // console.log(isSmoothBottomDirection);
         let currentElement = document.querySelector<any>("#SliderNav .active");
         let currentPageY = snows.scrollTop;
@@ -88,14 +91,13 @@ export default function MarkDownForCustom(props: { data: string }) {
           currentElement = currentElement?.previousElementSibling;
           currentElement?.classList.add("active");
         }
-
         smoothValue = e.target.scrollTop;
         // nav跟随文章滚动
         // console.log(smoothValue * multiple);
         sliderNav.scrollTop = smoothValue * multiple;
       });
-    }, 1);
-  }, []);
+    }, 100);
+  });
   return (
     <>
       <div className=" flex mx-auto relative" id="WriteContainer">

@@ -1,18 +1,36 @@
 import th from "@/assets/th.jpg";
 import classNames from "classnames";
 import "./index.less";
-import { EyeOutlined } from "@ant-design/icons";
+import { DislikeOutlined, EyeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import moment from "moment";
+import { Space } from "antd";
 
-export default function PageList({ userId = 999 }: { userId?: number }) {
+export default function PageList({
+  data,
+  userId = 999,
+}: {
+  data: {
+    qq: string;
+    pageid: string;
+    title: string;
+    coverUrl: string;
+    createTime: string;
+    likeCount: number;
+    unlikeCount: number;
+    description: string;
+    viewCount: number;
+  }[];
+  userId?: number;
+}) {
   return (
     <>
       <div className="my-4">
         <ul className="list-none p-0">
-          {[0, 1, 2, 3, 4, 5, 6].map((item, index) => (
-            <Link to={`page?pageid=32255935451701950178205`}>
+          {data?.map((item, index) => (
+            <Link to={`page?pageid=${item.pageid}`}>
               <li
-                key={item}
+                key={item.pageid}
                 className={`list-page my-8 h-64 flex justify-between bg-white p-4 ${classNames(
                   {
                     "flex-row-reverse": index % 2 !== 0,
@@ -22,7 +40,7 @@ export default function PageList({ userId = 999 }: { userId?: number }) {
                   borderBottom: "4px solid #4096ff",
                 }}
               >
-                <img src={th} className="w-2/5 rounded-2xl" />
+                <img src={item.coverUrl} className="w-2/5 rounded-2xl" />
                 <div className="h-full flex flex-col" style={{ width: "58%" }}>
                   <h2
                     style={{
@@ -38,7 +56,7 @@ export default function PageList({ userId = 999 }: { userId?: number }) {
                       margin: "0",
                     }}
                   >
-                    这是一个标题这是一个标题这是一个标题这是一个标题这是一个标题这是一个标题这是一个标题
+                    {item.title}
                   </h2>
                   <p
                     style={{
@@ -47,14 +65,31 @@ export default function PageList({ userId = 999 }: { userId?: number }) {
                       textIndent: "2rem",
                     }}
                   >
-                    阿萨德阿斯顿撒阿达啊阿萨德啊大大阿达是
+                    {item.description}
                   </p>
                   <p className="flex justify-between">
-                    <span>2023-12-12</span>
                     <span>
-                      <EyeOutlined />
-                      10
+                      {moment(Number(item.createTime)).format(
+                        "YYYY-MM-DD HH:mm"
+                      )}
                     </span>
+                    <Space>
+                      <span>
+                        <EyeOutlined />
+                        &nbsp;
+                        {item.viewCount}
+                      </span>
+                      <span>
+                        <LikeOutlined />
+                        &nbsp;
+                        {item.likeCount}
+                      </span>
+                      <span>
+                        <DislikeOutlined />
+                        &nbsp;
+                        {item.unlikeCount}
+                      </span>
+                    </Space>
                   </p>
                 </div>
               </li>

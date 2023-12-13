@@ -48,7 +48,7 @@ export const post = (url: string, data?: any) => {
   return httpInstance.post(url, data);
 };
 
-export const get = (url: string, data: any): any => {
+export const get = (url: string, data?: any): any => {
   return httpInstance.get<any>(url, { params: data });
 };
 
