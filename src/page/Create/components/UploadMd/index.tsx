@@ -36,7 +36,7 @@ export default function UploadMd() {
   const newImg = useRef<{ fileName: string; url: string; localImg?: string }[]>(
     []
   );
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const navigate = useNavigate();
 
   const uploadButton = (
@@ -125,6 +125,10 @@ export default function UploadMd() {
           const res = await fetchFile("/md", formData);
           if (res.code === 200) {
             message.success("上传成功");
+            setUserInfo({
+              ...userInfo,
+              pagesNumber: Number(userInfo.pagesNumber) + 1,
+            });
             navigate("/user");
           } else {
             message.error("上传失败");

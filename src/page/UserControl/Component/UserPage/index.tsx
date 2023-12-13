@@ -46,7 +46,7 @@ export default function UserPage() {
   return (
     <>
       <div className="mt-5">
-        {data!.length > 0 ? (
+        {data!?.length > 0 ? (
           data?.map((item) => (
             <div
               className="flex flex-row flex-nowrap my-4 pb-1 pages-list"

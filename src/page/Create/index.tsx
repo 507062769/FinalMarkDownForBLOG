@@ -1,6 +1,5 @@
 import { Tabs } from "antd";
 import UploadMd from "./components/UploadMd";
-import UploadOnline from "./components/UploadOnline";
 
 export default function Create() {
   return (
@@ -10,14 +9,7 @@ export default function Create() {
     >
       <Tabs
         className="p-4"
-        items={[
-          { label: "文档上传", key: "md", children: <UploadMd /> },
-          {
-            label: "在线上传",
-            key: "online",
-            children: <UploadOnline />,
-          },
-        ]}
+        items={[{ label: "文档上传", key: "md", children: <UploadMd /> }]}
       />
     </div>
   );

@@ -28,7 +28,7 @@ export default function PageComponent() {
           <MarkDownForCustom data={data?.content || ""} />
         </div>
         <div className=" w-2/12">
-          <AuthUserInfo userId={1} />
+          <AuthUserInfo userId={pageid.slice(0, -13)} />
         </div>
       </div>
     </>
