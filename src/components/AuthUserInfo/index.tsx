@@ -2,6 +2,7 @@ import "./index.less";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
 import moment from "moment";
+import UserImg from "../../assets/userImg.jpg";
 
 export default function AuthUserInfo({
   userId = "2458015575",
@@ -10,17 +11,19 @@ export default function AuthUserInfo({
 }) {
   const { data } = useQuery(
     ["userInfo"],
-    async () => (await get("/user/getuserinfo", { qq: userId })) as any,
+    async () => {
+      if (userId === "2458015575") return;
+      return (await get("/user/getuserinfo", { qq: userId })) as any;
+    },
     {
       retry: false,
       refetchOnWindowFocus: false,
     }
   );
-  console.log(data);
   return (
     <>
       <div className="box-border ml-5 p-6" id="AuthInfo">
-        <img src={data?.sqlRes.userImg} alt="头像" id="AuthImg" />
+        <img src={data?.sqlRes.userImg || UserImg} alt="头像" id="AuthImg" />
         {userId === "2458015575" ? (
           <>
             <p>介绍</p>

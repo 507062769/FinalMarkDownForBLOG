@@ -1,14 +1,10 @@
-import React, { useEffect } from "react";
-import ReactMarkdown from "react-markdown"; //引入
-import remarkGfm from "remark-gfm";
-import row from "rehype-raw";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import React, { useCallback, useEffect } from "react";
 import { animateScroll } from "react-scroll";
-// 引入md样式文件，仅在当前页面生效
-import "@/styles/onedark.css";
+
 // import "@/styles/newsprint.css";
 import "./index.less";
+import MdPreview from "@/components/MdPreview";
+import _ from "lodash";
 
 export default function MarkDownForCustom(props: { data: string }) {
   useEffect(() => {
@@ -47,6 +43,18 @@ export default function MarkDownForCustom(props: { data: string }) {
       let isSmoothBottomDirection = true; //  是否为下滑，默认为下滑
 
       const snows = document.querySelector(".container-snow")!;
+      const WriteContainer = document.querySelector("#WriteContainer");
+
+      const multiple =
+        Number(
+          window.getComputedStyle(sliderNav as any)["height"].split("px")[0]
+        ) /
+        Number(
+          window
+            .getComputedStyle(WriteContainer as any)
+            ["height"].split("px")[0]
+        );
+
       snows.addEventListener("scroll", (e: any) => {
         // 判断滑动的方向
         if (!(e.target.scrollTop > smoothValue)) {
@@ -75,16 +83,21 @@ export default function MarkDownForCustom(props: { data: string }) {
           currentElement = currentElement?.previousElementSibling;
           currentElement?.classList.add("active");
         }
+
         smoothValue = e.target.scrollTop;
+        // nav跟随文章滚动
+        // console.log(smoothValue * multiple);
+        sliderNav.scrollTop = smoothValue * multiple;
       });
     }, 500);
   }, []);
   return (
     <>
-      <div className=" flex mx-auto">
+      <div className=" flex mx-auto relative" id="WriteContainer">
         <div
           id="SliderNav"
-          className=" w-4/12 box-border p-4 h-full"
+          className=" w-4/12 box-border p-4"
+          style={{ height: "calc(100vh - 100px)" }}
           onClick={(e: any) => {
             if (!e.target?.dataset?.pagetop) return;
             animateScroll.scrollTo(
@@ -101,7 +114,7 @@ export default function MarkDownForCustom(props: { data: string }) {
           style={{ backgroundColor: "#f3f2ee" }}
           id="write"
         >
-          <ReactMarkdown
+          {/* <ReactMarkdown
             children={props?.data}
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[row]}
@@ -123,14 +136,9 @@ export default function MarkDownForCustom(props: { data: string }) {
                   </code>
                 );
               },
-              a(props) {
-                if (props?.href?.includes("http://localhost:9876/imgsForMd")) {
-                  return <img src={props?.href} />;
-                }
-                return <div>zheshia</div>;
-              },
             }}
-          />
+          /> */}
+          <MdPreview data={props?.data} />
         </div>
       </div>
     </>

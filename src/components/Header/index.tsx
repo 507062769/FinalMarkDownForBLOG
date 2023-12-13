@@ -7,12 +7,14 @@ export default function Header() {
   return (
     <header
       id="MyHeader"
-      className=" h-16 mb-7 z-50 sticky top-0"
+      className="mb-7 z-50 sticky top-0"
       style={{
+        height: "64px",
         border: "1px solid white",
         boxShadow: "0 0 20px 4px rgba(0, 0, 0, 0.3)",
         background: "transparent",
         backdropFilter: "blur(10px)",
+        transition: "all .3s liner",
       }}
     >
       <div className="flex w-11/12 justify-between mx-auto">

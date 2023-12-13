@@ -20,10 +20,7 @@ export default function PageComponent() {
 
   return (
     <>
-      <div
-        className=" flex w-11/12 mx-auto"
-        style={{ height: "calc(100vh - 154px)" }}
-      >
+      <div className=" flex w-11/12 mx-auto">
         <div className=" w-10/12">
           <MarkDownForCustom data={data?.content || ""} />
         </div>
