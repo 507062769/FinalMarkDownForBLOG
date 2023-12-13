@@ -7,6 +7,8 @@ import PageList from "@/components/PageList";
 import Swiper from "./Component/Swiper";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
+import { FloatButton } from "antd";
+import { VerticalAlignTopOutlined } from "@ant-design/icons";
 
 export default function Home() {
   const { data } = useQuery(
@@ -74,6 +76,13 @@ export default function Home() {
         <div className="w-2/12">
           <AuthUserInfo />
         </div>
+        <FloatButton.BackTop
+          icon={<VerticalAlignTopOutlined />}
+          visibilityHeight={400}
+          target={() => document.querySelector(".container-snow") as any}
+          className="icon-button"
+          tooltip={<span>回到顶部</span>}
+        />
       </div>
     </>
   );

@@ -2,7 +2,6 @@ import Header from "@/components/Header";
 import { Outlet } from "react-router-dom";
 import "./index.less";
 import Footer from "@/components/Footer";
-import ButtonList from "../PageComponent/component/ButtonList";
 const snowsColor = [
   "#FF4500", // 橙红色
   "#FF8C00", // 暗橙色
@@ -86,7 +85,6 @@ export default function Index() {
         <Outlet />
         <Footer />
       </div>
-      <ButtonList />
     </>
   );
 }

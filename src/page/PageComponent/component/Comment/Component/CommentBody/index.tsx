@@ -45,18 +45,29 @@ export default function CommentBody() {
           <>
             {/* 主评论 */}
             <div className="my-6">
-              <Space className="w-full" size="large">
+              <div className="w-full flex flex-row">
                 <img
                   src={imgUser}
                   alt="头像"
-                  className="w-8 h-8 rounded"
+                  className="w-8 h-8 rounded flex-shrink-0"
                   style={{ verticalAlign: "text-bottom" }}
                 />
-                <a href="javascript:0;" className=" text-lg">
-                  {item?.userName}
-                </a>
-                <span>{item?.createTime}</span>
-              </Space>
+                <div className="flex flex-row justify-between ml-4 flex-grow overflow-hidden">
+                  <p
+                    className=" text-lg my-0 w-4/5 overflow-hidden"
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "clip",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {item?.userName}
+                  </p>
+                  <span className="ml-auto flex-shrink-0">
+                    {item?.createTime}
+                  </span>
+                </div>
+              </div>
               <p className=" box-border pl-14">{item?.content}</p>
             </div>
             {/* 子评论 */}

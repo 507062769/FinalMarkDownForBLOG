@@ -5,8 +5,12 @@ import { animateScroll } from "react-scroll";
 import "./index.less";
 import MdPreview from "@/components/MdPreview";
 import _ from "lodash";
+import ButtonList from "../ButtonList";
 
-export default function MarkDownForCustom(props: { data: string }) {
+export default function MarkDownForCustom(props: {
+  data: string;
+  pageid: string;
+}) {
   useEffect(() => {
     setTimeout(() => {
       const WriteContainer = document.querySelector("#WriteContainer") as any;
@@ -147,6 +151,7 @@ export default function MarkDownForCustom(props: { data: string }) {
           /> */}
           <MdPreview data={props?.data} />
         </div>
+        <ButtonList pageid={props.pageid} />
       </div>
     </>
   );

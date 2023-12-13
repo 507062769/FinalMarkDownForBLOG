@@ -16,7 +16,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function UserInfo() {
   const { tabKey, setTabKey, open, setOpen } = useContext(TabContext);
-  const { isLogin, setToken, setIsLogin, userInfo } = useContext(UserContext);
+  const { isLogin, setToken, setIsLogin, userInfo, setUserInfo } =
+    useContext(UserContext);
   const token = useTheme();
   const navigate = useNavigate();
   const useStyle = createStyles(({ token }) => ({
@@ -90,6 +91,7 @@ export default function UserInfo() {
                   setToken("");
                   setIsLogin(false);
                   localStorage.removeItem("BLOG_TOKEN");
+                  setUserInfo({} as any);
                 }}
               >
                 <StopOutlined className="mr-2" />

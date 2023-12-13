@@ -22,7 +22,7 @@ export default function PageComponent() {
     <>
       <div className=" flex w-11/12 mx-auto">
         <div className=" w-10/12">
-          <MarkDownForCustom data={data?.content || ""} />
+          <MarkDownForCustom data={data?.content || ""} pageid={pageid} />
         </div>
         <div className=" w-2/12">
           <AuthUserInfo userId={pageid.slice(0, -13)} />
