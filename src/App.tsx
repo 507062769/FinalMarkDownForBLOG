@@ -13,6 +13,7 @@ import { UserContext } from "./Context/UserContextProvide";
 import moment from "moment";
 import _ from "lodash";
 import AuthGuard from "./components/AuthGuard";
+import OtherPersonalCenter from "./page/OtherPersonalCenter";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/" element={<Index />}>
           <Route index element={<Home />} />
           <Route path="page" element={<PageComponent />} />
+          <Route path="other" element={<OtherPersonalCenter />} />
           <Route
             path="message"
             element={
