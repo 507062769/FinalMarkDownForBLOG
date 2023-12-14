@@ -44,7 +44,7 @@ export type Page = {
 
 export default function UserPage() {
   const navigate = useNavigate();
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, setUserInfo } = useContext(UserContext);
   const { mutateAsync } = fetchDeletePage();
   const { mutateAsync: updatePage } = fetchUpdatePage();
   const [cover, setCover] = useState<any>();
@@ -155,6 +155,10 @@ export default function UserPage() {
                             qq: userInfo.qq,
                           });
                           if (res.isShowMessage) {
+                            setUserInfo({
+                              ...userInfo,
+                              pagesNumber: userInfo.pagesNumber - 1,
+                            });
                             refetch();
                           }
                         }}

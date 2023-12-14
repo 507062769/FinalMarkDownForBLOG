@@ -27,18 +27,19 @@ export default function MarkDownForCustom(props: {
           index === 0 ? "active" : ""
         }" data-pageTop=${item?.offsetTop}>${item.innerHTML}</p>`;
       });
+
       if (headerTitle.length === 0) {
         // htmlStr = `<p class="H1-stylesheet active" data-pageTop="0">暂无标题</p>`;
-        sliderNav.style.width = "0";
+        sliderNav.style.width = "0%";
         sliderNav.style.opacity = "0";
         // WriteContainer.style.justifyContent = "center";
         write.style.width = "80%";
+      } else {
+        sliderNav.style.width = "33.33333%";
+        sliderNav.style.opacity = "1";
+        write.style.width = "67.6666%";
       }
-      // 由于会执行多次，由于一开始的时候，headerTitle.length === 0，所以会走if，设置了宽度和透明度，但是在最后一次，不会走if，但是此时的width和opacity还是0，所以需要设置回来
-      sliderNav.style.width = "33.33333%";
-      sliderNav.style.opacity = "1";
-      write.style.width = "67.666666%";
-
+      console.log(sliderNav.style.width);
       if (sliderNav) {
         sliderNav.innerHTML = htmlStr;
       }
@@ -113,7 +114,7 @@ export default function MarkDownForCustom(props: {
       <div className=" flex mx-auto relative" id="WriteContainer">
         <div
           id="SliderNav"
-          className=" w-4/12 box-border p-4"
+          className=" box-border p-4 w-1/3"
           style={{ height: "calc(100vh - 154px)" }}
           onClick={(e: any) => {
             if (!e.target?.dataset?.pagetop) return;
@@ -127,34 +128,10 @@ export default function MarkDownForCustom(props: {
           }}
         ></div>
         <div
-          className="p-7 w-8/12"
+          className="p-7 w-2/3"
           style={{ backgroundColor: "#f3f2ee" }}
           id="write"
         >
-          {/* <ReactMarkdown
-            children={props?.data}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[row]}
-            components={{
-              code(props) {
-                const { children, className, node, ...rest } = props;
-                const match = /language-(\w+)/.exec(className || "");
-                return match ? (
-                  <SyntaxHighlighter
-                    {...rest}
-                    PreTag="div"
-                    children={String(children).replace(/\n$/, "")}
-                    language={match[1]}
-                    style={oneDark}
-                  />
-                ) : (
-                  <code {...rest} className={className}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          /> */}
           <MdPreview data={props?.data} />
         </div>
         <ButtonList pageid={props.pageid} />

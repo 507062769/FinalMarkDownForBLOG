@@ -72,11 +72,11 @@ export default function UserInfo() {
     <>
       <div
         className=" w-10/12  mx-auto mt-5 h-full"
-        style={{ backgroundColor: "#f3f2ee" }}
+        // style={{ backgroundColor: "#f3f2ee" }}
       >
         <header
-          className="flex flex-row justify-start h-44"
-          style={{ borderBottom: "10px solid white" }}
+          className="flex flex-row justify-start h-44 bg-white"
+          // style={{ borderBottom: "10px solid white" }}
         >
           <div className="w-52 box-border pt-4">
             <Upload

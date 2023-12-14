@@ -121,11 +121,6 @@ export default function UserInfo() {
           </Badge>
         </Link>
       </p>
-      <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
-        <Link to={"search"}>
-          <span className="text-base">随笔</span>
-        </Link>
-      </p>
       <Button
         type="primary"
         icon={<PlusCircleOutlined />}
