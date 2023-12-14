@@ -4,7 +4,7 @@ import UserInfo from "./component/UserInfo";
 import "./index.less";
 import { SearchOutlined } from "@ant-design/icons";
 import { Input, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { Search } = Input;
@@ -30,11 +30,11 @@ export default function Header() {
       }}
     >
       <div className="flex w-11/12 justify-between mx-auto">
-        <h1 className="w-1/5 m-0 ">
-          <a href="http://127.0.0.1:5173" id="Logo">
-            首页
-          </a>
-        </h1>
+        <Link to={"/"}>
+          <h1 className="w-1/5 m-0 ">
+            <a id="Logo">首页</a>
+          </h1>
+        </Link>
         <div className="w-2/5 pt-3">
           <Search
             placeholder="输入搜索内容"

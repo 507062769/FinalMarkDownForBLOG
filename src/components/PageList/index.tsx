@@ -27,10 +27,10 @@ export default function PageList({
       <div className="my-4">
         <ul className="list-none p-0">
           {data?.map((item, index) => (
-            <Link to={`page?pageid=${item.pageid}`}>
+            <Link to={`/page?pageid=${item.pageid}`}>
               <li
                 key={item.pageid}
-                className={`list-page my-8 h-64 flex justify-between bg-white p-4 ${classNames(
+                className={`list-page my-8 h-64 flex justify-between bg-white p-4 rounded-xl ${classNames(
                   {
                     "flex-row-reverse": index % 2 !== 0,
                   }

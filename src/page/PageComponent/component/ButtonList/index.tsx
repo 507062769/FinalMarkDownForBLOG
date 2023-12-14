@@ -58,7 +58,7 @@ export default function ButtonList(props: { pageid: string }) {
           icon={<SmileOutlined />}
           className="icon-button"
           tooltip={<span>顶</span>}
-          badge={{ count: data?.data?.linkCount, color: "blue" }}
+          badge={{ count: data?.data?.likeCount, color: "blue" }}
           onClick={() => handleOperator("top")}
         />
         <FloatButton
