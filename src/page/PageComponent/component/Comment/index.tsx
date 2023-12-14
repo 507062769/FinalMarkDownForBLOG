@@ -67,10 +67,10 @@ export default function Comment({
           type="primary"
           loading={isLoading}
           onClick={async () => {
-            // if (!isLogin) {
-            //   message.warning("请先登录");
-            //   return;
-            // }
+            if (!isLogin) {
+              message.warning("请先登录");
+              return;
+            }
             if (!commentText) {
               message.warning("评论不能为空");
               return;

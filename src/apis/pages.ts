@@ -29,3 +29,9 @@ export function fetchAddComment() {
     { createTime: number; content: string; pageid: string; qq: string }
   >((data) => get("/pages/comment", data));
 }
+
+export function fetchOperator() {
+  return useMutation<any, ClientError, { pageid: string; type: string }>(
+    (data) => get("/page/operator", data)
+  );
+}
