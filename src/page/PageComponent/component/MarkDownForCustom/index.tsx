@@ -15,10 +15,10 @@ export default function MarkDownForCustom(props: {
     setTimeout(() => {
       const WriteContainer = document.querySelector("#WriteContainer") as any;
       const sliderNav = document.querySelector("#SliderNav") as any;
+      const write = document.querySelector("#write") as any;
       const headerTitle = document.querySelectorAll<
         Element & { offsetTop: number }
       >("#write h1,h2,h3,h4,h5,h6");
-      console.log(headerTitle.length);
       let htmlStr = "";
       headerTitle.forEach((item, index) => {
         // console.log(item.tagName, item.id);
@@ -29,8 +29,6 @@ export default function MarkDownForCustom(props: {
       });
       if (headerTitle.length === 0) {
         // htmlStr = `<p class="H1-stylesheet active" data-pageTop="0">暂无标题</p>`;
-        console.log("走这了");
-
         sliderNav.style.width = "0";
         sliderNav.style.opacity = "0";
         // WriteContainer.style.justifyContent = "center";
@@ -39,10 +37,9 @@ export default function MarkDownForCustom(props: {
       // 由于会执行多次，由于一开始的时候，headerTitle.length === 0，所以会走if，设置了宽度和透明度，但是在最后一次，不会走if，但是此时的width和opacity还是0，所以需要设置回来
       sliderNav.style.width = "33.33333%";
       sliderNav.style.opacity = "1";
+      write.style.width = "67.666666%";
 
       if (sliderNav) {
-        console.log("设置页面");
-
         sliderNav.innerHTML = htmlStr;
       }
       document.querySelectorAll("p[data-pageTop]").forEach((item) => {
@@ -59,15 +56,22 @@ export default function MarkDownForCustom(props: {
       let smoothValue = 0; //  记录当前page的位置
       let isSmoothBottomDirection = true; //  是否为下滑，默认为下滑
       const snows = document.querySelector(".container-snow")!;
-      const multiple =
-        Number(
-          window.getComputedStyle(sliderNav as any)["height"].split("px")[0]
-        ) /
-        Number(
-          window
-            .getComputedStyle(WriteContainer as any)
-            ["height"].split("px")[0]
-        );
+      snows.scrollTop = 0;
+      // const multiple =
+      //   Number(
+      //     window.getComputedStyle(sliderNav as any)["height"].split("px")[0]
+      //   ) /
+      //   Number(
+      //     window
+      //       .getComputedStyle(WriteContainer as any)
+      //       ["height"].split("px")[0]
+      //   );
+      // console.log(
+      //   window.getComputedStyle(sliderNav as any)["height"].split("px")[0]
+      // );
+
+      // console.log(multiple);
+
       snows.addEventListener("scroll", (e: any) => {
         // 判断滑动的方向
         if (!(e.target.scrollTop > smoothValue)) {
@@ -98,7 +102,9 @@ export default function MarkDownForCustom(props: {
         smoothValue = e.target.scrollTop;
         // nav跟随文章滚动
         // console.log(smoothValue * multiple);
-        sliderNav.scrollTop = smoothValue * multiple;
+        const active = document.querySelector(".active") as any;
+        // console.log(active.offsetTop);
+        sliderNav.scrollTop = active.offsetTop;
       });
     }, 100);
   });

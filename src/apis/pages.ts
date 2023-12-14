@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { ClientError, post } from ".";
+import { ClientError, get, post } from ".";
 
 export function fetchDeletePage() {
   return useMutation<any, ClientError, { id: string; qq: string }>((data) =>
@@ -20,4 +20,12 @@ export function fetchUpdatePage() {
       qq: string;
     }
   >((data) => post("/pages/update", data));
+}
+
+export function fetchAddComment() {
+  return useMutation<
+    any,
+    ClientError,
+    { createTime: number; content: string; pageid: string; qq: string }
+  >((data) => get("/pages/comment", data));
 }

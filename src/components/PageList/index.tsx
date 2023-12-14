@@ -1,4 +1,3 @@
-import th from "@/assets/th.jpg";
 import classNames from "classnames";
 import "./index.less";
 import { DislikeOutlined, EyeOutlined, LikeOutlined } from "@ant-design/icons";

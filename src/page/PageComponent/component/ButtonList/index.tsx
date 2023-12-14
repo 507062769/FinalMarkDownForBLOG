@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import {
   CommentOutlined,
   FrownOutlined,
@@ -15,12 +15,9 @@ import { UserContext } from "@/Context/UserContextProvide";
 export default function ButtonList(props: { pageid: string }) {
   const { isLogin } = useContext(UserContext);
   const [isShowComment, setIsShowComment] = useState<boolean>(false);
-  const { data } = useQuery(
-    ["comment"],
-    async () => get("/page/data", { pageid: props.pageid }),
-    {
-      retry: false,
-    }
+  const { data, refetch } = useQuery(
+    ["commentdata"],
+    async () => await get("/page/data", { pageid: props.pageid })
   );
   return (
     <>
@@ -33,7 +30,7 @@ export default function ButtonList(props: { pageid: string }) {
           icon={<CommentOutlined />}
           className="icon-button"
           tooltip={<span>评论</span>}
-          badge={{ count: 5, color: "#282c34" }}
+          badge={{ count: data?.data?.commnetCount, color: "#282c34" }}
           onClick={() => {
             if (!isLogin) {
               message.warning("当前未登录");
@@ -45,13 +42,13 @@ export default function ButtonList(props: { pageid: string }) {
           icon={<SmileOutlined />}
           className="icon-button"
           tooltip={<span>顶</span>}
-          badge={{ count: data?.data.likeCount, color: "blue" }}
+          badge={{ count: data?.data?.linkCount, color: "blue" }}
         />
         <FloatButton
           icon={<FrownOutlined />}
           className="icon-button"
           tooltip={<span>踩</span>}
-          badge={{ count: data?.data.unlikeCount, color: "red" }}
+          badge={{ count: data?.data?.unlikeCount, color: "red" }}
         />
         <FloatButton.BackTop
           icon={<VerticalAlignTopOutlined />}
@@ -64,6 +61,7 @@ export default function ButtonList(props: { pageid: string }) {
       <Comment
         isShowComment={isShowComment}
         setIsShowComment={setIsShowComment}
+        refetch={refetch}
       />
     </>
   );

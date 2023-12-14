@@ -1,9 +1,21 @@
 import { TabContextProvide } from "@/Context/TabContextProvide";
-import Search from "./component/Search";
+// import Search from "./component/Search";
 import UserInfo from "./component/UserInfo";
 import "./index.less";
+import { SearchOutlined } from "@ant-design/icons";
+import { Input, message } from "antd";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
+  const { Search } = Input;
+  const navigate = useNavigate();
+  const onSearch = (value: string) => {
+    if (!value) {
+      message.warning("当前搜索框为空");
+      return;
+    }
+    navigate(`/search?key=${value}`);
+  };
   return (
     <header
       id="MyHeader"
@@ -24,7 +36,14 @@ export default function Header() {
           </a>
         </h1>
         <div className="w-2/5 pt-3">
-          <Search />
+          <Search
+            placeholder="输入搜索内容"
+            allowClear
+            enterButton={"搜索"}
+            size="large"
+            onSearch={onSearch}
+            suffix={<SearchOutlined />}
+          />
         </div>
         <div className="w-3/12">
           <TabContextProvide>
