@@ -1,8 +1,7 @@
 import { get } from "@/apis";
-import PageList from "@/components/PageList";
-import { Empty, Tabs } from "antd";
+import { Tabs } from "antd";
 import { useQuery } from "react-query";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import SearchPage from "./components/SearchPage";
 import SearchUser from "./components/SearchUser";
 

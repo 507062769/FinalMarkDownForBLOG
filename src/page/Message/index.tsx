@@ -1,16 +1,14 @@
-import { Avatar, Badge, Button, Input, Space, Tooltip, message } from "antd";
-import userImg from "@/assets/userImg.jpg";
-import userImg2 from "@/assets/userImg2.jpg";
+import { Avatar, Badge, Tooltip } from "antd";
 import moment from "moment";
 import classNames from "classnames";
-import { useUserMessage } from "./useUserMessage";
-import TextArea from "antd/es/input/TextArea";
 import { useEffect, useRef } from "react";
+import { observer } from "mobx-react-lite";
+import store from "@/stores/index";
+import TextArea from "antd/es/input/TextArea";
 
-export default function Message() {
-  const { currentUserId, setCurrentUserId, userMessageList } = useUserMessage();
+function Message() {
   const customMessage = useRef<any>(null);
-  console.log("two");
+  const { message } = store;
   const startScrollBottom = () => {
     setTimeout(() => {
       if (customMessage.current) {
@@ -20,23 +18,25 @@ export default function Message() {
   };
   useEffect(() => {
     startScrollBottom();
-  }, [currentUserId]);
+  }, [message.currentUserId]);
   return (
     <div
       className="w-11/12 mx-auto  h-96 flex flex-row"
       style={{ height: "calc(100vh - 154px)" }}
     >
       <ul className="w-3/12 box-border px-0 m-0 overflow-x-auto user-list bg-white">
-        {userMessageList.map((item) => (
+        {message.contactPerson.map((item) => (
           <li
             className={classNames(
               "list-none box-border px-4 flex flex-row h-18 py-4 ",
-              { "current-user-id": currentUserId === item.userId }
+              { "current-user-id": message.currentUserId === item.qq }
             )}
             style={{ borderBottom: "1px solid #ccc" }}
-            onClick={() => setCurrentUserId(item.userId)}
+            onClick={() => {
+              message.setCurrentUserId(item.qq);
+            }}
           >
-            <Avatar src={userImg} size={"large"} />
+            <Avatar src={item.userImg} size={"large"} />
             <p
               className="m-0 ml-4 text-base w-1/2"
               style={{
@@ -56,7 +56,7 @@ export default function Message() {
                 className="m-0 ml-2 text-sm text-left"
                 style={{ height: "40px", lineHeight: "40px" }}
               >
-                {moment(item.lastMessageTime).format("YYYY/MM/DD")}
+                {moment(item.lastDate).format("YYYY/MM/DD")}
               </p>
             </Badge>
           </li>
@@ -79,8 +79,9 @@ export default function Message() {
           className="pl-8 m-0 text-center flex-shrink-0"
         >
           {
-            userMessageList.find((item) => item.userId === currentUserId)
-              ?.userName
+            message.contactPerson.find(
+              (item) => item.qq === message.currentUserId
+            )?.userName
           }
         </h1>
         <div
@@ -182,3 +183,5 @@ export default function Message() {
     </div>
   );
 }
+
+export default observer(Message);

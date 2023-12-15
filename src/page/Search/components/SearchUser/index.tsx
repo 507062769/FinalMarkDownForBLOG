@@ -1,8 +1,11 @@
 import { CommentOutlined } from "@ant-design/icons";
 import { Button, Empty } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import store from "@/stores";
 
-export default function SearchUser(props: { data: any }) {
+function SearchUser(props: { data: any }) {
+  const { message } = store;
   const navigate = useNavigate();
   return (
     <>
@@ -29,6 +32,14 @@ export default function SearchUser(props: { data: any }) {
               style={{ right: "20px", transform: "translateY(-50%)" }}
               onClick={(e) => {
                 e.stopPropagation();
+                message.addConversation({
+                  qq: item.qq,
+                  userName: item.userName,
+                  lastDate: +new Date(),
+                  unreadCount: 0,
+                  userImg: item.userImg,
+                });
+                navigate("/message");
               }}
             >
               <CommentOutlined />
@@ -48,3 +59,5 @@ export default function SearchUser(props: { data: any }) {
     </>
   );
 }
+
+export default observer(SearchUser);

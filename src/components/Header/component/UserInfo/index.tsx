@@ -4,7 +4,7 @@ import {
   StopOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Badge, Button, Tabs, message } from "antd";
+import { Avatar, Badge, Button, Tabs, message as messageBox } from "antd";
 import Modal from "antd/es/modal/Modal";
 import Login from "./component/Login";
 import Register from "./component/Register";
@@ -13,8 +13,11 @@ import { createStyles, useTheme } from "antd-style";
 import { TabContext } from "@/Context/TabContextProvide";
 import { UserContext } from "@/Context/UserContextProvide";
 import { useNavigate } from "react-router-dom";
+import { observer } from "mobx-react-lite";
+import store from "@/stores";
 
-export default function UserInfo() {
+function UserInfo() {
+  const { message } = store;
   const { tabKey, setTabKey, open, setOpen } = useContext(TabContext);
   const { isLogin, setToken, setIsLogin, userInfo, setUserInfo } =
     useContext(UserContext);
@@ -116,7 +119,7 @@ export default function UserInfo() {
       </p>
       <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
         <Link to={"message"}>
-          <Badge count={1} color="#1677ff" size="small">
+          <Badge count={message.unreadAllCount} color="#1677ff" size="small">
             <span className="text-base">消息</span>
           </Badge>
         </Link>
@@ -130,7 +133,7 @@ export default function UserInfo() {
           if (isLogin && location.pathname !== "/create") {
             navigate("/create");
           } else if (!isLogin) {
-            message.warning("请先登录");
+            messageBox.warning("请先登录");
           }
         }}
       >
@@ -167,3 +170,5 @@ export default function UserInfo() {
     </section>
   );
 }
+
+export default observer(UserInfo);
