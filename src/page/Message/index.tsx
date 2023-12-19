@@ -1,17 +1,22 @@
 import { Avatar, Badge, Tooltip } from "antd";
 import moment from "moment";
 import classNames from "classnames";
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import store from "@/stores/index";
 import TextArea from "antd/es/input/TextArea";
+import { UserContext } from "@/Context/UserContextProvide";
+import { message as messageBox } from "antd";
 
 function Message() {
+  const [msg, setMsg] = useState<string>();
   const customMessage = useRef<any>(null);
+  const { userInfo } = useContext(UserContext);
   const { message } = store;
   const startScrollBottom = () => {
     setTimeout(() => {
       if (customMessage.current) {
+        // 可以优化，变成缓动
         customMessage.current.scrollTop = customMessage.current.scrollHeight;
       }
     }, 10);
@@ -89,93 +94,51 @@ function Message() {
           id="CustomMessage"
           ref={customMessage}
         >
-          <div className="flex flex-row my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#b8b8b9", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 ml-2 w-10/12"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干
-            </p>
-          </div>
-          <div className="flex flex-row-reverse my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#95ec69", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 mr-2"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干
-            </p>
-          </div>
-          <div className="flex flex-row-reverse my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#95ec69", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 mr-2"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干
-            </p>
-          </div>
-          <div className="flex flex-row-reverse my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#95ec69", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 mr-2"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干
-            </p>
-          </div>
-          <div className="flex flex-row-reverse my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#95ec69", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 mr-2"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干
-            </p>
-          </div>
-          <div className="flex flex-row-reverse my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#95ec69", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 mr-2"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干
-            </p>
-          </div>
-          <div className="flex flex-row-reverse my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#95ec69", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 mr-2"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干
-            </p>
-          </div>
-          <div className="flex flex-row-reverse my-4">
-            <Avatar src={userImg2} className="w-10 h-10 flex-shrink-0" />
-            <p
-              style={{ background: "#95ec69", lineHeight: "40px" }}
-              className="m-0 rounded-3xl px-4 mr-2"
-            >
-              你在干嘛你在干嘛你在干你在干嘛你在干嘛你在干你在干
-            </p>
-          </div>
+          {message.getCurrentUserMessageList()?.map((item) => {
+            const isMe = item.from === userInfo.qq;
+            return (
+              <div
+                className={`flex my-4 ${
+                  isMe ? "flex-row-reverse" : "flex-row"
+                }`}
+              >
+                <Avatar
+                  src={message.getCurrentUserInfo()?.userImg}
+                  className="w-10 h-10 flex-shrink-0"
+                />
+                <p
+                  style={{
+                    background: `${isMe ? "#95ec69" : "#b8b8b9"}`,
+                    lineHeight: "40px",
+                  }}
+                  className={`m-0 rounded-3xl px-4 ${isMe ? "mr-2" : "ml-2"}`}
+                >
+                  {item.messageContent}
+                </p>
+              </div>
+            );
+          })}
         </div>
         <div className="relative" id="TextArea">
+          {/* tips: 可改为Input框 */}
           <TextArea
+            value={msg}
             className="text-lg"
             autoSize={{ minRows: 5, maxRows: 5 }}
             maxLength={100}
             allowClear
             placeholder="按下Enter发送消息"
+            onChange={(e) => {
+              console.log(e.target.value);
+
+              if (e.target.value) {
+                setMsg(e.target.value);
+              }
+            }}
             style={{
               border: "none",
               borderTop: "1px solid #ccc",
               borderRadius: "0",
-            }}
-            onPressEnter={() => {
-              message.warning("发送");
             }}
           />
         </div>

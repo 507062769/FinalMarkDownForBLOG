@@ -1,5 +1,4 @@
 import { makeAutoObservable } from "mobx";
-import system from "@/assets/unlogin.jpg";
 
 type ContactType = {
   qq: string;
@@ -25,7 +24,7 @@ export class Message {
       userName: "系统",
       lastDate: 1009509685000,
       unreadCount: 10,
-      userImg: system,
+      userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
     },
   ];
 
@@ -46,6 +45,8 @@ export class Message {
       ],
     },
   ];
+
+  // 优化：设置一个当前用户属性，存储当前选中用户信息
 
   currentUserId = "2458015575";
 
@@ -78,5 +79,24 @@ export class Message {
         item.unreadCount = 0;
       }
     });
+  }
+
+  getCurrentUserMessageList() {
+    return this.messageList.find((item) => item.qq === this.currentUserId)
+      ?.messageList;
+  }
+
+  getCurrentUserInfo() {
+    return this.contactPerson.find((item) => item.qq === this.currentUserId);
+  }
+
+  addNewMessage(msg: string, from: string) {
+    this.messageList
+      .find((item) => item.qq === this.currentUserId)
+      ?.messageList.push({
+        from,
+        messageContent: msg,
+        lastDate: new Date().getTime().toString(),
+      });
   }
 }
