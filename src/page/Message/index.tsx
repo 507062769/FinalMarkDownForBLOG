@@ -1,12 +1,10 @@
-import { Avatar, Badge, Tooltip } from "antd";
+import { Avatar, Badge, Input, Tooltip } from "antd";
 import moment from "moment";
 import classNames from "classnames";
 import { useContext, useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import store from "@/stores/index";
-import TextArea from "antd/es/input/TextArea";
 import { UserContext } from "@/Context/UserContextProvide";
-import { message as messageBox } from "antd";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -23,7 +21,7 @@ function Message() {
   };
   useEffect(() => {
     startScrollBottom();
-  }, [message.currentUserId]);
+  }, [message.currentChatUser]);
   return (
     <div
       className="w-11/12 mx-auto  h-96 flex flex-row"
@@ -34,7 +32,7 @@ function Message() {
           <li
             className={classNames(
               "list-none box-border px-4 flex flex-row h-18 py-4 ",
-              { "current-user-id": message.currentUserId === item.qq }
+              { "current-user-id": message.currentChatUser.qq === item.qq }
             )}
             style={{ borderBottom: "1px solid #ccc" }}
             onClick={() => {
@@ -68,7 +66,7 @@ function Message() {
         ))}
       </ul>
       <div
-        className="w-9/12 bg-white box-border flex flex-col pb-8"
+        className="w-9/12 bg-white box-border flex flex-col"
         style={{ borderLeft: "1px solid #ccc" }}
         id="CustomTextarea"
       >
@@ -83,11 +81,7 @@ function Message() {
           }}
           className="pl-8 m-0 text-center flex-shrink-0"
         >
-          {
-            message.contactPerson.find(
-              (item) => item.qq === message.currentUserId
-            )?.userName
-          }
+          {message.currentChatUser.userName}
         </h1>
         <div
           className="flex-grow p-4 overflow-y-auto"
@@ -119,29 +113,29 @@ function Message() {
             );
           })}
         </div>
-        <div className="relative" id="TextArea">
-          {/* tips: 可改为Input框 */}
-          <TextArea
-            value={msg}
-            className="text-lg"
-            autoSize={{ minRows: 5, maxRows: 5 }}
-            maxLength={100}
-            allowClear
-            placeholder="按下Enter发送消息"
-            onChange={(e) => {
-              console.log(e.target.value);
-
-              if (e.target.value) {
-                setMsg(e.target.value);
-              }
-            }}
-            style={{
-              border: "none",
-              borderTop: "1px solid #ccc",
-              borderRadius: "0",
-            }}
-          />
-        </div>
+        {message.currentChatUser.qq !== "系统" && (
+          <div className="h-1/5" id="TextArea">
+            <Input
+              value={msg}
+              className="text-lg h-full"
+              maxLength={100}
+              allowClear
+              placeholder="按下Enter发送消息"
+              onChange={(e) => setMsg(e.target.value)}
+              onPressEnter={(e: any) => {
+                message.addNewMessage(e.target.value, userInfo.qq);
+                setMsg("");
+                startScrollBottom();
+              }}
+              style={{
+                border: "none",
+                borderTop: "1px solid #ccc",
+                borderRadius: "0",
+              }}
+              disabled={message.currentChatUser.qq === "系统"}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

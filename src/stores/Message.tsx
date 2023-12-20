@@ -20,10 +20,17 @@ export class Message {
   // 联系人
   contactPerson: ContactType[] = [
     {
-      qq: "2458015575",
+      qq: "系统",
       userName: "系统",
       lastDate: 1009509685000,
-      unreadCount: 10,
+      unreadCount: 0,
+      userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
+    },
+    {
+      qq: "2458015575",
+      userName: "张三",
+      lastDate: 1009509685000,
+      unreadCount: 0,
       userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
     },
   ];
@@ -45,10 +52,13 @@ export class Message {
       ],
     },
   ];
-
-  // 优化：设置一个当前用户属性，存储当前选中用户信息
-
-  currentUserId = "2458015575";
+  currentChatUser: ContactType = {
+    qq: "2458015575",
+    userName: "系统",
+    lastDate: 1009509685000,
+    unreadCount: 0,
+    userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
+  };
 
   unreadAllCount = this.contactPerson.reduce(
     (pre, cur) => pre + cur.unreadCount,
@@ -72,7 +82,10 @@ export class Message {
   }
 
   setCurrentUserId(userId: string) {
-    this.currentUserId = userId;
+    // this.currentUserId = userId;
+    this.currentChatUser = this.contactPerson.find(
+      (item) => item.qq === userId
+    )!;
     this.contactPerson.forEach((item) => {
       if (item.qq === userId) {
         this.unreadAllCount -= item.unreadCount;
@@ -82,17 +95,19 @@ export class Message {
   }
 
   getCurrentUserMessageList() {
-    return this.messageList.find((item) => item.qq === this.currentUserId)
+    return this.messageList.find((item) => item.qq === this.currentChatUser.qq)
       ?.messageList;
   }
 
   getCurrentUserInfo() {
-    return this.contactPerson.find((item) => item.qq === this.currentUserId);
+    return this.contactPerson.find(
+      (item) => item.qq === this.currentChatUser.qq
+    );
   }
 
   addNewMessage(msg: string, from: string) {
     this.messageList
-      .find((item) => item.qq === this.currentUserId)
+      .find((item) => item.qq === this.currentChatUser.qq)
       ?.messageList.push({
         from,
         messageContent: msg,
