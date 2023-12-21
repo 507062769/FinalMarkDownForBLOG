@@ -15,7 +15,7 @@ import { fetchOperator } from "@/apis/pages";
 import { useLocation } from "react-router-dom";
 
 export default function ButtonList(props: { pageid: string }) {
-  const { isLogin } = useContext(UserContext);
+  const { isLogin, userInfo } = useContext(UserContext);
   const [isShowComment, setIsShowComment] = useState<boolean>(false);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
@@ -27,8 +27,14 @@ export default function ButtonList(props: { pageid: string }) {
   const { mutateAsync: operator } = fetchOperator();
   const handleOperator = async (type: string) => {
     const lastClick = JSON.parse(localStorage.getItem("LAST_CLICK")!);
+
     if ((+new Date() - lastClick) / 1000 > 60) {
-      await operator({ type, pageid });
+      await operator({
+        type,
+        pageid,
+        fromQQ: userInfo.qq || "unlogin",
+        targetQQ: pageid.slice(0, -13),
+      });
       await refetch();
       localStorage.setItem("LAST_CLICK", JSON.stringify(+new Date()));
     } else {

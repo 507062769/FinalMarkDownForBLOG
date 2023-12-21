@@ -12,6 +12,8 @@ import { TabContext } from "@/Context/TabContextProvide";
 import passEncipherTwo from "@/utils/passEncipherTwo";
 import { UserContext } from "@/Context/UserContextProvide";
 import moment from "moment";
+import { getUnreadCount } from "@/apis/messages";
+import store from "@/stores";
 
 export default function Login() {
   const { setToken, setIsLogin, setUserInfo } = useContext(UserContext);
@@ -19,6 +21,7 @@ export default function Login() {
   const { setTabKey, setOpen } = useContext(TabContext);
   const { mutateAsync: login, isLoading } = useFetchLogin();
   const { mutateAsync: getSalt } = fetchSalt();
+  const { mutateAsync } = getUnreadCount();
   const handleLogin = async () => {
     const { password, username } = loginForm.getFieldsValue([
       "username",
@@ -37,6 +40,8 @@ export default function Login() {
         ...res.userInfo,
         registerDays: moment().diff(Number(res.userInfo.registerDate), "days"),
       });
+      const resUnreadCount = await mutateAsync({ qq: username });
+      store.message.unreadAllCount = resUnreadCount.unreadCount;
       localStorage.setItem("BLOG_TOKEN", res.token);
     }
   };

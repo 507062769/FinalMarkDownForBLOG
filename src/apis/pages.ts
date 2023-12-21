@@ -31,7 +31,9 @@ export function fetchAddComment() {
 }
 
 export function fetchOperator() {
-  return useMutation<any, ClientError, { pageid: string; type: string }>(
-    (data) => get("/page/operator", data)
-  );
+  return useMutation<
+    any,
+    ClientError,
+    { pageid: string; type: string; fromQQ: string; targetQQ: string }
+  >((data) => get("/page/operator", data));
 }

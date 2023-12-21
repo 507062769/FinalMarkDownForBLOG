@@ -97,7 +97,7 @@ function Message() {
                 }`}
               >
                 <Avatar
-                  src={message.getCurrentUserInfo()?.userImg}
+                  src={message.currentChatUser?.userImg}
                   className="w-10 h-10 flex-shrink-0"
                 />
                 <p

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   PlusCircleOutlined,
   StopOutlined,
@@ -67,6 +67,10 @@ function UserInfo() {
     },
   };
 
+  useEffect(() => {
+    console.log(message.unreadAllCount, +new Date());
+  }, [message.unreadAllCount]);
+
   return (
     <section
       className="flex justify-between h-16"
@@ -95,6 +99,7 @@ function UserInfo() {
                   setIsLogin(false);
                   localStorage.removeItem("BLOG_TOKEN");
                   setUserInfo({} as any);
+                  message.unreadAllCount = 0;
                 }}
               >
                 <StopOutlined className="mr-2" />
