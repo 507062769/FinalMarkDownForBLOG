@@ -67,10 +67,6 @@ function UserInfo() {
     },
   };
 
-  useEffect(() => {
-    console.log(message.unreadAllCount, +new Date());
-  }, [message.unreadAllCount]);
-
   return (
     <section
       className="flex justify-between h-16"
@@ -123,7 +119,12 @@ function UserInfo() {
         </Link>
       </p>
       <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
-        <Link to={"message"}>
+        <Link
+          to={"message"}
+          onClick={() => {
+            message.setCurrentUserId("admin");
+          }}
+        >
           <Badge count={message.unreadAllCount} color="#1677ff" size="small">
             <span className="text-base">消息</span>
           </Badge>

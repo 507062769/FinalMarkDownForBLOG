@@ -5,6 +5,9 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import store from "@/stores/index";
 import { UserContext } from "@/Context/UserContextProvide";
+import { useQuery } from "react-query";
+import { get } from "@/apis";
+import { Link } from "react-router-dom";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -17,10 +20,38 @@ function Message() {
         // 可以优化，变成缓动
         customMessage.current.scrollTop = customMessage.current.scrollHeight;
       }
-    }, 10);
+    }, 30);
   };
+  const { data: _ } = useQuery(
+    ["messageList"],
+    async () => await get("/messages/systemNotification", { qq: userInfo.qq }),
+    {
+      onSuccess: (data) => {
+        // 先将当前的通知清空，避免重复
+        message.systemMessageList = [];
+        data.systemNotification.forEach((item: any) => {
+          const from = item.fromQQ === "unlogin" ? "未登录用户" : item.userName;
+          const notificationType =
+            item.notificationType === "top"
+              ? "点赞"
+              : item.notificationType === "bottom"
+              ? "点踩"
+              : "评论";
+          message.systemMessageList.push({
+            notificationType,
+            from,
+            pageId: item.pageId,
+            fromQQ: item.fromQQ,
+          });
+        });
+      },
+    }
+  );
+  // 进入聊天界面默认是在系统页，所以在进入该抓紧时将系统消息全部设置为已读，并且获取所有
   useEffect(() => {
     startScrollBottom();
+    message.contactPerson.find((item) => item.qq === "admin")!.unreadCount = 0;
+    message.updateUnreadAllCount();
   }, [message.currentChatUser]);
   return (
     <div
@@ -32,7 +63,7 @@ function Message() {
           <li
             className={classNames(
               "list-none box-border px-4 flex flex-row h-18 py-4 ",
-              { "current-user-id": message.currentChatUser.qq === item.qq }
+              { "current-user-id": item.qq === "admin" }
             )}
             style={{ borderBottom: "1px solid #ccc" }}
             onClick={() => {
@@ -88,32 +119,66 @@ function Message() {
           id="CustomMessage"
           ref={customMessage}
         >
-          {message.getCurrentUserMessageList()?.map((item) => {
-            const isMe = item.from === userInfo.qq;
+          {(message.currentChatUser.qq === 'admin' ? message.systemMessageList : message.getCurrentUserMessageList())?.map((item) => {
+            const isMe = item?.from === userInfo.qq;
             return (
-              <div
-                className={`flex my-4 ${
-                  isMe ? "flex-row-reverse" : "flex-row"
-                }`}
-              >
-                <Avatar
-                  src={message.currentChatUser?.userImg}
-                  className="w-10 h-10 flex-shrink-0"
-                />
-                <p
-                  style={{
-                    background: `${isMe ? "#95ec69" : "#b8b8b9"}`,
-                    lineHeight: "40px",
-                  }}
-                  className={`m-0 rounded-3xl px-4 ${isMe ? "mr-2" : "ml-2"}`}
-                >
-                  {item.messageContent}
-                </p>
-              </div>
+              <>
+                {message.currentChatUser.qq === "admin" ? (
+                  <>
+                    <div className="text-center">
+                      {moment(Number(item.lastDate)).format(
+                        "YYYY-MM-DD HH:mm:ss"
+                      )}
+                    </div>
+                    <div className="my-8 flex flex-row">
+                      <Avatar
+                        src={message.currentChatUser?.userImg}
+                        className="w-10 h-10 flex-shrink-0"
+                      />
+                      <Link to={`/page?pageId=${item.pageId}`}>
+                        <div
+                          className="my-0 ml-6 px-6 py-6 rounded-lg notification-item"
+                          style={{ background: "#ccc" }}
+                        >
+                          <p
+                            className="my-2 text-xl"
+                            style={{ borderBottom: "1px solid #eee" }}
+                          >
+                            {item.notificationType}
+                          </p>
+                          <p className="my-2">{item.messageContent}</p>
+                        </div>
+                      </Link>
+                    </div>
+                  </>
+                ) : (
+                  <div
+                    className={`flex my-4 ${
+                      isMe ? "flex-row-reverse" : "flex-row"
+                    }`}
+                  >
+                    <Avatar
+                      src={message.currentChatUser?.userImg}
+                      className="w-10 h-10 flex-shrink-0"
+                    />
+                    <p
+                      style={{
+                        background: `${isMe ? "#95ec69" : "#b8b8b9"}`,
+                        lineHeight: "40px",
+                      }}
+                      className={`m-0 rounded-3xl px-4 ${
+                        isMe ? "mr-2" : "ml-2"
+                      }`}
+                    >
+                      {item.messageContent}
+                    </p>
+                  </div>
+                )}
+              </>
             );
           })}
         </div>
-        {message.currentChatUser.qq !== "系统" && (
+        {message.currentChatUser.qq !== "admin" && (
           <div className="h-1/5" id="TextArea">
             <Input
               value={msg}
@@ -132,7 +197,6 @@ function Message() {
                 borderTop: "1px solid #ccc",
                 borderRadius: "0",
               }}
-              disabled={message.currentChatUser.qq === "系统"}
             />
           </div>
         )}

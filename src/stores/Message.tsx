@@ -8,14 +8,22 @@ type ContactType = {
   userImg: string;
 };
 
+// 单独写一个系统通知吧
 type MessageType = {
   qq: string;
   messageList: {
+    // 普通联系人
     from: string;
     messageContent: string;
     lastDate: string;
   }[];
 };
+type SystemMessageType = {
+  notificationType: string;
+  from: string;
+  pageId: string;
+  fromQQ: string;
+}[];
 export class Message {
   // 联系人
   contactPerson: ContactType[] = [
@@ -24,15 +32,8 @@ export class Message {
       userName: "通知",
       lastDate: 1009509685000,
       unreadCount: 0,
-      userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
+      userImg: "http://localhost:9876/systemImgs/notification.png",
     },
-    // {
-    //   qq: "2458015575",
-    //   userName: "张三",
-    //   lastDate: 1009509685000,
-    //   unreadCount: 0,
-    //   userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
-    // },
   ];
 
   messageList: MessageType[] = [
@@ -52,18 +53,18 @@ export class Message {
     //   ],
     // },
   ];
+
+  systemMessageList: SystemMessageType[] = [];
+
   currentChatUser: ContactType = {
-    qq: "系统",
-    userName: "系统",
+    qq: "admin",
+    userName: "通知",
     lastDate: 1009509685000,
     unreadCount: 0,
     userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
   };
 
-  unreadAllCount = this.contactPerson.reduce(
-    (pre, cur) => pre + cur.unreadCount,
-    0
-  );
+  unreadAllCount = 0;
 
   constructor() {
     makeAutoObservable(this);
@@ -102,7 +103,6 @@ export class Message {
       ?.messageList;
   }
 
-  // 发送一条消息
   addNewMessage(msg: string, from: string) {
     this.messageList
       .find((item) => item.qq === this.currentChatUser.qq)
@@ -111,5 +111,13 @@ export class Message {
         messageContent: msg,
         lastDate: new Date().getTime().toString(),
       });
+  }
+
+  // 更新总的未读条数
+  updateUnreadAllCount() {
+    this.unreadAllCount = this.contactPerson.reduce(
+      (pre, cur) => pre + cur.unreadCount,
+      0
+    );
   }
 }

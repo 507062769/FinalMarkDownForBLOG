@@ -39,6 +39,10 @@ function SearchUser(props: { data: any }) {
                   unreadCount: 0,
                   userImg: item.userImg,
                 });
+                message.messageList.push({
+                  qq: item.qq,
+                  messageList: [],
+                });
                 navigate("/message");
               }}
             >
