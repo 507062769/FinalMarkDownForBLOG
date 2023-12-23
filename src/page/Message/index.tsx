@@ -12,7 +12,6 @@ import {
   CommentOutlined,
   DislikeOutlined,
   LikeOutlined,
-  LinkOutlined,
 } from "@ant-design/icons";
 
 function Message() {
@@ -24,7 +23,30 @@ function Message() {
     setTimeout(() => {
       if (customMessage.current) {
         // 可以优化，变成缓动
-        customMessage.current.scrollTop = customMessage.current.scrollHeight;
+        // customMessage.current.scrollTop = customMessage.current.scrollHeight;
+        const currentScrollTop = customMessage.current.scrollTop;
+        const scrollHeight = customMessage.current.scrollHeight;
+        const difference = scrollHeight - currentScrollTop;
+        const duration = 300; // 缓动动画的持续时间，单位为毫秒
+
+        let startTime: any;
+        function animationStep(timestamp: any) {
+          if (!startTime) startTime = timestamp;
+          const progress = timestamp - startTime;
+
+          const easeInOutQuad = (t) =>
+            t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+          const scrollTop =
+            currentScrollTop +
+            difference * easeInOutQuad(Math.min(progress / duration, 1));
+
+          customMessage.current.scrollTop = Math.ceil(scrollTop);
+
+          if (progress < duration) {
+            requestAnimationFrame(animationStep);
+          }
+        }
+        requestAnimationFrame(animationStep);
       }
     }, 30);
   };
@@ -70,7 +92,7 @@ function Message() {
           <li
             className={classNames(
               "list-none box-border px-4 flex flex-row h-18 py-4 ",
-              { "current-user-id": item.qq === "admin" }
+              { "current-user-id": item.qq === message.currentChatUser.qq }
             )}
             style={{ borderBottom: "1px solid #ccc" }}
             onClick={() => {
@@ -176,22 +198,33 @@ function Message() {
                 </div>
               </>
             ))}
+          {message.getCurrentUserMessageList()?.map((item) => {
+            const isMe = item.from !== message.currentChatUser.qq;
+            return (
+              <div
+                className={`flex my-4 ${
+                  isMe ? "flex-row-reverse" : "flex-row"
+                }`}
+              >
+                <Avatar
+                  src={
+                    isMe ? userInfo.userImg : message.currentChatUser?.userImg
+                  }
+                  className="w-10 h-10 flex-shrink-0"
+                />
+                <p
+                  style={{
+                    background: `${isMe ? "#95ec69" : "#b8b8b9"}`,
+                    lineHeight: "40px",
+                  }}
+                  className={`m-0 rounded-3xl px-4 ${isMe ? "mr-2" : "ml-2"}`}
+                >
+                  {item.messageContent}
+                </p>
+              </div>
+            );
+          })}
         </div>
-        {/* <div className={`flex my-4 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
-          <Avatar
-            src={message.currentChatUser?.userImg}
-            className="w-10 h-10 flex-shrink-0"
-          />
-          <p
-            style={{
-              background: `${isMe ? "#95ec69" : "#b8b8b9"}`,
-              lineHeight: "40px",
-            }}
-            className={`m-0 rounded-3xl px-4 ${isMe ? "mr-2" : "ml-2"}`}
-          >
-            {item.messageContent}
-          </p>
-        </div> */}
         {message.currentChatUser.qq !== "admin" && (
           <div className="h-1/5" id="TextArea">
             <Input

@@ -43,6 +43,7 @@ function SearchUser(props: { data: any }) {
                   qq: item.qq,
                   messageList: [],
                 });
+                message.setCurrentUserId(item.qq);
                 navigate("/message");
               }}
             >
