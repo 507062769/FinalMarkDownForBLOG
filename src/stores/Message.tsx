@@ -19,11 +19,12 @@ type MessageType = {
   }[];
 };
 type SystemMessageType = {
-  notificationType: string;
+  notification: string;
   from: string;
   pageId: string;
   fromQQ: string;
-}[];
+  lastDate: string;
+};
 export class Message {
   // 联系人
   contactPerson: ContactType[] = [

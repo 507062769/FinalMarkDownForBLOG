@@ -8,6 +8,12 @@ import { UserContext } from "@/Context/UserContextProvide";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
 import { Link } from "react-router-dom";
+import {
+  CommentOutlined,
+  DislikeOutlined,
+  LikeOutlined,
+  LinkOutlined,
+} from "@ant-design/icons";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -31,17 +37,18 @@ function Message() {
         message.systemMessageList = [];
         data.systemNotification.forEach((item: any) => {
           const from = item.fromQQ === "unlogin" ? "未登录用户" : item.userName;
-          const notificationType =
+          const notification =
             item.notificationType === "top"
               ? "点赞"
               : item.notificationType === "bottom"
               ? "点踩"
-              : "评论";
+              : ("评论" as any);
           message.systemMessageList.push({
-            notificationType,
+            notification,
             from,
             pageId: item.pageId,
             fromQQ: item.fromQQ,
+            lastDate: item.operatorDate,
           });
         });
       },
@@ -119,65 +126,72 @@ function Message() {
           id="CustomMessage"
           ref={customMessage}
         >
-          {(message.currentChatUser.qq === 'admin' ? message.systemMessageList : message.getCurrentUserMessageList())?.map((item) => {
-            const isMe = item?.from === userInfo.qq;
-            return (
+          {message.currentChatUser.qq === "admin" &&
+            message.systemMessageList.map((item) => (
               <>
-                {message.currentChatUser.qq === "admin" ? (
-                  <>
-                    <div className="text-center">
-                      {moment(Number(item.lastDate)).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )}
-                    </div>
-                    <div className="my-8 flex flex-row">
-                      <Avatar
-                        src={message.currentChatUser?.userImg}
-                        className="w-10 h-10 flex-shrink-0"
-                      />
-                      <Link to={`/page?pageId=${item.pageId}`}>
-                        <div
-                          className="my-0 ml-6 px-6 py-6 rounded-lg notification-item"
-                          style={{ background: "#ccc" }}
-                        >
-                          <p
-                            className="my-2 text-xl"
-                            style={{ borderBottom: "1px solid #eee" }}
-                          >
-                            {item.notificationType}
-                          </p>
-                          <p className="my-2">{item.messageContent}</p>
-                        </div>
-                      </Link>
-                    </div>
-                  </>
-                ) : (
-                  <div
-                    className={`flex my-4 ${
-                      isMe ? "flex-row-reverse" : "flex-row"
-                    }`}
-                  >
-                    <Avatar
-                      src={message.currentChatUser?.userImg}
-                      className="w-10 h-10 flex-shrink-0"
-                    />
-                    <p
-                      style={{
-                        background: `${isMe ? "#95ec69" : "#b8b8b9"}`,
-                        lineHeight: "40px",
-                      }}
-                      className={`m-0 rounded-3xl px-4 ${
-                        isMe ? "mr-2" : "ml-2"
-                      }`}
+                <div className="text-center">
+                  {moment(Number(item.lastDate)).format("YYYY-MM-DD HH:mm:ss")}
+                </div>
+                <div className="my-8 flex flex-row">
+                  <Avatar
+                    src={message.currentChatUser?.userImg}
+                    className="w-10 h-10 flex-shrink-0"
+                  />
+                  <Link to={`/page?pageid=${item.pageId}`}>
+                    <div
+                      className="my-0 ml-6 px-6 py-6 rounded-lg notification-item"
+                      style={{ background: "#ccc" }}
                     >
-                      {item.messageContent}
-                    </p>
-                  </div>
-                )}
+                      <p
+                        className="my-2 text-xl"
+                        style={{ borderBottom: "1px solid #eee" }}
+                      >
+                        {item.notification}
+                      </p>
+                      <p className="my-2">
+                        <p className="m-0 mx-2 inline-block">
+                          {item.from === "未登录用户" ? (
+                            <span>未登录用户</span>
+                          ) : (
+                            <Link
+                              to={`/other?qq=${item.fromQQ}`}
+                              className="message-user"
+                            >
+                              {item.from}
+                            </Link>
+                          )}
+                        </p>
+                        {item.notification}
+                        {item.notification === "点赞" ? (
+                          <LikeOutlined />
+                        ) : item.notification === "点踩" ? (
+                          <DislikeOutlined />
+                        ) : (
+                          <CommentOutlined />
+                        )}
+                        &nbsp; 了你的文章
+                      </p>
+                    </div>
+                  </Link>
+                </div>
               </>
-            );
-          })}
+            ))}
         </div>
+        {/* <div className={`flex my-4 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
+          <Avatar
+            src={message.currentChatUser?.userImg}
+            className="w-10 h-10 flex-shrink-0"
+          />
+          <p
+            style={{
+              background: `${isMe ? "#95ec69" : "#b8b8b9"}`,
+              lineHeight: "40px",
+            }}
+            className={`m-0 rounded-3xl px-4 ${isMe ? "mr-2" : "ml-2"}`}
+          >
+            {item.messageContent}
+          </p>
+        </div> */}
         {message.currentChatUser.qq !== "admin" && (
           <div className="h-1/5" id="TextArea">
             <Input
