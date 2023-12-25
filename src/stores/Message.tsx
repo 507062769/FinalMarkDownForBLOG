@@ -8,7 +8,6 @@ type ContactType = {
   userImg: string;
 };
 
-// 单独写一个系统通知吧
 type MessageType = {
   qq: string;
   messageList: {
@@ -35,24 +34,31 @@ export class Message {
       unreadCount: 0,
       userImg: "http://localhost:9876/systemImgs/notification.png",
     },
+    {
+      qq: "2458015575",
+      userName: "张三",
+      lastDate: 1009509685000,
+      unreadCount: 0,
+      userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
+    },
   ];
 
   messageList: MessageType[] = [
-    // {
-    //   qq: "2458015575",
-    //   messageList: [
-    //     {
-    //       from: "2458015575",
-    //       messageContent: "你好",
-    //       lastDate: "1702542628735",
-    //     },
-    //     {
-    //       from: "3225593545",
-    //       messageContent: "你也好",
-    //       lastDate: "1702542628735",
-    //     },
-    //   ],
-    // },
+    {
+      qq: "2458015575",
+      messageList: [
+        {
+          from: "2458015575",
+          messageContent: "你好",
+          lastDate: "1702542628735",
+        },
+        {
+          from: "3225593545",
+          messageContent: "你也好",
+          lastDate: "1702542628735",
+        },
+      ],
+    },
   ];
 
   systemMessageList: SystemMessageType[] = [];
@@ -120,5 +126,27 @@ export class Message {
       (pre, cur) => pre + cur.unreadCount,
       0
     );
+  }
+
+  // 更新消息发送的最后时间
+  updateMessageLastDate() {
+    // 更新消息列表的最后时间
+    this.contactPerson.forEach((item) => {
+      if (item.qq === "admin") {
+        // 更新系统消息的最后时间
+        this.contactPerson.find((item) => item.qq === "admin")!.lastDate =
+          Number(
+            this.systemMessageList[this.systemMessageList.length - 1].lastDate
+          );
+      } else {
+        // 普通用户
+        const currentMessageList = this.messageList.find(
+          (MsgItem) => item.qq === MsgItem.qq
+        )?.messageList!;
+        item.lastDate = Number(
+          currentMessageList[currentMessageList.length - 1].lastDate
+        );
+      }
+    });
   }
 }

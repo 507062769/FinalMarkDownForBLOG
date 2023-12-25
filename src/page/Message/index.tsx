@@ -1,4 +1,4 @@
-import { Avatar, Badge, Input, Tooltip } from "antd";
+import { Avatar, Badge, Input, Space, Tooltip } from "antd";
 import moment from "moment";
 import classNames from "classnames";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -13,6 +13,7 @@ import {
   DislikeOutlined,
   LikeOutlined,
 } from "@ant-design/icons";
+import TextArea from "antd/es/input/TextArea";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -34,7 +35,7 @@ function Message() {
           if (!startTime) startTime = timestamp;
           const progress = timestamp - startTime;
 
-          const easeInOutQuad = (t) =>
+          const easeInOutQuad = (t: any) =>
             t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
           const scrollTop =
             currentScrollTop +
@@ -73,14 +74,15 @@ function Message() {
             lastDate: item.operatorDate,
           });
         });
+        message.updateMessageLastDate();
       },
     }
   );
   // 进入聊天界面默认是在系统页，所以在进入该抓紧时将系统消息全部设置为已读，并且获取所有
   useEffect(() => {
-    startScrollBottom();
     message.contactPerson.find((item) => item.qq === "admin")!.unreadCount = 0;
     message.updateUnreadAllCount();
+    startScrollBottom();
   }, [message.currentChatUser]);
   return (
     <div
@@ -101,7 +103,7 @@ function Message() {
           >
             <Avatar src={item.userImg} size={"large"} />
             <p
-              className="m-0 ml-4 text-base w-1/2"
+              className="m-0 ml-4 text-base w-1/2 flex-shrink"
               style={{
                 height: "40px",
                 lineHeight: "40px",
@@ -116,10 +118,10 @@ function Message() {
             </p>
             <Badge count={item.unreadCount} offset={[14, 20]}>
               <p
-                className="m-0 ml-2 text-sm text-left"
+                className="m-0 ml-2 text-xs text-left"
                 style={{ height: "40px", lineHeight: "40px" }}
               >
-                {moment(item.lastDate).format("YYYY/MM/DD")}
+                {moment(item.lastDate).format("MM/DD HH:mm:ss")}
               </p>
             </Badge>
           </li>
@@ -165,10 +167,19 @@ function Message() {
                       style={{ background: "#ccc" }}
                     >
                       <p
-                        className="my-2 text-xl"
+                        className="my-2 text-xl pl-2"
                         style={{ borderBottom: "1px solid #eee" }}
                       >
-                        {item.notification}
+                        <Space>
+                          {item.notification}
+                          {item.notification === "点赞" ? (
+                            <LikeOutlined />
+                          ) : item.notification === "点踩" ? (
+                            <DislikeOutlined />
+                          ) : (
+                            <CommentOutlined />
+                          )}
+                        </Space>
                       </p>
                       <p className="my-2">
                         <p className="m-0 mx-2 inline-block">
@@ -202,7 +213,7 @@ function Message() {
             const isMe = item.from !== message.currentChatUser.qq;
             return (
               <div
-                className={`flex my-4 ${
+                className={`message-list-item flex my-4 ${
                   isMe ? "flex-row-reverse" : "flex-row"
                 }`}
               >
@@ -221,23 +232,45 @@ function Message() {
                 >
                   {item.messageContent}
                 </p>
+                <span
+                  className="mx-2 opacity-20 flex-shrink-0 mt-auto message-list-item-sendTime"
+                  style={{ lineHeight: "40px" }}
+                >
+                  {moment(Number(item.lastDate)).format("MM/DD HH:mm:ss")}
+                </span>
               </div>
             );
           })}
         </div>
         {message.currentChatUser.qq !== "admin" && (
-          <div className="h-1/5" id="TextArea">
-            <Input
+          <div className="h-1/5 flex-shrink-0" id="TextArea">
+            <TextArea
               value={msg}
               className="text-lg h-full"
               maxLength={100}
+              rows={2}
+              onFocus={() => {
+                startScrollBottom();
+              }}
               allowClear
+              showCount
               placeholder="按下Enter发送消息"
-              onChange={(e) => setMsg(e.target.value)}
+              onChange={(e) => {
+                // 清除左右空格
+                if (e.target.value.trim() === "") {
+                  setMsg("");
+                  return;
+                }
+                setMsg(e.target.value);
+              }}
               onPressEnter={(e: any) => {
+                if (!e.target.value) {
+                  return;
+                }
                 message.addNewMessage(e.target.value, userInfo.qq);
                 setMsg("");
                 startScrollBottom();
+                message.updateMessageLastDate();
               }}
               style={{
                 border: "none",

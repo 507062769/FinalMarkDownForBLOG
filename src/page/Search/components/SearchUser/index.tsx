@@ -3,8 +3,11 @@ import { Button, Empty } from "antd";
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import store from "@/stores";
+import { useContext } from "react";
+import { UserContext } from "@/Context/UserContextProvide";
 
 function SearchUser(props: { data: any }) {
+  const { userInfo } = useContext(UserContext);
   const { message } = store;
   const navigate = useNavigate();
   return (
@@ -46,6 +49,7 @@ function SearchUser(props: { data: any }) {
                 message.setCurrentUserId(item.qq);
                 navigate("/message");
               }}
+              disabled={userInfo?.qq === item.qq}
             >
               <CommentOutlined />
               私信

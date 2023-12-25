@@ -25,7 +25,12 @@ export default function ButtonList(props: { pageid: string }) {
     async () => await get("/page/data", { pageid: props.pageid })
   );
   const { mutateAsync: operator } = fetchOperator();
+  const targetQQ = pageid.slice(0, -13);
   const handleOperator = async (type: string) => {
+    if (targetQQ === userInfo.qq) {
+      message.warning("不能对自己的文章进行点赞/踩");
+      return;
+    }
     const lastClick = JSON.parse(localStorage.getItem("LAST_CLICK")!);
 
     if ((+new Date() - lastClick) / 1000 > 60) {
@@ -33,7 +38,7 @@ export default function ButtonList(props: { pageid: string }) {
         type,
         pageid,
         fromQQ: userInfo.qq || "unlogin",
-        targetQQ: pageid.slice(0, -13),
+        targetQQ,
       });
       await refetch();
       localStorage.setItem("LAST_CLICK", JSON.stringify(+new Date()));
