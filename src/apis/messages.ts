@@ -6,3 +6,17 @@ export function getUnreadCount() {
     post("/messages/unreadCount", data)
   );
 }
+
+export function fetchSendMessage() {
+  return useMutation<
+    any,
+    ClientError,
+    { targetQQ: string; content: string; lastDate: string; qq: string }
+  >((data) => post("/messages/send", data));
+}
+
+export function fetchReadMessage() {
+  return useMutation<any, ClientError, { targetQQ: string; fromQQ: string }>(
+    (data) => get("/messages/read", data)
+  );
+}

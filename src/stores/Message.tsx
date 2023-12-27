@@ -1,11 +1,12 @@
 import { makeAutoObservable } from "mobx";
 
-type ContactType = {
+export type ContactType = {
   qq: string;
   userName: string;
   lastDate: number;
   unreadCount: number;
   userImg: string;
+  isTemporarily?: boolean;
 };
 
 type MessageType = {
@@ -40,6 +41,7 @@ export class Message {
       lastDate: 1009509685000,
       unreadCount: 0,
       userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
+      isTemporarily: true,
     },
   ];
 
@@ -110,13 +112,13 @@ export class Message {
       ?.messageList;
   }
 
-  addNewMessage(msg: string, from: string) {
+  addNewMessage(msg: string, from: string, lastDate: string) {
     this.messageList
       .find((item) => item.qq === this.currentChatUser.qq)
       ?.messageList.push({
         from,
         messageContent: msg,
-        lastDate: new Date().getTime().toString(),
+        lastDate,
       });
   }
 
@@ -126,6 +128,12 @@ export class Message {
       (pre, cur) => pre + cur.unreadCount,
       0
     );
+    // 重新计算顺序
+    const [admin, ...lastItem] = this.contactPerson;
+    this.contactPerson = [
+      admin,
+      ...lastItem.sort((a, b) => Number(b.lastDate) - Number(a.lastDate)),
+    ];
   }
 
   // 更新消息发送的最后时间

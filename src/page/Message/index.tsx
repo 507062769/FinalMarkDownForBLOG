@@ -1,4 +1,4 @@
-import { Avatar, Badge, Input, Space, Tooltip } from "antd";
+import { Avatar, Badge, Space, Tooltip } from "antd";
 import moment from "moment";
 import classNames from "classnames";
 import { useContext, useEffect, useRef, useState } from "react";
@@ -14,6 +14,8 @@ import {
   LikeOutlined,
 } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+import { fetchReadMessage, fetchSendMessage } from "@/apis/messages";
+import { ContactType } from "@/stores/Message";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -78,6 +80,24 @@ function Message() {
       },
     }
   );
+  const { data: __ } = useQuery(
+    ["contactPerson"],
+    async () => await get("/messages/contactPerson", { qq: userInfo.qq }),
+    {
+      onSuccess: ({ showUnreadCount }: { showUnreadCount: ContactType[] }) => {
+        message.contactPerson = message.contactPerson.filter(
+          (item) => item.qq === "admin" || item?.isTemporarily
+        ) as any;
+        showUnreadCount.forEach((items) => {
+          message.contactPerson.push(items);
+        });
+        message.updateUnreadAllCount();
+      },
+      // refetchInterval: 1000,
+    }
+  );
+  const { mutateAsync, isLoading, isSuccess } = fetchSendMessage();
+  const { mutateAsync: readMessage } = fetchReadMessage();
   // 进入聊天界面默认是在系统页，所以在进入该抓紧时将系统消息全部设置为已读，并且获取所有
   useEffect(() => {
     message.contactPerson.find((item) => item.qq === "admin")!.unreadCount = 0;
@@ -90,20 +110,27 @@ function Message() {
       style={{ height: "calc(100vh - 154px)" }}
     >
       <ul className="w-3/12 box-border px-0 m-0 overflow-x-auto user-list bg-white">
-        {message.contactPerson.map((item) => (
+        {/* {message.contactPerson.map((item) => (
           <li
             className={classNames(
               "list-none box-border px-4 flex flex-row h-18 py-4 ",
               { "current-user-id": item.qq === message.currentChatUser.qq }
             )}
             style={{ borderBottom: "1px solid #ccc" }}
-            onClick={() => {
+            onClick={async () => {
+              if (item.unreadCount > 0) {
+                // 如果有未读消息，则将其设置为已读
+                await readMessage({
+                  targetQQ: userInfo.qq,
+                  fromQQ: item.qq,
+                });
+              }
               message.setCurrentUserId(item.qq);
             }}
           >
             <Avatar src={item.userImg} size={"large"} />
             <p
-              className="m-0 ml-4 text-base w-1/2 flex-shrink"
+              className="m-0 mx-2 text-base w-1/2 flex-shrink"
               style={{
                 height: "40px",
                 lineHeight: "40px",
@@ -118,14 +145,14 @@ function Message() {
             </p>
             <Badge count={item.unreadCount} offset={[14, 20]}>
               <p
-                className="m-0 ml-2 text-xs text-left"
+                className="m-0 text-xs text-left"
                 style={{ height: "40px", lineHeight: "40px" }}
               >
-                {moment(item.lastDate).format("MM/DD HH:mm:ss")}
+                {moment(Number(item.lastDate)).format("MM/DD HH:mm:ss")}
               </p>
             </Badge>
           </li>
-        ))}
+        ))} */}
       </ul>
       <div
         className="w-9/12 bg-white box-border flex flex-col"
@@ -263,14 +290,21 @@ function Message() {
                 }
                 setMsg(e.target.value);
               }}
-              onPressEnter={(e: any) => {
+              onPressEnter={async (e: any) => {
                 if (!e.target.value) {
                   return;
                 }
-                message.addNewMessage(e.target.value, userInfo.qq);
+                const lastDate = +new Date() + "";
+                message.addNewMessage(e.target.value, userInfo.qq, lastDate);
                 setMsg("");
                 startScrollBottom();
                 message.updateMessageLastDate();
+                await mutateAsync({
+                  targetQQ: message.currentChatUser.qq,
+                  qq: userInfo.qq,
+                  content: e.target.value,
+                  lastDate,
+                });
               }}
               style={{
                 border: "none",
