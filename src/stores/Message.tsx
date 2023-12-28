@@ -78,20 +78,12 @@ export class Message {
     });
   }
 
-  // 获取当前联系人的消息列表
-  getCurrentUserMessageList() {
-    return this.messageList.find((item) => item.qq === this.currentChatUser.qq)
-      ?.messageList;
-  }
-
   addNewMessage(msg: string, from: string, lastDate: string) {
-    this.messageList
-      .find((item) => item.qq === this.currentChatUser.qq)
-      ?.messageList.push({
-        from,
-        messageContent: msg,
-        lastDate,
-      });
+    this?.messageList.push({
+      from,
+      messageContent: msg,
+      lastDate,
+    });
   }
 
   // 更新总的未读条数
@@ -120,11 +112,10 @@ export class Message {
           );
       } else {
         // 普通用户
-        const currentMessageList = this.messageList.find(
-          (MsgItem) => item.qq === MsgItem.qq
-        )?.messageList!;
-        item.lastDate = Number(
-          currentMessageList[currentMessageList.length - 1].lastDate
+        this.contactPerson.find(
+          (item) => item.qq === this.currentChatUser.qq
+        )!.lastDate = Number(
+          this.messageList[this.messageList.length - 1].lastDate
         );
       }
     });

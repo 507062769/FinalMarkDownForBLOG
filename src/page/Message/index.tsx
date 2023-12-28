@@ -263,7 +263,7 @@ function Message() {
                 </div>
               </>
             ))}
-          {message.getCurrentUserMessageList()?.map((item) => {
+          {message.messageList?.map((item) => {
             const isMe = item.from !== message.currentChatUser.qq;
             return (
               <div

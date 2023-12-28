@@ -47,10 +47,7 @@ function SearchUser(props: { data: any }) {
                   userImg: item.userImg,
                   isTemporarily: true,
                 });
-                message.messageList.push({
-                  qq: item.qq,
-                  messageList: [],
-                });
+                message.messageList = [];
                 message.setCurrentUserId(item.qq);
                 navigate("/message");
               }}

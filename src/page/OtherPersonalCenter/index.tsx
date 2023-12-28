@@ -89,10 +89,7 @@ export default function OtherPersonalCenter() {
                     userImg: userInfo.userImg,
                     isTemporarily: true,
                   });
-                  message.messageList.push({
-                    qq: userInfo.qq,
-                    messageList: [],
-                  });
+                  message.messageList = [];
                   message.setCurrentUserId(userInfo.qq);
                   navigate("/message");
                 }}
