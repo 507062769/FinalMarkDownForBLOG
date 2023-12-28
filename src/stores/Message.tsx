@@ -121,7 +121,7 @@ export class Message {
   }
 
   // 当发送消息，切换会话都可能会造成排序更改
-  updateMessageListSort() {
+  updateContactPersonListSort() {
     this.contactPerson = this.contactPerson.slice().sort((a, b) => {
       // 如果 a 是 "admin"，则 a 在 b 前面
       if (a.qq === "admin") {
@@ -142,5 +142,12 @@ export class Message {
       // 如果 unreadCount 相同，按照 lastDate 排序
       return b.lastDate - a.lastDate;
     });
+  }
+
+  // 对消息进行排序，最新的消息在最下面
+  updateMessageListSort() {
+    this.messageList = this.messageList
+      .slice()
+      .sort((a, b) => Number(a.lastDate) - Number(b.lastDate));
   }
 }
