@@ -1,3 +1,4 @@
+import { post } from "@/apis";
 import { makeAutoObservable } from "mobx";
 
 export type ContactType = {
@@ -10,7 +11,8 @@ export type ContactType = {
 };
 
 type MessageType = {
-  from: string;
+  targetQQ: string;
+  fromQQ: string;
   messageContent: string;
   lastDate: string;
 };
@@ -53,19 +55,16 @@ export class Message {
 
   // 添加联系人
   addConversation(data: ContactType) {
+    this.setCurrentUserId(data.qq);
     // 判断当前是否已经存在消息列表中
-    if (this.contactPerson.findIndex((item) => item.qq === data.qq) > 0) {
+    if (this.contactPerson.findIndex((item) => item.qq === data.qq) < 0) {
       // 将当前用户设置为选中
-      this.setCurrentUserId(data.qq);
-    } else {
-      // 添加到消息列表中
       this.contactPerson.push(data);
-      this.setCurrentUserId(data.qq);
     }
   }
 
   // 切换当前活动的联系人
-  setCurrentUserId(userId: string) {
+  setCurrentUserId(userId: string, meId?: string) {
     // this.currentUserId = userId;
     this.currentChatUser = this.contactPerson.find(
       (item) => item.qq === userId
@@ -78,13 +77,13 @@ export class Message {
     });
   }
 
-  addNewMessage(msg: string, from: string, lastDate: string) {
-    this?.messageList.push({
-      from,
-      messageContent: msg,
-      lastDate,
-    });
-  }
+  // addNewMessage(msg: string, from: string, lastDate: string) {
+  //   this?.messageList.push({
+  //     from,
+  //     messageContent: msg,
+  //     lastDate,
+  //   });
+  // }
 
   // 更新总的未读条数
   updateUnreadAllCount() {

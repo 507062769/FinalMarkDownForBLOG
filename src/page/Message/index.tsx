@@ -25,25 +25,20 @@ function Message() {
     setTimeout(() => {
       if (customMessage.current) {
         // 可以优化，变成缓动
-        // customMessage.current.scrollTop = customMessage.current.scrollHeight;
         const currentScrollTop = customMessage.current.scrollTop;
         const scrollHeight = customMessage.current.scrollHeight;
         const difference = scrollHeight - currentScrollTop;
         const duration = 300; // 缓动动画的持续时间，单位为毫秒
-
         let startTime: any;
         function animationStep(timestamp: any) {
           if (!startTime) startTime = timestamp;
           const progress = timestamp - startTime;
-
           const easeInOutQuad = (t: any) =>
             t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
           const scrollTop =
             currentScrollTop +
             difference * easeInOutQuad(Math.min(progress / duration, 1));
-
           customMessage.current.scrollTop = Math.ceil(scrollTop);
-
           if (progress < duration) {
             requestAnimationFrame(animationStep);
           }
@@ -52,33 +47,49 @@ function Message() {
       }
     }, 30);
   };
-  const { data: _ } = useQuery(
+  const { data: _, refetch: refetchMessageList } = useQuery(
     ["SYS-messageList"],
-    async () => await get("/messages/systemNotification", { qq: userInfo.qq }),
+    async () => {
+      if (message.currentChatUser.qq === "admin") {
+        return await get("/messages/systemNotification", { qq: userInfo.qq });
+      } else {
+        return await get("/messages/list", {
+          targetQQ: message.currentChatUser.qq,
+          fromQQ: userInfo.qq,
+        });
+      }
+    },
     {
       onSuccess: (data) => {
-        // 先将当前的通知清空，避免重复
-        message.systemMessageList = [];
-        data.systemNotification.forEach((item: any) => {
-          const from = item.fromQQ === "unlogin" ? "未登录用户" : item.userName;
-          const notification =
-            item.notificationType === "top"
-              ? "点赞"
-              : item.notificationType === "bottom"
-              ? "点踩"
-              : ("评论" as any);
-          message.systemMessageList.push({
-            notification,
-            from,
-            pageId: item.pageId,
-            fromQQ: item.fromQQ,
-            lastDate: item.operatorDate,
+        if (message.currentChatUser.qq === "admin") {
+          // 先将当前的通知清空，避免重复
+          message.systemMessageList = [];
+          data.systemNotification.forEach((item: any) => {
+            const from =
+              item.fromQQ === "unlogin" ? "未登录用户" : item.userName;
+            const notification =
+              item.notificationType === "top"
+                ? "点赞"
+                : item.notificationType === "bottom"
+                ? "点踩"
+                : ("评论" as any);
+            message.systemMessageList.push({
+              notification,
+              from,
+              pageId: item.pageId,
+              fromQQ: item.fromQQ,
+              lastDate: item.operatorDate,
+            });
           });
-        });
+        } else {
+          message.messageList = data?.res;
+        }
         message.updateMessageLastDate();
       },
+      refetchInterval: 1000,
     }
   );
+
   const { data: __, refetch } = useQuery(
     ["contactPerson"],
     async () => await get("/messages/contactPerson", { qq: userInfo.qq }),
@@ -114,17 +125,21 @@ function Message() {
         message.updateUnreadAllCount();
         message.updateMessageListSort();
       },
-      refetchInterval: 1000,
+      // refetchInterval: 1000,
     }
   );
   const { mutateAsync, isLoading, isSuccess } = fetchSendMessage();
   const { mutateAsync: readMessage } = fetchReadMessage();
   // 进入聊天界面默认是在系统页，所以在进入该抓紧时将系统消息全部设置为已读，并且获取所有
   useEffect(() => {
+    refetchMessageList();
     message.contactPerson.find((item) => item.qq === "admin")!.unreadCount = 0;
     message.updateUnreadAllCount();
-    startScrollBottom();
   }, [message.currentChatUser]);
+
+  useEffect(() => {
+    startScrollBottom();
+  }, []);
   return (
     <div
       className="w-11/12 mx-auto  h-96 flex flex-row"
@@ -146,7 +161,9 @@ function Message() {
                   fromQQ: item.qq,
                 });
               }
-              message.setCurrentUserId(item.qq);
+              message.setCurrentUserId(item.qq, userInfo.qq);
+              customMessage.current.scrollTop =
+                customMessage.current.scrollHeight;
             }}
           >
             <Avatar src={item.userImg} size={"large"} />
@@ -264,7 +281,7 @@ function Message() {
               </>
             ))}
           {message.messageList?.map((item) => {
-            const isMe = item.from !== message.currentChatUser.qq;
+            const isMe = item.fromQQ === userInfo.qq;
             return (
               <div
                 className={`message-list-item flex my-4 ${
@@ -322,8 +339,6 @@ function Message() {
                   return;
                 }
                 const lastDate = +new Date() + "";
-                message.addNewMessage(e.target.value, userInfo.qq, lastDate);
-                startScrollBottom();
                 await mutateAsync({
                   targetQQ: message.currentChatUser.qq,
                   qq: userInfo.qq,
@@ -332,7 +347,9 @@ function Message() {
                 });
                 setMsg("");
                 refetch();
+                refetchMessageList();
                 message.updateMessageLastDate();
+                startScrollBottom();
               }}
               style={{
                 border: "none",

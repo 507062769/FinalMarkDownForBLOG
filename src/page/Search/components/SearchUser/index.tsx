@@ -12,7 +12,7 @@ function SearchUser(props: { data: any }) {
   const navigate = useNavigate();
   return (
     <>
-      {props?.data?.map((item) => {
+      {props?.data?.map((item: any) => {
         return (
           // <Link to={`/other?qq=${item.qq}`}>
           <div
@@ -48,7 +48,7 @@ function SearchUser(props: { data: any }) {
                   isTemporarily: true,
                 });
                 message.messageList = [];
-                message.setCurrentUserId(item.qq);
+                message.setCurrentUserId(item.qq, userInfo.qq);
                 navigate("/message");
               }}
               disabled={userInfo?.qq === item.qq}

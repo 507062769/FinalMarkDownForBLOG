@@ -90,7 +90,7 @@ export default function OtherPersonalCenter() {
                     isTemporarily: true,
                   });
                   message.messageList = [];
-                  message.setCurrentUserId(userInfo.qq);
+                  message.setCurrentUserId(userInfo.qq, userInfos.qq);
                   navigate("/message");
                 }}
                 disabled={userInfos?.qq === userInfo?.qq}
