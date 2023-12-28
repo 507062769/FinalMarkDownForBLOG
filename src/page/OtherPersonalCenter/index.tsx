@@ -1,14 +1,22 @@
+import { UserContext } from "@/Context/UserContextProvide";
 import { get } from "@/apis";
 import PageList from "@/components/PageList";
-import { AlertOutlined, ContainerOutlined } from "@ant-design/icons";
-import { Badge, Empty, Space } from "antd";
+import store from "@/stores";
+import {
+  AlertOutlined,
+  CommentOutlined,
+  ContainerOutlined,
+} from "@ant-design/icons";
+import { Badge, Button, Empty, Space, message as messageBox } from "antd";
 import moment from "moment";
+import { useContext } from "react";
 import { useQuery } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function OtherPersonalCenter() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
+  const { isLogin, userInfo: userInfos } = useContext(UserContext);
   const qq = params.get("qq");
   const { data } = useQuery(
     ["other-pages-list"],
@@ -22,6 +30,8 @@ export default function OtherPersonalCenter() {
     { refetchOnWindowFocus: false }
   );
   const userInfo = data?.userInfo;
+  const { message } = store;
+  const navigate = useNavigate();
   return (
     <div
       style={{ minHeight: "calc(100vh - 186px)" }}
@@ -64,6 +74,33 @@ export default function OtherPersonalCenter() {
                   {userInfo?.pagesNumber}
                 </span>
               </span>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isLogin) {
+                    messageBox.warning("请先登录");
+                    return;
+                  }
+                  message.addConversation({
+                    qq: userInfo.qq,
+                    userName: userInfo.userName,
+                    lastDate: +new Date(),
+                    unreadCount: 0,
+                    userImg: userInfo.userImg,
+                    isTemporarily: true,
+                  });
+                  message.messageList.push({
+                    qq: userInfo.qq,
+                    messageList: [],
+                  });
+                  message.setCurrentUserId(userInfo.qq);
+                  navigate("/message");
+                }}
+                disabled={userInfos?.qq === userInfo?.qq}
+              >
+                <CommentOutlined />
+                私信
+              </Button>
               {/* <span>
               <CompassOutlined />
               &nbsp;Ip地址：

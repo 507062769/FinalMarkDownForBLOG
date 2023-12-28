@@ -1,5 +1,5 @@
 import { CommentOutlined } from "@ant-design/icons";
-import { Button, Empty } from "antd";
+import { Button, Empty, message as messageBox } from "antd";
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import store from "@/stores";
@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { UserContext } from "@/Context/UserContextProvide";
 
 function SearchUser(props: { data: any }) {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, isLogin } = useContext(UserContext);
   const { message } = store;
   const navigate = useNavigate();
   return (
@@ -35,12 +35,17 @@ function SearchUser(props: { data: any }) {
               style={{ right: "20px", transform: "translateY(-50%)" }}
               onClick={(e) => {
                 e.stopPropagation();
+                if (!isLogin) {
+                  messageBox.warning("请先登录");
+                  return;
+                }
                 message.addConversation({
                   qq: item.qq,
                   userName: item.userName,
                   lastDate: +new Date(),
                   unreadCount: 0,
                   userImg: item.userImg,
+                  isTemporarily: true,
                 });
                 message.messageList.push({
                   qq: item.qq,

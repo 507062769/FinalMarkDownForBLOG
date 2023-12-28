@@ -10,13 +10,9 @@ export type ContactType = {
 };
 
 type MessageType = {
-  qq: string;
-  messageList: {
-    // 普通联系人
-    from: string;
-    messageContent: string;
-    lastDate: string;
-  }[];
+  from: string;
+  messageContent: string;
+  lastDate: string;
 };
 type SystemMessageType = {
   notification: string;
@@ -35,33 +31,9 @@ export class Message {
       unreadCount: 0,
       userImg: "http://localhost:9876/systemImgs/notification.png",
     },
-    {
-      qq: "2458015575",
-      userName: "张三",
-      lastDate: 1009509685000,
-      unreadCount: 0,
-      userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
-      isTemporarily: true,
-    },
   ];
 
-  messageList: MessageType[] = [
-    {
-      qq: "2458015575",
-      messageList: [
-        {
-          from: "2458015575",
-          messageContent: "你好",
-          lastDate: "1702542628735",
-        },
-        {
-          from: "3225593545",
-          messageContent: "你也好",
-          lastDate: "1702542628735",
-        },
-      ],
-    },
-  ];
+  messageList: MessageType[] = [];
 
   systemMessageList: SystemMessageType[] = [];
 
@@ -155,6 +127,30 @@ export class Message {
           currentMessageList[currentMessageList.length - 1].lastDate
         );
       }
+    });
+  }
+
+  // 当发送消息，切换会话都可能会造成排序更改
+  updateMessageListSort() {
+    this.contactPerson = this.contactPerson.slice().sort((a, b) => {
+      // 如果 a 是 "admin"，则 a 在 b 前面
+      if (a.qq === "admin") {
+        return -1;
+      }
+      // 如果 b 是 "admin"，则 b 在 a 前面
+      if (b.qq === "admin") {
+        return 1;
+      }
+      // 如果 unreadCount 不为 0，则 a 在 b 前面
+      if (a.unreadCount !== 0 && b.unreadCount === 0) {
+        return -1;
+      }
+      // 如果 unreadCount 为 0，则 b 在 a 前面
+      if (a.unreadCount === 0 && b.unreadCount !== 0) {
+        return 1;
+      }
+      // 如果 unreadCount 相同，按照 lastDate 排序
+      return b.lastDate - a.lastDate;
     });
   }
 }

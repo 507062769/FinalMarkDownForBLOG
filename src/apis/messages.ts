@@ -11,7 +11,12 @@ export function fetchSendMessage() {
   return useMutation<
     any,
     ClientError,
-    { targetQQ: string; content: string; lastDate: string; qq: string }
+    {
+      targetQQ: string;
+      content: string;
+      lastDate: string;
+      qq: string;
+    }
   >((data) => post("/messages/send", data));
 }
 

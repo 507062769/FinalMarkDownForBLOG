@@ -15,7 +15,6 @@ import {
 } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { fetchReadMessage, fetchSendMessage } from "@/apis/messages";
-import { ContactType } from "@/stores/Message";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -54,7 +53,7 @@ function Message() {
     }, 30);
   };
   const { data: _ } = useQuery(
-    ["messageList"],
+    ["SYS-messageList"],
     async () => await get("/messages/systemNotification", { qq: userInfo.qq }),
     {
       onSuccess: (data) => {
@@ -80,20 +79,42 @@ function Message() {
       },
     }
   );
-  const { data: __ } = useQuery(
+  const { data: __, refetch } = useQuery(
     ["contactPerson"],
     async () => await get("/messages/contactPerson", { qq: userInfo.qq }),
     {
-      onSuccess: ({ showUnreadCount }: { showUnreadCount: ContactType[] }) => {
+      onSuccess: ({
+        result,
+      }: {
+        result: {
+          qq: string;
+          targetImg: string;
+          targetName: string;
+          unreadCount: number;
+          lastDate: number;
+        }[];
+      }) => {
         message.contactPerson = message.contactPerson.filter(
-          (item) => item.qq === "admin" || item?.isTemporarily
+          (item) =>
+            item.qq === "admin" ||
+            (item?.isTemporarily &&
+              result.findIndex((items) => item.qq === items.qq) < 0)
         ) as any;
-        showUnreadCount.forEach((items) => {
-          message.contactPerson.push(items);
-        });
+        result.forEach(
+          ({ qq, lastDate, unreadCount, targetName, targetImg }) => {
+            message.contactPerson.push({
+              qq,
+              lastDate,
+              unreadCount,
+              userName: targetName,
+              userImg: targetImg,
+            });
+          }
+        );
         message.updateUnreadAllCount();
+        message.updateMessageListSort();
       },
-      // refetchInterval: 1000,
+      refetchInterval: 1000,
     }
   );
   const { mutateAsync, isLoading, isSuccess } = fetchSendMessage();
@@ -110,7 +131,7 @@ function Message() {
       style={{ height: "calc(100vh - 154px)" }}
     >
       <ul className="w-3/12 box-border px-0 m-0 overflow-x-auto user-list bg-white">
-        {/* {message.contactPerson.map((item) => (
+        {message.contactPerson.map((item) => (
           <li
             className={classNames(
               "list-none box-border px-4 flex flex-row h-18 py-4 ",
@@ -145,14 +166,20 @@ function Message() {
             </p>
             <Badge count={item.unreadCount} offset={[14, 20]}>
               <p
-                className="m-0 text-xs text-left"
-                style={{ height: "40px", lineHeight: "40px" }}
+                className="m-0 text-xs text-left "
+                style={{
+                  height: "40px",
+                  lineHeight: "40px",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
               >
                 {moment(Number(item.lastDate)).format("MM/DD HH:mm:ss")}
               </p>
             </Badge>
           </li>
-        ))} */}
+        ))}
       </ul>
       <div
         className="w-9/12 bg-white box-border flex flex-col"
@@ -296,15 +323,16 @@ function Message() {
                 }
                 const lastDate = +new Date() + "";
                 message.addNewMessage(e.target.value, userInfo.qq, lastDate);
-                setMsg("");
                 startScrollBottom();
-                message.updateMessageLastDate();
                 await mutateAsync({
                   targetQQ: message.currentChatUser.qq,
                   qq: userInfo.qq,
                   content: e.target.value,
                   lastDate,
                 });
+                setMsg("");
+                refetch();
+                message.updateMessageLastDate();
               }}
               style={{
                 border: "none",
