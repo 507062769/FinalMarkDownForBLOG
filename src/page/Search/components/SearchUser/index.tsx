@@ -47,8 +47,6 @@ function SearchUser(props: { data: any }) {
                   userImg: item.userImg,
                   isTemporarily: true,
                 });
-                message.messageList = [];
-                message.setCurrentUserId(item.qq, userInfo.qq);
                 navigate("/message");
               }}
               disabled={userInfo?.qq === item.qq}

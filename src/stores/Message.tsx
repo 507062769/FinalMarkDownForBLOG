@@ -1,4 +1,3 @@
-import { post } from "@/apis";
 import { makeAutoObservable } from "mobx";
 
 export type ContactType = {
@@ -11,10 +10,13 @@ export type ContactType = {
 };
 
 type MessageType = {
-  targetQQ: string;
-  fromQQ: string;
-  messageContent: string;
-  lastDate: string;
+  qq: string;
+  messageList: {
+    targetQQ: string;
+    fromQQ: string;
+    messageContent: string;
+    lastDate: string;
+  }[];
 };
 type SystemMessageType = {
   notification: string;
@@ -55,20 +57,25 @@ export class Message {
 
   // 添加联系人
   addConversation(data: ContactType) {
-    this.setCurrentUserId(data.qq);
     // 判断当前是否已经存在消息列表中
     if (this.contactPerson.findIndex((item) => item.qq === data.qq) < 0) {
-      // 将当前用户设置为选中
+      // 不存在则添加到其中
       this.contactPerson.push(data);
+      this.messageList.push({
+        qq: data.qq,
+        messageList: [],
+      });
     }
+    this.setCurrentUserId(data.qq);
   }
 
   // 切换当前活动的联系人
-  setCurrentUserId(userId: string, meId?: string) {
+  setCurrentUserId(userId: string) {
     // this.currentUserId = userId;
     this.currentChatUser = this.contactPerson.find(
       (item) => item.qq === userId
     )!;
+
     this.contactPerson.forEach((item) => {
       if (item.qq === userId) {
         this.unreadAllCount -= item.unreadCount;
@@ -77,13 +84,24 @@ export class Message {
     });
   }
 
-  // addNewMessage(msg: string, from: string, lastDate: string) {
-  //   this?.messageList.push({
-  //     from,
-  //     messageContent: msg,
-  //     lastDate,
-  //   });
-  // }
+  // 添加新信息
+  addNewMessage(msg: string, lastDate: string, fromQQ: string) {
+    // 添加信息
+    this.messageList
+      .find((item) => item.qq === this.currentChatUser.qq)
+      ?.messageList.push({
+        messageContent: msg,
+        lastDate,
+        fromQQ,
+        targetQQ: this.currentChatUser.qq,
+      });
+    // 更新当前联系人的最后发送时间
+    this.contactPerson.find(
+      (item) => item.qq === this.currentChatUser.qq
+    )!.lastDate = Number(lastDate);
+    // 更新联系人的顺序
+    this.updateContactPersonListSort();
+  }
 
   // 更新总的未读条数
   updateUnreadAllCount() {
@@ -97,27 +115,6 @@ export class Message {
       admin,
       ...lastItem.sort((a, b) => Number(b.lastDate) - Number(a.lastDate)),
     ];
-  }
-
-  // 更新消息发送的最后时间
-  updateMessageLastDate() {
-    // 更新消息列表的最后时间
-    this.contactPerson.forEach((item) => {
-      if (item.qq === "admin") {
-        // 更新系统消息的最后时间
-        this.contactPerson.find((item) => item.qq === "admin")!.lastDate =
-          Number(
-            this.systemMessageList[this.systemMessageList.length - 1].lastDate
-          );
-      } else {
-        // 普通用户
-        this.contactPerson.find(
-          (item) => item.qq === this.currentChatUser.qq
-        )!.lastDate = Number(
-          this.messageList[this.messageList.length - 1].lastDate
-        );
-      }
-    });
   }
 
   // 当发送消息，切换会话都可能会造成排序更改
@@ -145,9 +142,15 @@ export class Message {
   }
 
   // 对消息进行排序，最新的消息在最下面
-  updateMessageListSort() {
-    this.messageList = this.messageList
-      .slice()
-      .sort((a, b) => Number(a.lastDate) - Number(b.lastDate));
+  // updateMessageListSort() {
+  //   this.messageList = this.messageList
+  //     .slice()
+  //     .sort((a, b) => Number(a.lastDate) - Number(b.lastDate));
+  // }
+
+  // 获取当前活动对话的MessageList
+  getCurrentMessageList() {
+    return this.messageList.find((item) => item.qq === this.currentChatUser.qq)
+      ?.messageList;
   }
 }

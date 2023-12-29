@@ -89,8 +89,6 @@ export default function OtherPersonalCenter() {
                     userImg: userInfo.userImg,
                     isTemporarily: true,
                   });
-                  message.messageList = [];
-                  message.setCurrentUserId(userInfo.qq, userInfos.qq);
                   navigate("/message");
                 }}
                 disabled={userInfos?.qq === userInfo?.qq}

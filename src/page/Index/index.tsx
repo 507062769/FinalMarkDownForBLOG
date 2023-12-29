@@ -2,6 +2,11 @@ import Header from "@/components/Header";
 import { Outlet } from "react-router-dom";
 import "./index.less";
 import Footer from "@/components/Footer";
+import store from "@/stores";
+import { useQuery } from "react-query";
+import { get } from "@/apis";
+import { useContext } from "react";
+import { UserContext } from "@/Context/UserContextProvide";
 const snowsColor = [
   "#FF4500", // 橙红色
   "#FF8C00", // 暗橙色
@@ -77,6 +82,92 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 export default function Index() {
+  const { message } = store;
+  const { userInfo, isLogin } = useContext(UserContext);
+
+  const { data: ___ } = useQuery(
+    ["SYS-messageList", isLogin],
+    async () => {
+      if (!isLogin) return;
+      const res = await Promise.all([
+        get("/messages/systemNotification", { qq: userInfo?.qq || "" }),
+        get("/messages/list", {
+          fromQQ: userInfo?.qq || "",
+        }),
+      ]);
+      return {
+        systemNotification: res?.[0].systemNotification || [],
+        chatMessageList: res?.[1].data,
+      };
+    },
+    {
+      onSuccess: (data) => {
+        // 先将当前的通知清空，避免重复
+        message.systemMessageList = [];
+        data?.systemNotification.forEach((item: any) => {
+          const from = item.fromQQ === "unlogin" ? "未登录用户" : item.userName;
+          const notification =
+            item.notificationType === "top"
+              ? "点赞"
+              : item.notificationType === "bottom"
+              ? "点踩"
+              : ("评论" as any);
+          message.systemMessageList.push({
+            notification,
+            from,
+            pageId: item.pageId,
+            fromQQ: item.fromQQ,
+            lastDate: item.operatorDate,
+          });
+        });
+        message.messageList = data?.chatMessageList;
+      },
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { data: __ } = useQuery(
+    ["contactPerson", isLogin],
+    async () => {
+      if (!isLogin) return;
+      return await get("/messages/contactPerson", { qq: userInfo?.qq || "" });
+    },
+    {
+      onSuccess: ({
+        result,
+      }: {
+        result: {
+          qq: string;
+          targetImg: string;
+          targetName: string;
+          unreadCount: number;
+          lastDate: number;
+        }[];
+      }) => {
+        // 由于每次进入message请求都会重新发送，但
+        message.contactPerson = message.contactPerson.filter(
+          (item) =>
+            item.qq === "admin" ||
+            (item?.isTemporarily &&
+              result.findIndex((items) => item.qq === items.qq) < 0)
+        ) as any;
+        result.forEach(
+          ({ qq, lastDate, unreadCount, targetName, targetImg }) => {
+            message.contactPerson.push({
+              qq,
+              lastDate,
+              unreadCount: message.currentChatUser.qq === qq ? 0 : unreadCount,
+              userName: targetName,
+              userImg: targetImg,
+            });
+          }
+        );
+        message.updateUnreadAllCount();
+        message.updateContactPersonListSort();
+      },
+      refetchOnWindowFocus: false,
+    }
+  );
   return (
     <>
       <canvas id="snowCanvas" />
