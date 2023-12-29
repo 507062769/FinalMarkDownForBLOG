@@ -1,7 +1,7 @@
 import { getUnreadCount } from "@/apis/messages";
 import store from "@/stores";
 import { observer } from "mobx-react-lite";
-import { Dispatch, createContext, useEffect, useState } from "react";
+import { Dispatch, createContext, useEffect, useRef, useState } from "react";
 
 type TUserInfo = {
   userImg: string;
@@ -30,11 +30,22 @@ function UserContextProvide(props: any) {
   const [token, setToken] = useState<string>("");
   const [userInfo, setUserInfo] = useState<TUserInfo>({} as any);
   const { mutateAsync } = getUnreadCount();
+  const ws = useRef<WebSocket>();
   useEffect(() => {
     const unread = async () => {
       if (isLogin) {
+        ws.current = new WebSocket(`ws://localhost:9875?qq=${userInfo.qq}`);
         const res = await mutateAsync({ qq: userInfo.qq });
         store.message.unreadAllCount = res.unreadCount;
+        // 登录状态下建立WebSocket
+        ws.current.onmessage = (data) => {
+          console.log(data);
+        };
+        ws.current.onerror = (error) => {
+          console.log(error);
+        };
+      } else if (ws.current) {
+        ws.current.close();
       }
     };
     unread();

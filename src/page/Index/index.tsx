@@ -133,25 +133,15 @@ export default function Index() {
       return await get("/messages/contactPerson", { qq: userInfo?.qq || "" });
     },
     {
-      onSuccess: ({
-        result,
-      }: {
-        result: {
-          qq: string;
-          targetImg: string;
-          targetName: string;
-          unreadCount: number;
-          lastDate: number;
-        }[];
-      }) => {
+      onSuccess: (data: any) => {
         // 由于每次进入message请求都会重新发送，但
         message.contactPerson = message.contactPerson.filter(
           (item) =>
             item.qq === "admin" ||
             (item?.isTemporarily &&
-              result.findIndex((items) => item.qq === items.qq) < 0)
+              data?.result.findIndex((items: any) => item.qq === items.qq) < 0)
         ) as any;
-        result.forEach(
+        data?.result.forEach(
           ({ qq, lastDate, unreadCount, targetName, targetImg }) => {
             message.contactPerson.push({
               qq,
