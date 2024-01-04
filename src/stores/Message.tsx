@@ -1,4 +1,6 @@
+import { UserContext } from "@/Context/UserContextProvide";
 import { makeAutoObservable } from "mobx";
+import { useContext } from "react";
 
 export type ContactType = {
   qq: string;
@@ -101,6 +103,29 @@ export class Message {
     )!.lastDate = Number(lastDate);
     // 更新联系人的顺序
     this.updateContactPersonListSort();
+  }
+
+  // 接受到新消息
+  receiveMessage({
+    fromQQ,
+    targetQQ,
+    messageContent,
+    lastDate,
+  }: {
+    targetQQ: string;
+    fromQQ: string;
+    messageContent: string;
+    lastDate: string;
+  }) {
+    // 在消息页
+    this.messageList
+      .find((item) => item.qq === fromQQ)!
+      .messageList.push({
+        targetQQ,
+        fromQQ,
+        messageContent,
+        lastDate,
+      });
   }
 
   // 更新总的未读条数

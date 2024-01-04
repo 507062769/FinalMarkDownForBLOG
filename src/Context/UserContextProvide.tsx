@@ -1,4 +1,4 @@
-import { getUnreadCount } from "@/apis/messages";
+import { fetchReadMessage, getUnreadCount } from "@/apis/messages";
 import store from "@/stores";
 import { message as messageBox } from "antd";
 import { observer } from "mobx-react-lite";
@@ -28,47 +28,62 @@ export const UserContext = createContext<{
 
 const { message } = store;
 
-const wsMap = {
-  message: ({ fromQQ, data }: any) => {
-    console.log(fromQQ, data);
-    // 判断当前收到的消息是否在对话列表中，并处理联系人数据
-    if (message.contactPerson.findIndex((item) => item.qq === fromQQ) < 0) {
-      // 不在联系人列表中所以需要添加
-      message.addConversation({ qq: fromQQ, ...data, unreadCount: 1 });
-    } else {
-      const targetChat =
-        message.contactPerson.find((item) => item.qq === fromQQ)! || {};
-      targetChat!.unreadCount += 1;
-      targetChat.lastDate = Number(data.lastDate);
-    }
-    message.updateUnreadAllCount();
-
-    // 处理具体的消息列表
-    // 根据pathname做不同的处理
-    if (location.pathname.includes("message")) {
-      // 在消息页
-    } else {
-      messageBox.success("收到了一条消息");
-    }
-  },
-  notification: (wsRes: any) => {
-    const notificationType = {
-      top: "赞",
-      bottom: "踩",
-      comment: "评论",
-    };
-    messageBox.success(`有人${notificationType[wsRes?.data?.type]}了你的文章`);
-    // 进行通知操作
-  },
-};
-
 function UserContextProvide(props: any) {
   const [isLogin, setIsLogin] = useState(false);
   const [token, setToken] = useState<string>("");
   const [userInfo, setUserInfo] = useState<TUserInfo>({} as any);
   const { mutateAsync } = getUnreadCount();
+  const { mutateAsync: read } = fetchReadMessage();
   const ws = useRef<WebSocket>();
+  const wsMap = {
+    // 这里逻辑太臃肿，可以整体拆到ReceiveMessage中
+    message: async ({ fromQQ, data }: any) => {
+      console.log(fromQQ, data);
+      // 判断当前收到的消息是否在对话列表中，并处理联系人数据
+      if (message.contactPerson.findIndex((item) => item.qq === fromQQ) < 0) {
+        // 不在联系人列表中所以需要添加
+        message.addConversation({ qq: fromQQ, ...data, unreadCount: 1 });
+      } else {
+        const targetChat =
+          message.contactPerson.find((item) => item.qq === fromQQ)! || {};
+        targetChat!.unreadCount += 1;
+        targetChat.lastDate = Number(data.lastDate);
+        if (targetChat.qq === message.currentChatUser.qq) {
+          // 如果消息的发送者，与当前会话用户，刚好是同一个，则说明不需要更改数量
+          targetChat.unreadCount = 0;
+          // 将此条消息置为已读
+          await read({ targetQQ: userInfo.qq, fromQQ });
+          // 将消息窗口滑动到底部，可以用pubsub
+        }
+      }
 
+      // 处理具体的消息列表
+      // 根据pathname做不同的处理
+      if (location.pathname.includes("message")) {
+        message.receiveMessage({
+          targetQQ: userInfo.qq,
+          fromQQ,
+          messageContent: data.content,
+          lastDate: data.lastDate,
+        });
+        // 还需要判断当前选中的是否是发送过来的那个，如果是，则修改未读消息数量，
+      } else {
+        messageBox.success("收到了一条消息");
+      }
+      message.updateUnreadAllCount();
+    },
+    notification: (wsRes: any) => {
+      const notificationType = {
+        top: "赞",
+        bottom: "踩",
+        comment: "评论",
+      };
+      messageBox.success(
+        `有人${notificationType[wsRes?.data?.type]}了你的文章`
+      );
+      // 将消息添加到通知中
+    },
+  };
   useEffect(() => {
     const unread = async () => {
       if (isLogin) {
