@@ -38,7 +38,6 @@ function UserContextProvide(props: any) {
   const wsMap = {
     // 这里逻辑太臃肿，可以整体拆到ReceiveMessage中
     message: async ({ fromQQ, data }: any) => {
-      messageBox.success("收到了一条消息");
       // 判断当前收到的消息是否在对话列表中，并处理联系人数据
       if (message.contactPerson.findIndex((item) => item.qq === fromQQ) < 0) {
         // 不在联系人列表中所以需要添加
@@ -54,8 +53,10 @@ function UserContextProvide(props: any) {
           // 将此条消息置为已读
           await read({ targetQQ: userInfo.qq, fromQQ });
           // 将消息窗口滑动到底部，可以用pubsub
+          PubSub.publish("receiveMessage");
         }
       }
+      console.log(message.currentChatUser.qq, fromQQ, "outer");
 
       // 处理具体的消息列表
       // 根据pathname做不同的处理
@@ -68,6 +69,12 @@ function UserContextProvide(props: any) {
         });
         // 还需要判断当前选中的是否是发送过来的那个，如果是，则修改未读消息数量，
       }
+      if (
+        message.currentChatUser.qq !== fromQQ ||
+        !location.pathname.includes("message")
+      ) {
+        messageBox.success("收到了一条消息");
+      }
       message.updateUnreadAllCount();
     },
     notification: ({ fromQQ, data }: any) => {
@@ -76,7 +83,6 @@ function UserContextProvide(props: any) {
         bottom: "点踩",
         comment: "评论",
       };
-      messageBox.success(`有人${notificationType[data?.type]}了你的文章`);
       const system = message.contactPerson.find((item) => item.qq === "admin")!;
       system.lastDate = Number(data?.lastDate);
       system.unreadCount += 1;
@@ -90,12 +96,15 @@ function UserContextProvide(props: any) {
         lastDate: data?.lastDate,
       });
       if (
-        location.pathname === "message" &&
+        location.pathname.includes("message") &&
         message.currentChatUser.qq === "admin"
       ) {
         message.contactPerson.find(
           (item) => item.qq === "admin"
         )!.unreadCount = 0;
+        PubSub.publish("receiveMessage");
+      } else {
+        messageBox.success(`有人${notificationType[data?.type]}了你的文章`);
       }
       message.updateUnreadAllCount();
     },

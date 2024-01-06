@@ -96,6 +96,7 @@ function UserInfo() {
                   localStorage.removeItem("BLOG_TOKEN");
                   setUserInfo({} as any);
                   message.unreadAllCount = 0;
+                  PubSub.unsubscribe("receiveMessage");
                 }}
               >
                 <StopOutlined className="mr-2" />

@@ -1,7 +1,7 @@
 import { Avatar, Badge, Space, Tooltip } from "antd";
 import moment from "moment";
 import classNames from "classnames";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { observer } from "mobx-react-lite";
 import store from "@/stores/index";
 import { UserContext } from "@/Context/UserContextProvide";
@@ -15,6 +15,7 @@ import TextArea from "antd/es/input/TextArea";
 import { fetchReadMessage, fetchSendMessage } from "@/apis/messages";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
+import Pubsub from "pubsub-js";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -59,6 +60,13 @@ function Message() {
       refetchOnWindowFocus: false,
     }
   );
+  Pubsub.subscribe("receiveMessage", startScrollBottom);
+  useEffect(() => {
+    startScrollBottom();
+    return () => {
+      Pubsub.unsubscribe("receiveMessage");
+    };
+  }, [message.currentChatUser]);
   return (
     <div
       className="w-11/12 mx-auto  h-96 flex flex-row"
