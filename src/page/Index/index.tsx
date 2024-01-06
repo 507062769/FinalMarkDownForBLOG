@@ -120,7 +120,16 @@ export default function Index() {
             lastDate: item.operatorDate,
           });
         });
-        // const maxLastDate = data?.systemNotification[0].operatorDate;
+        let maxLastDate = Number(data?.systemNotification[0].operatorDate);
+        data?.systemNotification?.forEach((item: any) => {
+          if (Number(item?.operatorDate) > maxLastDate) {
+            maxLastDate = Number(item?.operatorDate);
+          }
+        });
+        const system = message.contactPerson.find(
+          (item) => item.qq === "admin"
+        )!;
+        system.lastDate = maxLastDate;
         message.messageList = data?.chatMessageList;
       },
       refetchOnWindowFocus: false,

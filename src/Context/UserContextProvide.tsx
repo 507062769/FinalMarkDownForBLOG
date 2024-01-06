@@ -38,7 +38,7 @@ function UserContextProvide(props: any) {
   const wsMap = {
     // 这里逻辑太臃肿，可以整体拆到ReceiveMessage中
     message: async ({ fromQQ, data }: any) => {
-      console.log(fromQQ, data);
+      messageBox.success("收到了一条消息");
       // 判断当前收到的消息是否在对话列表中，并处理联系人数据
       if (message.contactPerson.findIndex((item) => item.qq === fromQQ) < 0) {
         // 不在联系人列表中所以需要添加
@@ -67,8 +67,6 @@ function UserContextProvide(props: any) {
           lastDate: data.lastDate,
         });
         // 还需要判断当前选中的是否是发送过来的那个，如果是，则修改未读消息数量，
-      } else {
-        messageBox.success("收到了一条消息");
       }
       message.updateUnreadAllCount();
     },
@@ -79,21 +77,27 @@ function UserContextProvide(props: any) {
         comment: "评论",
       };
       messageBox.success(`有人${notificationType[data?.type]}了你的文章`);
+      const system = message.contactPerson.find((item) => item.qq === "admin")!;
+      system.lastDate = Number(data?.lastDate);
+      system.unreadCount += 1;
       // 将消息添加到通知中
-      if (data?.type === "comment") {
-        // 评论
-        message.systemMessageList.push({
-          notification: "评论",
-          fromQQ,
-          pageId: data?.pageId,
-          lastDate: data?.lastDate,
-          from: "7777",
-        });
-        message.contactPerson.find((item) => item.qq === "admin")!.lastDate =
-          Number(data?.lastDate);
-      } else {
-        // 点赞/踩
+      const notification = notificationType[data?.type];
+      message.systemMessageList.push({
+        notification,
+        from: fromQQ,
+        fromQQ,
+        pageId: data?.pageid,
+        lastDate: data?.lastDate,
+      });
+      if (
+        location.pathname === "message" &&
+        message.currentChatUser.qq === "admin"
+      ) {
+        message.contactPerson.find(
+          (item) => item.qq === "admin"
+        )!.unreadCount = 0;
       }
+      message.updateUnreadAllCount();
     },
   };
   useEffect(() => {

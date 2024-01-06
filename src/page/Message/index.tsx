@@ -74,7 +74,7 @@ function Message() {
               )}
               style={{ borderBottom: "1px solid #ccc" }}
               onClick={async () => {
-                if (item.unreadCount > 0) {
+                if (item.unreadCount > 0 && item.qq !== "admin") {
                   // 如果有未读消息，则将其设置为已读
                   await readMessage({
                     targetQQ: userInfo.qq,
