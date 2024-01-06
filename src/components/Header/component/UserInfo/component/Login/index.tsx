@@ -33,7 +33,6 @@ export default function Login() {
     const res = await login({ qq: username, pass });
     if (res.isLogin) {
       // 登录成功
-      setIsLogin(true);
       setToken(res.token);
       setOpen(false);
       setUserInfo({
@@ -43,6 +42,7 @@ export default function Login() {
       const resUnreadCount = await mutateAsync({ qq: username });
       store.message.unreadAllCount = resUnreadCount.unreadCount;
       localStorage.setItem("BLOG_TOKEN", res.token);
+      setIsLogin(true);
     }
   };
   return (

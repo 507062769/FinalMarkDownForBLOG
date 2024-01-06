@@ -13,6 +13,8 @@ import {
 } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
 import { fetchReadMessage, fetchSendMessage } from "@/apis/messages";
+import { useQuery } from "react-query";
+import { get } from "@/apis";
 
 function Message() {
   const [msg, setMsg] = useState<string>();
@@ -45,9 +47,18 @@ function Message() {
       }
     }, 30);
   };
-
   const { mutateAsync } = fetchSendMessage();
   const { mutateAsync: readMessage } = fetchReadMessage();
+  const { data: _ } = useQuery(
+    ["readSystemNotification", message.currentChatUser],
+    async () => {
+      if (message.currentChatUser.qq !== "admin") return;
+      return get("/messages/readSystemNotification", { qq: userInfo.qq });
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
   return (
     <div
       className="w-11/12 mx-auto  h-96 flex flex-row"

@@ -120,6 +120,7 @@ export default function Index() {
             lastDate: item.operatorDate,
           });
         });
+        // const maxLastDate = data?.systemNotification[0].operatorDate;
         message.messageList = data?.chatMessageList;
       },
       refetchOnWindowFocus: false,

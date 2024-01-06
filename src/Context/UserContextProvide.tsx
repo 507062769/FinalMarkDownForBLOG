@@ -72,16 +72,28 @@ function UserContextProvide(props: any) {
       }
       message.updateUnreadAllCount();
     },
-    notification: (wsRes: any) => {
+    notification: ({ fromQQ, data }: any) => {
       const notificationType = {
-        top: "赞",
-        bottom: "踩",
+        top: "点赞",
+        bottom: "点踩",
         comment: "评论",
       };
-      messageBox.success(
-        `有人${notificationType[wsRes?.data?.type]}了你的文章`
-      );
+      messageBox.success(`有人${notificationType[data?.type]}了你的文章`);
       // 将消息添加到通知中
+      if (data?.type === "comment") {
+        // 评论
+        message.systemMessageList.push({
+          notification: "评论",
+          fromQQ,
+          pageId: data?.pageId,
+          lastDate: data?.lastDate,
+          from: "7777",
+        });
+        message.contactPerson.find((item) => item.qq === "admin")!.lastDate =
+          Number(data?.lastDate);
+      } else {
+        // 点赞/踩
+      }
     },
   };
   useEffect(() => {

@@ -1,6 +1,4 @@
-import { UserContext } from "@/Context/UserContextProvide";
 import { makeAutoObservable } from "mobx";
-import { useContext } from "react";
 
 export type ContactType = {
   qq: string;
