@@ -1,6 +1,6 @@
 import axios from "axios";
 import { message } from "antd";
-const BASE_URL = "http://localhost:9876";
+const BASE_URL = "http://www.zhangtc.online:9876";
 
 const httpInstance = axios.create({
   baseURL: BASE_URL,

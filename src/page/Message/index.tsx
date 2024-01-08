@@ -267,15 +267,15 @@ function Message() {
                   return;
                 }
                 const lastDate = +new Date() + "";
+                message.addNewMessage(e.target.value, lastDate, userInfo.qq);
+                startScrollBottom();
+                setMsg("");
                 await mutateAsync({
                   targetQQ: message.currentChatUser.qq,
                   qq: userInfo.qq,
                   content: e.target.value,
                   lastDate,
                 });
-                message.addNewMessage(e.target.value, lastDate, userInfo.qq);
-                startScrollBottom();
-                setMsg("");
               }}
               style={{
                 border: "none",
