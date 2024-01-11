@@ -32,7 +32,9 @@ export default function Header() {
       <div className="flex w-11/12 justify-between mx-auto">
         <Link to={"/"}>
           <h1 className="w-1/5 m-0 ">
-            <a id="Logo">首页</a>
+            <a id="Logo" title="首页">
+              首页
+            </a>
           </h1>
         </Link>
         <div className="w-2/5 pt-3">
