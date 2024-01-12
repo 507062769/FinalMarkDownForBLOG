@@ -15,6 +15,7 @@ import _ from "lodash";
 import AuthGuard from "./components/AuthGuard";
 import OtherPersonalCenter from "./page/OtherPersonalCenter";
 import HOCPageTitle from "./components/HOCPageTitle";
+import NotFound from "./page/NotFound";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
@@ -42,7 +43,7 @@ export default function App() {
             index
             element={
               // 可以利用传入HOC一个字段，然后写一个函数，在函数对参数进行处理，从而达到自定义标题的效果
-              <HOCPageTitle title="Z的博客社区">
+              <HOCPageTitle>
                 <Home />
               </HOCPageTitle>
             }
@@ -50,7 +51,7 @@ export default function App() {
           <Route
             path="page"
             element={
-              <HOCPageTitle title="文章">
+              <HOCPageTitle>
                 <PageComponent />
               </HOCPageTitle>
             }
@@ -58,7 +59,7 @@ export default function App() {
           <Route
             path="other"
             element={
-              <HOCPageTitle title="他的主页">
+              <HOCPageTitle>
                 <OtherPersonalCenter />
               </HOCPageTitle>
             }
@@ -67,7 +68,7 @@ export default function App() {
             path="message"
             element={
               <AuthGuard>
-                <HOCPageTitle title="私信">
+                <HOCPageTitle>
                   <Message />
                 </HOCPageTitle>
               </AuthGuard>
@@ -76,7 +77,7 @@ export default function App() {
           <Route
             path="search"
             element={
-              <HOCPageTitle title="搜索结果">
+              <HOCPageTitle>
                 <Search />
               </HOCPageTitle>
             }
@@ -85,7 +86,7 @@ export default function App() {
             path="user"
             element={
               <AuthGuard>
-                <HOCPageTitle title="个人中心">
+                <HOCPageTitle>
                   <UserControl />
                 </HOCPageTitle>
               </AuthGuard>
@@ -95,20 +96,13 @@ export default function App() {
             path="create"
             element={
               <AuthGuard>
-                <HOCPageTitle title="创建新文章">
+                <HOCPageTitle>
                   <Create />
                 </HOCPageTitle>
               </AuthGuard>
             }
           />
-          <Route
-            path="*"
-            element={
-              <HOCPageTitle title="页面不见啦">
-                <div>404</div>
-              </HOCPageTitle>
-            }
-          />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

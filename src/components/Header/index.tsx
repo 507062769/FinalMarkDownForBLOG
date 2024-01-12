@@ -5,16 +5,19 @@ import "./index.less";
 import { SearchOutlined } from "@ant-design/icons";
 import { Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Header() {
   const { Search } = Input;
   const navigate = useNavigate();
+  const [key, setKey] = useState<string>("");
   const onSearch = (value: string) => {
     if (!value) {
       message.warning("当前搜索框为空");
       return;
     }
     navigate(`/search?key=${value}`);
+    setKey("");
   };
   return (
     <header
@@ -45,6 +48,8 @@ export default function Header() {
             size="large"
             onSearch={onSearch}
             suffix={<SearchOutlined />}
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
           />
         </div>
         <div className="w-3/12">

@@ -19,7 +19,7 @@ function SearchUser(props: { data: any }) {
             className="flex flex-row bg-white p-2 search-user-list relative"
             style={{ borderBottom: "1px solid #ccc" }}
             onClick={() => {
-              navigate(`/other?qq=${item.qq}`);
+              navigate(`/other?qq=${item.qq}&other=${item.userName}`);
             }}
           >
             <img
