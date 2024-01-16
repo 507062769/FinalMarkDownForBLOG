@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { get } from "@/apis";
 import moment from "moment";
 import UserImg from "../../assets/userImg.jpg";
-import Icon, { GithubOutlined } from "@ant-design/icons";
+import { GithubOutlined } from "@ant-design/icons";
 
 export default function AuthUserInfo({
   userId = "2458015575",
@@ -21,6 +21,11 @@ export default function AuthUserInfo({
       refetchOnWindowFocus: false,
     }
   );
+  const { data: countData } = useQuery(["countData"], async () =>
+    get<{ visitCount: number; pagesCount: number; userCount: number }>(
+      "/page/count"
+    )
+  );
   return (
     <>
       <div className="box-border ml-5 p-6" id="AuthInfo">
@@ -29,13 +34,22 @@ export default function AuthUserInfo({
           <div>
             <p>欢迎来到我的博客社区，毕业于武汉某高校的前端</p>
             <p>
-              网站访问总量：<span style={{ color: "#1677ff" }}>1</span>
+              网站访问总量：
+              <span style={{ color: "#1677ff" }}>
+                {countData?.visitCount || 99}
+              </span>
             </p>
             <p>
-              网站文章数量：<span style={{ color: "#1677ff" }}>1</span>
+              网站文章数量：
+              <span style={{ color: "#1677ff" }}>
+                {countData?.pagesCount || 99}
+              </span>
             </p>
             <p>
-              网站用户数量：<span style={{ color: "#1677ff" }}>1</span>
+              网站用户数量：
+              <span style={{ color: "#1677ff" }}>
+                {countData?.userCount || 99}
+              </span>
             </p>
             <p>
               网站运行天数：

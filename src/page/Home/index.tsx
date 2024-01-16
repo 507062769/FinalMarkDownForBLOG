@@ -13,7 +13,7 @@ import { VerticalAlignTopOutlined } from "@ant-design/icons";
 export default function Home() {
   const { data } = useQuery(
     ["indexmd"],
-    async () => await get("/page/indexmd"),
+    async () => await get("/page/indexmd", { platform: 1 }),
     {
       refetchOnWindowFocus: false,
     }

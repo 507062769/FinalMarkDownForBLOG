@@ -44,12 +44,12 @@ export type ClientError = {
   msg: string;
 };
 
-export const post = (url: string, data?: any) => {
-  return httpInstance.post(url, data);
+export const post = <T>(url: string, data?: any): T => {
+  return httpInstance.post<T>(url, data) as T;
 };
 
-export const get = (url: string, data?: any): any => {
-  return httpInstance.get<any>(url, { params: data });
+export const get = <T>(url: string, data?: any): T => {
+  return httpInstance.get<T>(url, { params: data }) as T;
 };
 
 export const fetchFile = async (url: string, data: any, param?: any) => {
