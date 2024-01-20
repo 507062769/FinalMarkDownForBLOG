@@ -112,7 +112,9 @@ export default function OtherPersonalCenter() {
         </div>
         <h2 style={{ borderBottom: "4px solid #ccc" }}>他的文章</h2>
         {data?.pagesList.length > 0 ? (
-          <PageList data={data?.pagesList} />
+          <PageList
+            data={data?.pagesList.filter((item) => item.isCheckSuccess === 1)}
+          />
         ) : (
           <Empty
             description="小伙伴暂未发布任何文章"

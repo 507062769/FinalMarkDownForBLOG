@@ -31,7 +31,7 @@ export default function AuthUserInfo({
       <div className="box-border ml-5 p-6" id="AuthInfo">
         <img src={data?.sqlRes.userImg || UserImg} alt="头像" id="AuthImg" />
         {userId === "2458015575" ? (
-          <div>
+          <div className="text-sm">
             <p>欢迎来到我的博客社区，毕业于武汉某高校的前端</p>
             <p>
               网站访问总量：

@@ -8,6 +8,7 @@ import {
   EyeOutlined,
   LikeOutlined,
   PlusOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -17,11 +18,12 @@ import {
   Modal,
   Popconfirm,
   Space,
+  Tag,
   Upload,
   message,
 } from "antd";
 import moment from "moment";
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useMemo } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { fetchDeletePage, fetchUpdatePage } from "@/apis/pages";
@@ -40,9 +42,11 @@ export type Page = {
   likeCount: number;
   unlikeCount: number;
   viewCount: number;
+  isCheckSuccess: number;
+  reason?: string;
 };
 
-export default function UserPage() {
+export default function UserPage({ isCheck = false }: any) {
   const navigate = useNavigate();
   const { userInfo, setUserInfo } = useContext(UserContext);
   const { mutateAsync } = fetchDeletePage();
@@ -65,6 +69,13 @@ export default function UserPage() {
       refetchOnWindowFocus: false,
     }
   );
+  const datas = useMemo(() => {
+    if (isCheck) {
+      return data?.filter((item) => [0, -1].includes(item.isCheckSuccess));
+    } else {
+      return data?.filter((item) => [1].includes(item.isCheckSuccess));
+    }
+  }, [data]);
   const uploadButton = (
     <div>
       <PlusOutlined />
@@ -74,14 +85,16 @@ export default function UserPage() {
   return (
     <>
       <div className="mt-5">
-        {data!?.length > 0 ? (
-          data?.map((item) => (
+        {datas!?.length > 0 ? (
+          datas?.map((item) => (
             <div
               key={item.pageid}
               className="flex flex-row flex-nowrap my-4 pb-1 pages-list"
               style={{ borderBottom: "1px solid #ccc" }}
               onClick={() => {
-                navigate(`/page?pageid=${item.pageid}`);
+                if (!isCheck) {
+                  navigate(`/page?pageid=${item.pageid}`);
+                }
               }}
             >
               <img
@@ -100,23 +113,47 @@ export default function UserPage() {
                     )}
                   </span>
                   <div className="ml-auto pr-4 text-lg">
-                    <Space size={"large"}>
-                      <span>
-                        <EyeOutlined />
-                        &nbsp;
-                        {item.viewCount}
-                      </span>
-                      <span>
-                        <LikeOutlined />
-                        &nbsp;
-                        {item.likeCount}
-                      </span>
-                      <span>
-                        <DislikeOutlined />
-                        &nbsp;
-                        {item.unlikeCount}
-                      </span>
-                    </Space>
+                    {isCheck ? (
+                      <>
+                        {item?.reason && (
+                          <>
+                            <span style={{ color: "red" }}>
+                              未通过原因：{item.reason}
+                            </span>
+                            <Button type="link" style={{ color: "orange" }}>
+                              <Popconfirm
+                                title="确定重新发起审核吗？"
+                                onConfirm={() => console.log(111)}
+                              >
+                                <ReloadOutlined />
+                                重新审核
+                              </Popconfirm>
+                            </Button>
+                          </>
+                        )}
+                        <Tag color={item.reason ? "red" : "#1677ff"}>
+                          {item.reason ? "未通过" : "审核中"}
+                        </Tag>
+                      </>
+                    ) : (
+                      <Space size={"large"}>
+                        <span>
+                          <EyeOutlined />
+                          &nbsp;
+                          {item.viewCount}
+                        </span>
+                        <span>
+                          <LikeOutlined />
+                          &nbsp;
+                          {item.likeCount}
+                        </span>
+                        <span>
+                          <DislikeOutlined />
+                          &nbsp;
+                          {item.unlikeCount}
+                        </span>
+                      </Space>
+                    )}
                     <Button
                       type="link"
                       className="text-lg"
@@ -176,7 +213,7 @@ export default function UserPage() {
           ))
         ) : (
           <>
-            <div>当前暂无文章，快去发表吧</div>
+            <div>当前暂无{isCheck ? "待发布" : ""}文章，快去发表吧</div>
             <Empty />
           </>
         )}

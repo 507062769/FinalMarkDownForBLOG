@@ -37,3 +37,7 @@ export function fetchOperator() {
     { pageid: string; type: string; fromQQ: string; targetQQ: string }
   >((data) => get("/page/operator", data));
 }
+
+export function fetchReloadCheckPage() {
+  return useMutation(async (pageid) => post("/reloadCheck", { pageid }));
+}

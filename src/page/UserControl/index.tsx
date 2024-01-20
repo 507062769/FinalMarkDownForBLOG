@@ -13,6 +13,11 @@ export default function UserControl() {
         items={[
           { label: "个人资料", key: "control", children: <UserInfo /> },
           { label: "我的创作", key: "page", children: <UserPage /> },
+          {
+            label: "待发布",
+            key: "check",
+            children: <UserPage isCheck={true} />,
+          },
         ]}
       />
     </div>
