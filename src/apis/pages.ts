@@ -39,5 +39,7 @@ export function fetchOperator() {
 }
 
 export function fetchReloadCheckPage() {
-  return useMutation(async (pageid) => post("/reloadCheck", { pageid }));
+  return useMutation<any, ClientError, { pageid: string }>(async (pageid) =>
+    post("/pages/check", pageid)
+  );
 }

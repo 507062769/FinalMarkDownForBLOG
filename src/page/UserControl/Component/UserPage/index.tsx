@@ -26,7 +26,11 @@ import moment from "moment";
 import { useContext, useState, useRef, useMemo } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { fetchDeletePage, fetchUpdatePage } from "@/apis/pages";
+import {
+  fetchDeletePage,
+  fetchReloadCheckPage,
+  fetchUpdatePage,
+} from "@/apis/pages";
 import { beforeUpload } from "@/page/UserControl/Component/UserInfo";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
@@ -51,6 +55,7 @@ export default function UserPage({ isCheck = false }: any) {
   const { userInfo, setUserInfo } = useContext(UserContext);
   const { mutateAsync } = fetchDeletePage();
   const { mutateAsync: updatePage } = fetchUpdatePage();
+  const { mutateAsync: reloadCheck } = fetchReloadCheckPage();
   const [cover, setCover] = useState<any>();
   const [form] = useForm();
   const currentPage = useRef<string>();
@@ -120,10 +125,17 @@ export default function UserPage({ isCheck = false }: any) {
                             <span style={{ color: "red" }}>
                               未通过原因：{item.reason}
                             </span>
-                            <Button type="link" style={{ color: "orange" }}>
+                            <Button
+                              type="link"
+                              style={{ color: "orange" }}
+                              disabled={!(item.isCheckSuccess === -1)}
+                            >
                               <Popconfirm
                                 title="确定重新发起审核吗？"
-                                onConfirm={() => console.log(111)}
+                                onConfirm={async () => {
+                                  await reloadCheck({ pageid: item.pageid });
+                                  refetch();
+                                }}
                               >
                                 <ReloadOutlined />
                                 重新审核
@@ -160,13 +172,13 @@ export default function UserPage({ isCheck = false }: any) {
                       onClick={async (e) => {
                         e.stopPropagation();
                         setIsOpenEditModal(true);
-                        const mdContents = await get("page/md", {
+                        const mdContents = (await get("/page/md", {
                           pageId: item.pageid,
-                        });
+                        })) as any;
                         form.setFieldsValue({
                           desc: item.description,
                           title: item.title,
-                          content: mdContents.content,
+                          content: mdContents?.content,
                         });
                         setCover(item.coverUrl);
                         currentPage.current = item.pageid;
