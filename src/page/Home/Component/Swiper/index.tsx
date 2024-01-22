@@ -1,21 +1,13 @@
 import "@/page/Home/index.less";
+import { Page } from "@/page/UserControl/Component/UserPage";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import _ from "lodash";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-document.addEventListener("DOMContentLoaded", () => {
-  // swiper.addEventListener("mouseenter", () => {
-  //   console.log(1);
-  // });
-});
-
-export default function Swiper({
-  list,
-}: {
-  list: { title: string; url: any; pageId: string }[];
-}) {
+export default function Swiper({ list }: { list: Page[] }) {
   let timer: any = null;
-
+  const navigate = useNavigate();
   useEffect(() => {
     const swiperContainer = document.querySelector("#SwiperContainer") as any;
     const containerWidth = Math.ceil(
@@ -43,7 +35,7 @@ export default function Swiper({
       const swiperLeft = Math.ceil(swiper.style.left.split("px")[0]);
       swiper.style.left = swiperLeft + containerWidth + "px";
       if (swiperLeft >= 0) {
-        swiper.style.left = containerWidth * -3 + 'px';
+        swiper.style.left = containerWidth * -3 + "px";
       }
     }, 1000);
 
@@ -71,13 +63,19 @@ export default function Swiper({
       swiperContainer.removeEventListener("mouseenter", swiperMouseenter);
       swiperContainer.removeEventListener("mouseout", startTimer);
     };
-  }, []);
+  }, [list]);
   return (
     <>
       <ul id="Swiper">
         {list.map((item) => (
-          <li key={item.title} className="float-left swiper-item">
-            <img src={item.url} alt="图片" />
+          <li
+            key={item.title}
+            className="float-left swiper-item"
+            onClick={() =>
+              navigate(`/page?pageid=${item.pageid}&page=${item.title}`)
+            }
+          >
+            <img src={item.coverUrl} alt="图片" />
             <span
               style={{
                 overflow: "hidden",

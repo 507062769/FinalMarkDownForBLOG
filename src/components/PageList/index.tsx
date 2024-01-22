@@ -4,22 +4,9 @@ import { DislikeOutlined, EyeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { Space } from "antd";
+import { Page } from "@/page/UserControl/Component/UserPage";
 
-export default function PageList({
-  data,
-}: {
-  data: {
-    qq: string;
-    pageid: string;
-    title: string;
-    coverUrl: string;
-    createTime: string;
-    likeCount: number;
-    unlikeCount: number;
-    description: string;
-    viewCount: number;
-  }[];
-}) {
+export default function PageList({ data }: { data: Page[] }) {
   return (
     <>
       <div className="my-4">

@@ -174,7 +174,7 @@ export default function Index() {
       <div className="container-snow" id="ContainerSnow">
         <Header />
         <Outlet />
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </>
   );

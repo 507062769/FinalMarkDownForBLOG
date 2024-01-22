@@ -1,7 +1,3 @@
-import th from "@/assets/th.jpg";
-import th1 from "@/assets/th1.jpg";
-import th2 from "@/assets/th2.jpg";
-import th3 from "@/assets/th3.jpg";
 import AuthUserInfo from "@/components/AuthUserInfo";
 import PageList from "@/components/PageList";
 import Swiper from "./Component/Swiper";
@@ -9,21 +5,32 @@ import { useQuery } from "react-query";
 import { get } from "@/apis";
 import { FloatButton } from "antd";
 import { VerticalAlignTopOutlined } from "@ant-design/icons";
+import { useMemo } from "react";
+import { Page } from "../UserControl/Component/UserPage";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
   const { data } = useQuery(
     ["indexmd"],
-    async () => await get("/page/indexmd", { platform: 1 }),
+    async () => await get<{ data: Page[] }>("/page/indexmd", { platform: 1 }),
     {
       refetchOnWindowFocus: false,
     }
   );
-  const list = [
-    { title: "Umi3", url: th, pageId: "1111" },
-    { title: "React", url: th1, pageId: "2222" },
-    { title: "Vue", url: th2, pageId: "3333" },
-    { title: "Js", url: th3, pageId: "4444" },
-  ];
+  const indexPage = useMemo(() => {
+    const home = data?.data.filter((item) => item.position === "home") || [];
+    const slide = data?.data.filter((item) => item.position === "slide") || [];
+    const swipe = data?.data.filter((item) => item.position === "swipe") || [];
+    console.log(home, slide, swipe);
+
+    return {
+      home,
+      slide,
+      swipe,
+    };
+  }, [data]);
+
   return (
     <>
       <div className=" flex w-11/12 mx-auto -z-40">
@@ -37,41 +44,34 @@ export default function Home() {
               className="swiper w-8/12  relative overflow-hidden"
               id="SwiperContainer"
             >
-              <Swiper list={list} />
+              <Swiper list={indexPage.swipe} />
             </div>
-            <div className="box-border p-5  w-4/12 flex flex-col justify-between">
-              <article className="flex flex-col small-page">
-                <img src={th} className="h-5/6"></img>
-                <div
-                  className="h-1/6"
-                  style={{
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    borderBottom: "4px solid white",
-                  }}
+            <div className="box-border p-5  w-4/12 flex flex-col justify-between ">
+              {indexPage.slide.map((item) => (
+                <article
+                  className="flex flex-col small-page"
+                  onClick={() =>
+                    navigate(`/page?pageid=${item.pageid}&page=${item.title}`)
+                  }
                 >
-                  这是一篇文章啊撒大声地撒大声地阿打算撒打啊d
-                </div>
-              </article>
-              <article className=" flex flex-col small-page">
-                <img src={th} className="h-5/6"></img>
-                <div
-                  className="h-1/6"
-                  style={{
-                    overflow: "hidden",
-                    whiteSpace: "nowrap",
-                    textOverflow: "ellipsis",
-                    borderBottom: "4px solid white",
-                  }}
-                >
-                  这是一篇文章
-                </div>
-              </article>
+                  <img src={item.coverUrl} className="h-5/6"></img>
+                  <div
+                    className="h-1/6"
+                    style={{
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                      borderBottom: "4px solid white",
+                    }}
+                  >
+                    {item.title}
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
           {/* 轮播图end */}
-          <PageList data={data?.data} />
+          <PageList data={indexPage?.home} />
         </div>
         <div className="w-2/12">
           <AuthUserInfo />

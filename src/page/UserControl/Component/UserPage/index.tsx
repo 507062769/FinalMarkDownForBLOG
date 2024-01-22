@@ -48,6 +48,7 @@ export type Page = {
   viewCount: number;
   isCheckSuccess: number;
   reason?: string;
+  position: string;
 };
 
 export default function UserPage({ isCheck = false }: any) {
