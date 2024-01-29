@@ -1,9 +1,7 @@
 import axios from "axios";
 import { message } from "antd";
-const BASE_URL = "http://localhost:9876";
 
 const httpInstance = axios.create({
-  baseURL: BASE_URL,
   timeout: 5000,
   // 将token发往后端
   headers: {
@@ -45,11 +43,11 @@ export type ClientError = {
 };
 
 export const post = <T>(url: string, data?: any): T => {
-  return httpInstance.post<T>(url, data) as T;
+  return httpInstance.post<T>(`/api${url}`, data) as T;
 };
 
 export const get = <T>(url: string, data?: any): T => {
-  return httpInstance.get<T>(url, { params: data }) as T;
+  return httpInstance.get<T>(`/api${url}`, { params: data }) as T;
 };
 
 export const fetchFile = async (url: string, data: any, param?: any) => {
@@ -62,7 +60,7 @@ export const fetchFile = async (url: string, data: any, param?: any) => {
     ...param,
   };
   try {
-    const response = await fetch(BASE_URL + "/files" + url, defaultConfig);
+    const response = await fetch("/api/files" + url, defaultConfig);
     if (!response.ok) {
       throw new Error("请求失败");
     }

@@ -2,12 +2,13 @@ import AuthUserInfo from "@/components/AuthUserInfo";
 import PageList from "@/components/PageList";
 import Swiper from "./Component/Swiper";
 import { useQuery } from "react-query";
-import { get } from "@/apis";
 import { FloatButton } from "antd";
 import { VerticalAlignTopOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
 import { Page } from "../UserControl/Component/UserPage";
 import { useNavigate } from "react-router-dom";
+import { get } from "@/apis";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -84,6 +85,7 @@ export default function Home() {
           tooltip={<span>回到顶部</span>}
         />
       </div>
+      <Footer />
     </>
   );
 }

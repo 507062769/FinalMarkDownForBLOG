@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import { Outlet } from "react-router-dom";
 import "./index.less";
-import Footer from "@/components/Footer";
 import store from "@/stores";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
@@ -174,7 +173,6 @@ export default function Index() {
       <div className="container-snow" id="ContainerSnow">
         <Header />
         <Outlet />
-        {/* <Footer /> */}
       </div>
     </>
   );
