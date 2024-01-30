@@ -22,7 +22,7 @@ export default function ButtonList(props: { pageid: string }) {
   const pageid = params.get("pageid") || "";
   const { data, refetch } = useQuery(
     ["commentdata"],
-    async () => await get("/page/data", { pageid: props.pageid })
+    async () => (await get("/page/data", { pageid: props.pageid })) as any
   );
   const { mutateAsync: operator } = fetchOperator();
   const targetQQ = pageid.slice(0, -13);

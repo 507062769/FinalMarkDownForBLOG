@@ -65,9 +65,9 @@ export default function UserPage({ isCheck = false }: any) {
   const { data, refetch } = useQuery<Page[]>(
     [],
     async () => {
-      const res = await get("/page/list", {
+      const res = (await get("/page/list", {
         qq: userInfo.qq,
-      });
+      })) as any;
       return res.data;
     },
     {

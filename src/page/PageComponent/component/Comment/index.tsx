@@ -1,5 +1,5 @@
 import { Drawer, message } from "antd";
-import react, { useState, useContext } from "react";
+import { useState, useContext } from "react";
 import { Button } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { UserContext } from "@/Context/UserContextProvide";
@@ -13,7 +13,6 @@ import {
 } from "react-query";
 import { get } from "@/apis";
 import moment from "moment";
-import unlogin from "@/assets/unlogin.jpg";
 
 export default function Comment({
   isShowComment,
@@ -48,7 +47,7 @@ export default function Comment({
     >
       <div className="flex flex-row mb-6">
         <img
-          src={userInfo?.userImg || unlogin}
+          src={userInfo?.userImg || "../../../../assets/unlogin.jpg"}
           alt="用户头像"
           className="w-8 h-8 rounded"
           style={{ verticalAlign: "top" }}
@@ -90,7 +89,7 @@ export default function Comment({
         </Button>
       </div>
       <div id="CommentBody" className="box-border pl-10">
-        {data?.data?.map((item) => {
+        {data?.data?.map((item: any) => {
           return (
             <>
               {/* 主评论 */}

@@ -11,7 +11,7 @@ export default function Search() {
   const key = params.get("key") || "";
   const { data } = useQuery(
     ["queryKey", key],
-    async () => get("/page/query", { key }),
+    async () => get("/page/query", { key }) as any,
     {
       retry: 3,
     }

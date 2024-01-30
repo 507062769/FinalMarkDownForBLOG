@@ -87,7 +87,8 @@ function UserContextProvide(props: any) {
       system.lastDate = Number(data?.lastDate);
       system.unreadCount += 1;
       // 将消息添加到通知中
-      const notification = notificationType[data?.type];
+      const notification =
+        notificationType[data?.type as "top" | "bottom" | "comment"];
       message.systemMessageList.push({
         notification,
         from: fromQQ,
@@ -104,7 +105,11 @@ function UserContextProvide(props: any) {
         )!.unreadCount = 0;
         PubSub.publish("receiveMessage");
       } else {
-        messageBox.success(`有人${notificationType[data?.type]}了你的文章`);
+        messageBox.success(
+          `有人${
+            notificationType[data?.type as "top" | "bottom" | "comment"]
+          }了你的文章`
+        );
       }
       message.updateUnreadAllCount();
     },
@@ -118,7 +123,7 @@ function UserContextProvide(props: any) {
         // 登录状态下建立WebSocket
         ws.current.onmessage = ({ data }) => {
           const wsRes = JSON.parse(data) as any;
-          wsMap[wsRes.type](wsRes);
+          wsMap[wsRes.type as "message" | "notification"](wsRes);
         };
         ws.current.onerror = (error) => {
           console.log(error);

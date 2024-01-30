@@ -88,12 +88,12 @@ export default function Index() {
     ["SYS-messageList", isLogin],
     async () => {
       if (!isLogin) return;
-      const res = await Promise.all([
+      const res = (await Promise.all([
         get("/messages/systemNotification", { qq: userInfo?.qq || "" }),
         get("/messages/list", {
           fromQQ: userInfo?.qq || "",
         }),
-      ]);
+      ])) as any;
       return {
         systemNotification: res?.[0].systemNotification || [],
         chatMessageList: res?.[1].data,
@@ -151,7 +151,7 @@ export default function Index() {
               data?.result.findIndex((items: any) => item.qq === items.qq) < 0)
         ) as any;
         data?.result.forEach(
-          ({ qq, lastDate, unreadCount, targetName, targetImg }) => {
+          ({ qq, lastDate, unreadCount, targetName, targetImg }: any) => {
             message.contactPerson.push({
               qq,
               lastDate,

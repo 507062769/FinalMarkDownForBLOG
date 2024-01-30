@@ -2,7 +2,6 @@ import "./index.less";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
 import moment from "moment";
-import UserImg from "../../assets/userImg.jpg";
 import { GithubOutlined } from "@ant-design/icons";
 
 export default function AuthUserInfo({
@@ -29,7 +28,11 @@ export default function AuthUserInfo({
   return (
     <>
       <div className="box-border ml-5 p-6" id="AuthInfo">
-        <img src={data?.sqlRes.userImg || UserImg} alt="头像" id="AuthImg" />
+        <img
+          src={data?.sqlRes.userImg || "../../assets/userImg.jpg"}
+          alt="头像"
+          id="AuthImg"
+        />
         {userId === "2458015575" ? (
           <div className="text-sm">
             <p>欢迎来到我的博客社区，毕业于武汉某高校的前端</p>

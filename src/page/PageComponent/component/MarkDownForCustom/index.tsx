@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { animateScroll } from "react-scroll";
 
 // import "@/styles/newsprint.css";
@@ -13,7 +13,6 @@ export default function MarkDownForCustom(props: {
 }) {
   useEffect(() => {
     setTimeout(() => {
-      const WriteContainer = document.querySelector("#WriteContainer") as any;
       const sliderNav = document.querySelector("#SliderNav") as any;
       const write = document.querySelector("#write") as any;
       const headerTitle = document.querySelectorAll<

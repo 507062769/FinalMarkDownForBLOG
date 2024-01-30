@@ -22,7 +22,18 @@ export default function HOCPageTitle(props: any) {
     } else {
       let key = location.pathname.replace("/", "");
       key === "search" ? (key = "key") : null;
-      const str = titleCustom[key];
+      const str =
+        titleCustom[
+          key as
+            | "user"
+            | "create"
+            | "page"
+            | "other"
+            | "other"
+            | "message"
+            | "home"
+            | "key"
+        ];
       const customStr = params.get(key) || "";
       setTitle(customStr + str);
     }

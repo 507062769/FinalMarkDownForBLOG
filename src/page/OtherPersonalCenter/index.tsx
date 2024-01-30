@@ -21,10 +21,10 @@ export default function OtherPersonalCenter() {
   const { data } = useQuery(
     ["other-pages-list"],
     async () => {
-      const res = await Promise.all([
+      const res = (await Promise.all([
         get("/page/list", { qq }),
         get("/user/getuserinfo", { qq }),
-      ]);
+      ])) as any;
       return { pagesList: res[0]?.data, userInfo: res[1]?.sqlRes };
     },
     { refetchOnWindowFocus: false }
@@ -113,7 +113,9 @@ export default function OtherPersonalCenter() {
         <h2 style={{ borderBottom: "4px solid #ccc" }}>他的文章</h2>
         {data?.pagesList.length > 0 ? (
           <PageList
-            data={data?.pagesList.filter((item) => item.isCheckSuccess === 1)}
+            data={data?.pagesList.filter(
+              (item: any) => item.isCheckSuccess === 1
+            )}
           />
         ) : (
           <Empty

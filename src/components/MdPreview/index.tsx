@@ -1,3 +1,4 @@
+//@ts-nocheck
 import ReactMarkdown from "react-markdown"; //引入
 import remarkGfm from "remark-gfm";
 import row from "rehype-raw";
