@@ -6,14 +6,6 @@ import { resolve } from "path";
 export default defineConfig({
   server: {
     port: 9909,
-    proxy: {
-      "/api": {
-        target: "http://www.zhangtc.online:9876",
-        // target: "http://localhost:9876",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
   },
   plugins: [react()],
   resolve: {
