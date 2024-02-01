@@ -33,15 +33,15 @@ export default function Login() {
     const res = await login({ qq: username, pass });
     if (res.isLogin) {
       // 登录成功
-      setToken(res.token);
+      setToken(() => res.token);
       setOpen(false);
       setUserInfo({
         ...res.userInfo,
         registerDays: moment().diff(Number(res.userInfo.registerDate), "days"),
       });
+      localStorage.setItem("BLOG_TOKEN", res.token);
       const resUnreadCount = await mutateAsync({ qq: username });
       store.message.unreadAllCount = resUnreadCount.unreadCount;
-      localStorage.setItem("BLOG_TOKEN", res.token);
       setIsLogin(true);
     }
   };
