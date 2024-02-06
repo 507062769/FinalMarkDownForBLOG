@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Home from "./page/Home";
 import Index from "@/page/Index";
 import PageComponent from "./page/PageComponent";
@@ -35,6 +35,24 @@ export default function App() {
       },
     }
   );
+  useEffect(() => {
+    // 在页面加载时检测设备类型并重定向
+    window.addEventListener("load", () => {
+      // 检测用户代理字符串
+      const userAgent = navigator.userAgent;
+
+      // 判断是否为移动设备
+      const isMobile =
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+          userAgent
+        );
+
+      // 重定向到不同网站
+      if (isMobile) {
+        window.location.href = "https://m.zhangtc.online";
+      }
+    });
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
