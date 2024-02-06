@@ -1,11 +1,13 @@
 import MarkDownForCustom from "@/page/PageComponent/component/MarkDownForCustom";
 import AuthUserInfo from "@/components/AuthUserInfo";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
+import { message } from "antd";
 
 export default function PageComponent() {
   const location = useLocation();
+  const navigate = useNavigate();
   const params = new URLSearchParams(location.search);
   const pageid = params.get("pageid") || "";
   const { data } = useQuery(
@@ -15,6 +17,12 @@ export default function PageComponent() {
     },
     {
       refetchOnWindowFocus: false,
+      onSuccess(data) {
+        if (data?.isError) {
+          message.error("当前不存在该文章");
+          navigate("/error");
+        }
+      },
     }
   );
 
