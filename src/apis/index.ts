@@ -3,6 +3,7 @@ import axios from "axios";
 import { message } from "antd";
 
 const httpInstance = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
   timeout: 5000,
   // 将token发往后端
   headers: {
