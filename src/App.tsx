@@ -16,6 +16,7 @@ import AuthGuard from "./components/AuthGuard";
 import OtherPersonalCenter from "./page/OtherPersonalCenter";
 import HOCPageTitle from "./components/HOCPageTitle";
 import NotFound from "./page/NotFound";
+import AI from "./page/Ai";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
@@ -120,6 +121,7 @@ export default function App() {
               </AuthGuard>
             }
           />
+          <Route path="ai" element={<AI />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
