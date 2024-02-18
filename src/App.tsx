@@ -17,6 +17,9 @@ import OtherPersonalCenter from "./page/OtherPersonalCenter";
 import HOCPageTitle from "./components/HOCPageTitle";
 import NotFound from "./page/NotFound";
 import AI from "./page/Ai";
+import MIndex from "./page/Mobile/Index";
+import MHome from "./page/Mobile/Home";
+import MOther from "./page/Mobile/Other";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
@@ -48,9 +51,11 @@ export default function App() {
           userAgent
         );
 
-      // 重定向到不同网站
+      // 重定向到Mobile
       if (isMobile) {
-        window.location.href = "https://m.zhangtc.online";
+        if (!location.pathname.includes("mobile")) {
+          window.location.href = "http://localhost:5173/mobile";
+        }
       }
     });
   }, []);
@@ -123,6 +128,10 @@ export default function App() {
           />
           {/* <Route path="ai" element={<AI />} /> */}
           <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route path="mobile" element={<MIndex />}>
+          <Route index element={<MHome />} />
+          <Route path="other" element={<MOther />} />
         </Route>
       </Routes>
     </BrowserRouter>
