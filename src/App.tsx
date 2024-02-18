@@ -121,7 +121,7 @@ export default function App() {
               </AuthGuard>
             }
           />
-          <Route path="ai" element={<AI />} />
+          {/* <Route path="ai" element={<AI />} /> */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

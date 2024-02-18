@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
-interface ChatContent {
+export interface ChatContent {
   role: "user" | "assistant";
   content: string;
 }
@@ -11,29 +11,15 @@ type ChatListType = {
 }[];
 
 export class AIChat {
-  private chatList: ChatListType = [
-    {
-      key: 123,
-      content: [
-        {
-          role: "user",
-          content: "你好",
-        },
-        {
-          role: "assistant",
-          content: "你也好",
-        },
-      ],
-    },
-  ];
+  private chatList: ChatListType = [];
 
-  private currentContext: number = 123;
+  private currentContext: number = this.chatList[0]?.key || -9999;
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  set addMessage({
+  addMessage({
     key,
     content,
     role,
@@ -45,6 +31,16 @@ export class AIChat {
     this.chatList
       .find((item) => item.key === key)
       ?.content.push({ role, content });
+    localStorage.setItem("Z_BLOG_AICHAT_LIST", JSON.stringify(this.chatList));
+  }
+
+  newChat(key: number, content: string) {
+    this.chatList.push({
+      key,
+      content: [{ role: "user", content }],
+    });
+    this.setCurrentContext(key);
+    localStorage.setItem("Z_BLOG_AICHAT_LIST", JSON.stringify(this.chatList));
   }
 
   setCurrentContext(context: number) {
@@ -52,7 +48,7 @@ export class AIChat {
   }
 
   get getChatList() {
-    return this.chatList;
+    return this.chatList || [];
   }
 
   get getCurrentContext() {
@@ -60,6 +56,15 @@ export class AIChat {
   }
 
   get getCurrentContent() {
-    return this.chatList.find((item) => this.currentContext === item.key);
+    return (
+      this.chatList.find((item) => this.currentContext === item.key)?.content ||
+      []
+    );
+  }
+
+  init() {
+    this.chatList =
+      JSON.parse(localStorage.getItem("Z_BLOG_AICHAT_LIST") as string) || [];
+    this.setCurrentContext(this.chatList?.[0]?.key || -9999);
   }
 }

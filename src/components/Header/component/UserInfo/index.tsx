@@ -131,11 +131,11 @@ function UserInfo() {
           </Badge>
         </Link>
       </p>
-      <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
+      {/* <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>
         <Link to={"ai"}>
-          <span className="text-base">AI</span>
+          <span className="text-base">AI-Chat</span>
         </Link>
-      </p>
+      </p> */}
       <Button
         type="primary"
         icon={<PlusCircleOutlined />}
