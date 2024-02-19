@@ -1,36 +1,15 @@
 import AuthUserInfo from "@/components/AuthUserInfo";
 import PageList from "@/components/PageList";
 import Swiper from "./Component/Swiper";
-import { useQuery } from "react-query";
 import { FloatButton } from "antd";
 import { VerticalAlignTopOutlined } from "@ant-design/icons";
-import { useMemo } from "react";
-import { Page } from "../UserControl/Component/UserPage";
 import { useNavigate } from "react-router-dom";
-import { get } from "@/apis";
 import Footer from "@/components/Footer";
+import { useIndexPage } from "@/hooks/useIndexPage";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { data } = useQuery(
-    ["indexmd"],
-    async () => await get<{ data: Page[] }>("/page/indexmd", { platform: 1 }),
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
-  const indexPage = useMemo(() => {
-    const home = data?.data.filter((item) => item.position === "home") || [];
-    const slide = data?.data.filter((item) => item.position === "slide") || [];
-    const swipe = data?.data.filter((item) => item.position === "swipe") || [];
-    console.log(home, slide, swipe);
-
-    return {
-      home,
-      slide,
-      swipe,
-    };
-  }, [data]);
+  const indexPage = useIndexPage();
 
   return (
     <>
