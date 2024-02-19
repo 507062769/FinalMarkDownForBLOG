@@ -16,7 +16,7 @@ import AuthGuard from "./components/AuthGuard";
 import OtherPersonalCenter from "./page/OtherPersonalCenter";
 import HOCPageTitle from "./components/HOCPageTitle";
 import NotFound from "./page/NotFound";
-import AI from "./page/Ai";
+// import AI from "./page/Ai";
 import MIndex from "./page/Mobile/Index";
 import MHome from "./page/Mobile/Home";
 import MOther from "./page/Mobile/Other";

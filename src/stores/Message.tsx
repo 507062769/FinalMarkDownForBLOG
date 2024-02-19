@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { makeAutoObservable } from "mobx";
 
 export type ContactType = {

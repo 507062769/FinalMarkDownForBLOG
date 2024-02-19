@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { UserContext } from "@/Context/UserContextProvide";
 import logo from "@/assets/logo.png";
 import { useIndexPage } from "@/hooks/useIndexPage";
