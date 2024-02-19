@@ -67,6 +67,20 @@ function Message() {
       Pubsub.unsubscribe("receiveMessage");
     };
   }, [message.currentChatUser]);
+  useEffect(() => {
+    // 对系统通知进行处理
+    let maxLastDate = Number(message?.systemMessageList?.[0]?.lastDate);
+    message.systemMessageList?.forEach((item) => {
+      if (Number(item.lastDate) > maxLastDate) {
+        maxLastDate = Number(item.lastDate);
+      }
+    });
+    const system = message.contactPerson.find((item) => item.qq === "admin")!;
+    system.lastDate = maxLastDate;
+    message.systemMessageList = message.systemMessageList
+      .slice()
+      .sort((a, b) => Number(a.lastDate) - Number(b.lastDate));
+  }, [message]);
   return (
     <div
       className="w-11/12 mx-auto  h-96 flex flex-row"

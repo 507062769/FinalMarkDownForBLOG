@@ -63,9 +63,7 @@ export const fetchFile = async (url: string, data: any, param?: any) => {
   };
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_URL}:${
-        import.meta.env.VITE_BASE_PORT
-      }/files` + url,
+      `${import.meta.env.VITE_BASE_URL}/files` + url,
       defaultConfig
     );
     if (!response.ok) {

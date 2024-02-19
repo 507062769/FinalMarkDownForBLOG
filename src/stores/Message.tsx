@@ -31,9 +31,9 @@ export class Message {
     {
       qq: "admin",
       userName: "通知",
-      lastDate: 1009509685000,
+      lastDate: +new Date(),
       unreadCount: 0,
-      userImg: "http://localhost:9876/systemImgs/notification.png",
+      userImg: `${import.meta.env.VITE_BASE_URL}/systemImgs/notification.png`,
     },
   ];
 
@@ -44,9 +44,9 @@ export class Message {
   currentChatUser: ContactType = {
     qq: "admin",
     userName: "通知",
-    lastDate: 1009509685000,
+    lastDate: +new Date(),
     unreadCount: 0,
-    userImg: "http://localhost:9876/systemImgs/unlogin.jpg",
+    userImg: `${import.meta.env.VITE}/systemImgs/notification.png`,
   };
 
   unreadAllCount = 0;
@@ -168,7 +168,7 @@ export class Message {
   // updateMessageListSort() {
   //   this.messageList = this.messageList
   //     .slice()
-  //     .sort((a, b) => Number(a.lastDate) - Number(b.lastDate));
+  //     .sort((a, b) => Number(a.messageList) - Number(b.lastDate));
   // }
 
   // 获取当前活动对话的MessageList

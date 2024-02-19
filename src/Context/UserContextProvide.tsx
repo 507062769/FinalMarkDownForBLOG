@@ -117,7 +117,9 @@ function UserContextProvide(props: any) {
   useEffect(() => {
     const unread = async () => {
       if (isLogin) {
-        ws.current = new WebSocket(`ws://localhost:9875?qq=${userInfo.qq}`);
+        ws.current = new WebSocket(
+          `ws://www.zhangtc.online:9875?qq=${userInfo.qq}`
+        );
         const res = await mutateAsync({ qq: userInfo.qq });
         store.message.unreadAllCount = res.unreadCount;
         // 登录状态下建立WebSocket
