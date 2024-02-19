@@ -105,13 +105,13 @@ function UserInfo() {
             </ul>
           </>
         ) : (
-          <p
-            className="block m-0 cursor-pointer"
+          <span
+            className="block m-0 cursor-pointer text-base"
             style={{ lineHeight: "64px" }}
             onClick={() => setOpen(true)}
           >
             登录
-          </p>
+          </span>
         )}
       </div>
       <p className="block m-0 cursor-pointer" style={{ lineHeight: "64px" }}>

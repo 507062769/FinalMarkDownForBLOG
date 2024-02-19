@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import { message } from "antd";
 import { makeAutoObservable } from "mobx";
 
 export type ContactType = {
@@ -106,7 +107,7 @@ export class Message {
   }
 
   // 接受到新消息
-  receiveMessage({
+  addMessage({
     fromQQ,
     targetQQ,
     messageContent,
@@ -126,6 +127,38 @@ export class Message {
         messageContent,
         lastDate,
       });
+  }
+
+  // 接收到新消息
+  receiveSendMessage(fromQQ: any, data: any, currentUserQQ: string) {
+    // 判断来消息的人是否存在于当前联系人列表钟
+    if (this.contactPerson.findIndex((item) => item.qq === fromQQ) < 0) {
+      message.addConversation({ qq: fromQQ, ...data, unreadCount: 1 });
+    }
+
+    // 必须要做的操作
+    const sender = this.contactPerson.find((item) => item.qq === fromQQ);
+    sender.lastDate = data.lastDate;
+    this.addMessage({
+      targetQQ: currentUserQQ,
+      fromQQ,
+      messageContent: data.content,
+      lastDate: data.lastDate,
+    });
+
+    // 根据当前出在哪个页面，分别进行处理
+    if (location.pathname.includes("message")) {
+      if (this.currentChatUser.qq === fromQQ) {
+        // 收到的消息是否在当前对话
+        PubSub.publish("receiveMessage");
+      } else {
+        sender.unreadCount += 1;
+      }
+    } else {
+      message.success("收到了一条新消息");
+      sender.unreadCount += 1;
+    }
+    this.updateUnreadAllCount();
   }
 
   // 更新总的未读条数

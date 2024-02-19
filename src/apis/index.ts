@@ -15,6 +15,7 @@ const httpInstance = axios.create({
 
 httpInstance.interceptors.request.use(
   (config) => {
+    config.headers["X-Token"] = localStorage.getItem("BLOG_TOKEN") || "";
     return config;
   },
   (error) => {
