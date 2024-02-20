@@ -1,4 +1,4 @@
-import { fetchReadMessage, getUnreadCount } from "@/apis/messages";
+import { getUnreadCount } from "@/apis/messages";
 import store from "@/stores";
 import { message as messageBox } from "antd";
 import { observer } from "mobx-react-lite";
@@ -80,7 +80,7 @@ function UserContextProvide(props: any) {
     const unread = async () => {
       if (isLogin) {
         ws.current = new WebSocket(
-          `ws://zhangtc.online:9875?qq=${userInfo.qq}`
+          `wss://zhangtc.online:9875?qq=${userInfo.qq}`
         );
         const res = await mutateAsync({ qq: userInfo.qq });
         store.message.unreadAllCount = res.unreadCount;
