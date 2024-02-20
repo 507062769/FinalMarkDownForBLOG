@@ -20,7 +20,11 @@ export default function HOCPageTitle(props: any) {
     if (location.pathname === "/") {
       setTitle("Z的博客社区");
     } else {
+      // 这里是为了兼容Mobile端，先将第一层/去掉
       let key = location.pathname.replace("/", "");
+      // 如果存在着Mobile的话则也需要去掉
+      key = key.replace("mobile/", "");
+      // 如果路由为Search的话，关键字定位key
       key === "search" ? (key = "key") : null;
       const str =
         titleCustom[

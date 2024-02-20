@@ -22,6 +22,7 @@ import NotFound from "./page/NotFound";
 import MIndex from "./page/Mobile/Index";
 import MHome from "./page/Mobile/Home";
 import MOther from "./page/Mobile/Other";
+import MSearch from "./page/Mobile/Search";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
@@ -134,6 +135,14 @@ export default function App() {
         <Route path="mobile" element={<MIndex />}>
           <Route index element={<MHome />} />
           <Route path="other" element={<MOther />} />
+          <Route
+            path="search"
+            element={
+              <HOCPageTitle>
+                <MSearch />
+              </HOCPageTitle>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
