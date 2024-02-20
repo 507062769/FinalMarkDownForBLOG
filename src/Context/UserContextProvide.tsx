@@ -80,7 +80,7 @@ function UserContextProvide(props: any) {
     const unread = async () => {
       if (isLogin) {
         ws.current = new WebSocket(
-          `wss://zhangtc.online:9875?qq=${userInfo.qq}`
+          `wss://blog.ws.zhangtc.online?qq=${userInfo.qq}`
         );
         const res = await mutateAsync({ qq: userInfo.qq });
         store.message.unreadAllCount = res.unreadCount;
