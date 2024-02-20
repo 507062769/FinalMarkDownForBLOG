@@ -1,8 +1,10 @@
 // @ts-nocheck
 
+import { TabContext, TabContextProvide } from "@/Context/TabContextProvide";
 import { UserContext } from "@/Context/UserContextProvide";
 import logo from "@/assets/logo.png";
 import { useIndexPage } from "@/hooks/useIndexPage";
+import { useLogin } from "@/hooks/useLogin";
 import {
   PoweroffOutlined,
   SearchOutlined,
@@ -20,6 +22,8 @@ export default function MHeader() {
     { key: "exit", icon: <PoweroffOutlined />, text: "退出登录" },
   ];
   const indexPage = useIndexPage();
+  const { open, setOpen, tabKey, setTabKey } = useContext(TabContext);
+  const { NodeModel } = useLogin({ open, setOpen, tabKey, setTabKey });
   return (
     <>
       <div className="flex flex-row justify-between">
@@ -36,7 +40,7 @@ export default function MHeader() {
               <Avatar src={userInfo.userImg} alt="用户头像" size="large" />
             </Popover.Menu>
           ) : (
-            <span>登录</span>
+            <span onClick={() => setOpen(true)}>登录</span>
           )}
         </Space>
       </div>
@@ -92,6 +96,7 @@ export default function MHeader() {
           ))}
         </Swiper>
       </Space>
+      {NodeModel}
     </>
   );
 }

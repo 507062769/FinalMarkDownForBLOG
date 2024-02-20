@@ -1,11 +1,12 @@
 import { Dispatch, SetStateAction, createContext, useState } from "react";
 
-export const TabContext = createContext<{
+export interface LoginTabProps {
   tabKey: string;
   setTabKey: Dispatch<SetStateAction<string>>;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-}>({} as any);
+}
+export const TabContext = createContext<LoginTabProps>({} as any);
 
 export function TabContextProvide(props: any) {
   const [tabKey, setTabKey] = useState("login");

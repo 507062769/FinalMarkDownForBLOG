@@ -54,7 +54,7 @@ export default function App() {
       // 重定向到Mobile
       if (isMobile) {
         if (!location.pathname.includes("mobile")) {
-          window.location.href = "http://localhost:5173/mobile";
+          window.location.href = `http://localhost:5173/mobile`;
         }
       }
     });

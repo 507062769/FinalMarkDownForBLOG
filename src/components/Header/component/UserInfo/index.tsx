@@ -4,68 +4,23 @@ import {
   StopOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Badge, Button, Tabs, message as messageBox } from "antd";
-import Modal from "antd/es/modal/Modal";
-import Login from "./component/Login";
-import Register from "./component/Register";
+import { Avatar, Badge, Button, message as messageBox } from "antd";
 import { Link } from "react-router-dom";
-import { createStyles, useTheme } from "antd-style";
 import { TabContext } from "@/Context/TabContextProvide";
 import { UserContext } from "@/Context/UserContextProvide";
 import { useNavigate } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import store from "@/stores";
+import { useLogin } from "@/hooks/useLogin";
 
 function UserInfo() {
   const { message } = store;
   const { tabKey, setTabKey, open, setOpen } = useContext(TabContext);
   const { isLogin, setToken, setIsLogin, userInfo, setUserInfo } =
     useContext(UserContext);
-  const token = useTheme();
   const navigate = useNavigate();
-  const useStyle = createStyles(({ token }) => ({
-    "my-modal-mask": {
-      boxShadow: `inset 0 0 15px #fff`,
-    },
-    "my-modal-header": {
-      // borderBottom: `1px dotted ${token.colorPrimary}`,
-      textAlign: "center",
-      opacity: "0",
-    },
-    "my-modal-footer": {
-      color: token.colorPrimary,
-    },
-    "my-modal-content": {
-      border: "1px solid #333",
-    },
-  }));
-  const { styles } = useStyle();
-  const classNames = {
-    mask: styles["my-modal-mask"],
-    header: styles["my-modal-header"],
-    footer: styles["my-modal-footer"],
-    content: styles["my-modal-content"],
-  };
-  const modalStyles = {
-    header: {
-      borderLeft: `5px solid ${token.colorPrimary}`,
-      borderRadius: 0,
-      paddingInlineStart: 5,
-    },
-    body: {
-      // boxShadow: "inset 0 0 5px #999",
-      borderRadius: 5,
-    },
-    mask: {
-      backdropFilter: "blur(10px)",
-    },
-    footer: {
-      borderTop: "1px solid #333",
-    },
-    content: {
-      boxShadow: "0 0 30px #999",
-    },
-  };
+
+  const { NodeModel } = useLogin({ tabKey, setTabKey, open, setOpen });
 
   return (
     <section
@@ -151,34 +106,7 @@ function UserInfo() {
       >
         创作
       </Button>
-      <Modal
-        destroyOnClose
-        title="登录"
-        open={open}
-        onCancel={() => {
-          setOpen(false);
-          setTabKey("login");
-        }}
-        footer={null}
-        classNames={classNames}
-        styles={modalStyles}
-      >
-        <Tabs
-          destroyInactiveTabPane
-          centered
-          activeKey={tabKey}
-          onChange={setTabKey}
-          items={[
-            { key: "login", label: "登录", children: <Login /> },
-            { key: "register", label: "注册", children: <Register /> },
-            {
-              key: "forget",
-              label: "忘记密码",
-              children: <Register />,
-            },
-          ]}
-        />
-      </Modal>
+      {NodeModel}
     </section>
   );
 }
