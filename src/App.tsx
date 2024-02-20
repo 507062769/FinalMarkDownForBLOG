@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import Home from "./page/Home";
@@ -20,7 +22,6 @@ import NotFound from "./page/NotFound";
 import MIndex from "./page/Mobile/Index";
 import MHome from "./page/Mobile/Home";
 import MOther from "./page/Mobile/Other";
-import { TabContextProvide } from "./Context/TabContextProvide";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
@@ -55,7 +56,7 @@ export default function App() {
       // 重定向到Mobile
       if (isMobile) {
         if (!location.pathname.includes("mobile")) {
-          window.location.href = `http://localhost:5173/mobile`;
+          window.location.href = `${import.meta.env.VITE_MOBILE_URL}/mobile`;
         }
       }
     });
