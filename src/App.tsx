@@ -20,6 +20,7 @@ import NotFound from "./page/NotFound";
 import MIndex from "./page/Mobile/Index";
 import MHome from "./page/Mobile/Home";
 import MOther from "./page/Mobile/Other";
+import { TabContextProvide } from "./Context/TabContextProvide";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
