@@ -1,11 +1,12 @@
 import Header from "@/components/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import "./index.less";
 import store from "@/stores";
 import { useQuery } from "react-query";
 import { get } from "@/apis";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UserContext } from "@/Context/UserContextProvide";
+import { CurrentDeviceContext } from "@/Context/CurrentDeviceProvide";
 const snowsColor = [
   "#FF4500", // 橙红色
   "#FF8C00", // 暗橙色
@@ -83,7 +84,8 @@ window.addEventListener("DOMContentLoaded", () => {
 export default function Index() {
   const { message } = store;
   const { userInfo, isLogin } = useContext(UserContext);
-
+  const { isPc } = useContext(CurrentDeviceContext);
+  const navigate = useNavigate();
   const { data: ___ } = useQuery(
     ["SYS-messageList", isLogin],
     async () => {
@@ -167,6 +169,12 @@ export default function Index() {
       refetchOnWindowFocus: false,
     }
   );
+
+  useEffect(() => {
+    if (!isPc) {
+      navigate("/mobile");
+    }
+  }, [isPc]);
   return (
     <>
       <canvas id="snowCanvas" />

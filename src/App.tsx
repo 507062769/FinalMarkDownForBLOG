@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import Home from "./page/Home";
 import Index from "@/page/Index";
@@ -23,9 +23,11 @@ import MIndex from "./page/Mobile/Index";
 import MHome from "./page/Mobile/Home";
 import MOther from "./page/Mobile/Other";
 import MSearch from "./page/Mobile/Search";
+import { CurrentDeviceContext } from "./Context/CurrentDeviceProvide";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
+  const { setIsPc } = useContext(CurrentDeviceContext);
   useQuery(
     ["token"],
     async () =>
@@ -53,12 +55,9 @@ export default function App() {
         /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
           userAgent
         );
-
-      // 重定向到Mobile
+      // 设置当前设备状态
       if (isMobile) {
-        if (!location.pathname.includes("mobile")) {
-          window.location.href = `${import.meta.env.VITE_MOBILE_URL}/mobile`;
-        }
+        setIsPc(false);
       }
     });
   }, []);
@@ -132,14 +131,21 @@ export default function App() {
           {/* <Route path="ai" element={<AI />} /> */}
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="mobile" element={<MIndex />}>
+        <Route
+          path="mobile"
+          element={
+            <HOCPageTitle>
+              <MIndex />
+            </HOCPageTitle>
+          }
+        >
           <Route index element={<MHome />} />
           <Route path="other" element={<MOther />} />
           <Route
             path="search"
             element={
               <HOCPageTitle>
-                <MSearch />
+                <Search />
               </HOCPageTitle>
             }
           />

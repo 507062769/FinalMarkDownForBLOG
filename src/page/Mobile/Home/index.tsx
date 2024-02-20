@@ -73,9 +73,7 @@ export default function MHome() {
         </Swiper>
       </Space>
       <div className="mt-2">
-        {home.concat(slide).map((item, index) => (
-          <SmallPage index={index} item={item} />
-        ))}
+        <SmallPage data={home.concat(slide)} />
       </div>
     </>
   );

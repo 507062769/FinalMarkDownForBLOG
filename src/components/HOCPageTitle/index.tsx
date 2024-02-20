@@ -17,7 +17,7 @@ export default function HOCPageTitle(props: any) {
   const [title, setTitle] = useState<string>("");
   const params = new URLSearchParams(location.search);
   useEffect(() => {
-    if (location.pathname === "/") {
+    if (location.pathname === "/" || location.pathname === "/mobile") {
       setTitle("Z的博客社区");
     } else {
       // 这里是为了兼容Mobile端，先将第一层/去掉

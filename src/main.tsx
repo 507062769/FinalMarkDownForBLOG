@@ -4,15 +4,18 @@ import App from "./App.tsx";
 import "./index.less";
 import { QueryClient, QueryClientProvider } from "react-query";
 import UserContextProvide from "./Context/UserContextProvide.tsx";
+import CurrentDeviceProvide from "./Context/CurrentDeviceProvide.tsx";
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <UserContextProvide>
-        <App />
-      </UserContextProvide>
+      <CurrentDeviceProvide>
+        <UserContextProvide>
+          <App />
+        </UserContextProvide>
+      </CurrentDeviceProvide>
     </QueryClientProvider>
   </React.StrictMode>
 );
