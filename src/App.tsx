@@ -45,50 +45,6 @@ export default function App() {
       },
     }
   );
-  useLayoutEffect(() => {
-    // 在页面加载时检测设备类型并重定向
-    window.addEventListener("load", () => {
-      // 检测用户代理字符串
-      const userAgent = navigator.userAgent;
-
-      // 判断是否为移动设备
-      const isMobile =
-        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-          userAgent
-        );
-      // 设置当前设备状态
-      if (isMobile) {
-        setIsPc(false);
-      }
-    });
-    window.addEventListener(
-      "orientationchange" in window ? "orientationchange" : "resize",
-      (function () {
-        function c() {
-          if (isPc) return;
-          const deviceWidth = 1920;
-          const deviceHeight = 1080;
-          const rem = 100;
-          const clientWidth = document.documentElement.clientWidth;
-          const clientHeight = document.documentElement.clientHeight;
-          const base =
-            clientWidth / clientHeight <= deviceWidth / deviceHeight
-              ? clientWidth
-              : clientHeight * (deviceWidth / deviceHeight);
-
-          document.documentElement.style.fontSize =
-            (base * rem) / deviceWidth + "px";
-          window.onresize = function () {
-            document.documentElement.style.fontSize =
-              (base * rem) / deviceWidth + "px";
-          };
-        }
-        c();
-        return c;
-      })(),
-      false
-    );
-  }, []);
   useEffect(() => {
     if (location.pathname.includes("mobile")) {
       setIsPc(false);

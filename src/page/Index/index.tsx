@@ -84,7 +84,7 @@ window.addEventListener("DOMContentLoaded", () => {
 export default function Index() {
   const { message } = store;
   const { userInfo, isLogin } = useContext(UserContext);
-  const { isPc } = useContext(CurrentDeviceContext);
+  const { isPc, setIsPc } = useContext(CurrentDeviceContext);
   const navigate = useNavigate();
   const { data: ___ } = useQuery(
     ["SYS-messageList", isLogin],
@@ -172,8 +172,21 @@ export default function Index() {
 
   // 如果要切换至Mobile，那么不需要写在useEffect里面，因为这样会白白等待下面的组件渲染完毕，然后渲染完成后再跳转去Mobile
   useEffect(() => {
+    // 在页面加载时检测设备类型并重定向
+    // 检测用户代理字符串
+    const userAgent = navigator.userAgent;
+
+    // 判断是否为移动设备
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        userAgent
+      );
+    // 设置当前设备状态
+    if (isMobile) {
+      setIsPc(false);
+    }
     if (!isPc) {
-      navigate("/mobile");
+      navigate("/mobile", { replace: true });
     }
   }, [isPc]);
   return (
