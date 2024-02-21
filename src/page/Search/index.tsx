@@ -8,15 +8,19 @@ import { useContext } from "react";
 import { CurrentDeviceContext } from "@/Context/CurrentDeviceProvide";
 import SmallPageList from "@/components/Mobile/SmallPage";
 import { Page } from "../UserControl/Component/UserPage";
+import MUserList from "@/components/Mobile/SearchResultUser";
 
 function SearchPageAdapter({ data }: { data: Page[] }) {
   const { isPc } = useContext(CurrentDeviceContext);
   return isPc ? <SearchPage data={data} /> : <SmallPageList data={data} />;
 }
 
-// function SearchUserAdapter({data}: { data: User[] }) {
-//   return isPc ?
-// }
+function SearchUserAdapter({ data }: { data: any }) {
+  const { isPc } = useContext(CurrentDeviceContext);
+  console.log(isPc);
+
+  return isPc ? <SearchUser data={data} /> : <MUserList data={data} />;
+}
 
 export default function Search() {
   const location = useLocation();
@@ -47,7 +51,7 @@ export default function Search() {
           {
             label: `相关用户 (${data?.userRes.length || 0})`,
             key: "users",
-            children: <SearchUser data={data?.userRes || []} />,
+            children: <SearchUserAdapter data={data?.userRes} />,
           },
         ]}
       />

@@ -1,6 +1,6 @@
 import { Page } from "@/page/UserControl/Component/UserPage";
 import { EyeOutlined, LikeOutlined } from "@ant-design/icons";
-import { Space } from "antd";
+import { Empty, Space } from "antd";
 import moment from "moment";
 
 export default function SmallPageList({ data }: { data: Page[] }) {
@@ -15,7 +15,9 @@ export default function SmallPageList({ data }: { data: Page[] }) {
             borderBottom: "1px solid #ccc",
             // 在搜索页不需要展示上边框
             borderTop: `1px solid ${
-              index === 0 && !location.pathname.includes("/search")
+              index === 0 &&
+              !location.pathname.includes("/search") &&
+              !location.pathname.includes("/other")
                 ? "#ccc"
                 : "transparent"
             }`,
@@ -64,6 +66,12 @@ export default function SmallPageList({ data }: { data: Page[] }) {
           </div>
         </div>
       ))}
+      {data.length === 0 && (
+        <Empty
+          description="小伙伴暂未发布任何文章"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        />
+      )}
     </>
   );
 }

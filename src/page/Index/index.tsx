@@ -170,6 +170,7 @@ export default function Index() {
     }
   );
 
+  // 如果要切换至Mobile，那么不需要写在useEffect里面，因为这样会白白等待下面的组件渲染完毕，然后渲染完成后再跳转去Mobile
   useEffect(() => {
     if (!isPc) {
       navigate("/mobile");

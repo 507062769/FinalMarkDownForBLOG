@@ -39,7 +39,9 @@ export default function MHeader() {
                 trigger="click"
                 onAction={({ key }) => {
                   if (key === "center") {
-                    console.log("跳转至个人中心");
+                    navigate(
+                      `other?qq=${userInfo.qq}&other=${userInfo.userName}`
+                    );
                   } else {
                     message.success("成功退出登录");
                     setIsLogin(false);
