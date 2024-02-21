@@ -24,10 +24,11 @@ import MHome from "./page/Mobile/Home";
 import MOther from "./page/Mobile/Other";
 import MSearch from "./page/Mobile/Search";
 import { CurrentDeviceContext } from "./Context/CurrentDeviceProvide";
+import MMdContent from "./page/Mobile/MdContent";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
-  const { setIsPc } = useContext(CurrentDeviceContext);
+  const { setIsPc, isPc } = useContext(CurrentDeviceContext);
   useQuery(
     ["token"],
     async () =>
@@ -60,7 +61,39 @@ export default function App() {
         setIsPc(false);
       }
     });
+    window.addEventListener(
+      "orientationchange" in window ? "orientationchange" : "resize",
+      (function () {
+        function c() {
+          if (isPc) return;
+          const deviceWidth = 1920;
+          const deviceHeight = 1080;
+          const rem = 100;
+          const clientWidth = document.documentElement.clientWidth;
+          const clientHeight = document.documentElement.clientHeight;
+          const base =
+            clientWidth / clientHeight <= deviceWidth / deviceHeight
+              ? clientWidth
+              : clientHeight * (deviceWidth / deviceHeight);
+
+          document.documentElement.style.fontSize =
+            (base * rem) / deviceWidth + "px";
+          window.onresize = function () {
+            document.documentElement.style.fontSize =
+              (base * rem) / deviceWidth + "px";
+          };
+        }
+        c();
+        return c;
+      })(),
+      false
+    );
   }, []);
+  useEffect(() => {
+    if (location.pathname.includes("mobile")) {
+      setIsPc(false);
+    }
+  }, [location.pathname]);
   return (
     <BrowserRouter>
       <Routes>
@@ -146,6 +179,14 @@ export default function App() {
             element={
               <HOCPageTitle>
                 <Search />
+              </HOCPageTitle>
+            }
+          />
+          <Route
+            path="page"
+            element={
+              <HOCPageTitle>
+                <MMdContent />
               </HOCPageTitle>
             }
           />

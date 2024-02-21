@@ -1,10 +1,10 @@
 import { get } from "@/apis";
 import SmallPageList from "@/components/Mobile/SmallPage";
 import { AlertOutlined, ContainerOutlined } from "@ant-design/icons";
-import { Badge, Button, Space, Tabs } from "antd";
+import { Badge, Space, Tabs } from "antd";
 import moment from "moment";
 import { useQuery } from "react-query";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function MOther() {
   const location = useLocation();
@@ -23,7 +23,6 @@ export default function MOther() {
   );
   const userInfo = data?.userInfo;
   const list = data?.pagesList || [];
-  const navigate = useNavigate();
   return (
     <Tabs
       className="px-4"
@@ -83,7 +82,7 @@ export default function MOther() {
                 <p>性别：{userInfo?.sex}</p>
                 <p>
                   注册时间：
-                  {moment(Number(userInfo.registerDate)).format(
+                  {moment(Number(userInfo?.registerDate)).format(
                     "YYYY-MM-DD HH:mm:ss"
                   )}
                 </p>

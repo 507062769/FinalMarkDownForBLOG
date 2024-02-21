@@ -51,7 +51,12 @@ export default function MHome() {
           )}
         >
           {swipe.map((item, index) => (
-            <Swiper.Item key={index}>
+            <Swiper.Item
+              key={index}
+              onClick={() =>
+                navigate(`page?pageid=${item.pageid}&page=${item.title}`)
+              }
+            >
               <img
                 src={item.coverUrl}
                 alt={item.title}

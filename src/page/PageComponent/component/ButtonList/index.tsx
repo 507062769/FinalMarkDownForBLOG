@@ -13,10 +13,12 @@ import { get } from "@/apis";
 import { UserContext } from "@/Context/UserContextProvide";
 import { fetchOperator } from "@/apis/pages";
 import { useLocation } from "react-router-dom";
+import { CurrentDeviceContext } from "@/Context/CurrentDeviceProvide";
 
 export default function ButtonList(props: { pageid: string }) {
   const { isLogin, userInfo } = useContext(UserContext);
   const [isShowComment, setIsShowComment] = useState<boolean>(false);
+  const { isPc } = useContext(CurrentDeviceContext);
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const pageid = params.get("pageid") || "";
@@ -82,7 +84,11 @@ export default function ButtonList(props: { pageid: string }) {
         <FloatButton.BackTop
           icon={<VerticalAlignTopOutlined />}
           visibilityHeight={400}
-          target={() => document.querySelector(".container-snow") as any}
+          target={() =>
+            document.querySelector(
+              `${isPc ? ".container-snow" : "#mobile-box-id"}`
+            ) as any
+          }
           className="icon-button"
           tooltip={<span>回到顶部</span>}
         />

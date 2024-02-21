@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { Drawer, message } from "antd";
 import { useState, useContext } from "react";
 import { Button } from "antd";
@@ -13,6 +15,8 @@ import {
 } from "react-query";
 import { get } from "@/apis";
 import moment from "moment";
+import { CurrentDeviceContext } from "@/Context/CurrentDeviceProvide";
+import unlogin from "@/assets/unlogin.jpg";
 
 export default function Comment({
   isShowComment,
@@ -31,6 +35,7 @@ export default function Comment({
   const [commentText, setCommentText] = useState<string>("");
   const { userInfo, isLogin } = useContext(UserContext);
   const { mutateAsync, isLoading } = fetchAddComment();
+  const { isPc } = useContext(CurrentDeviceContext);
   const { data, refetch: refetchComment } = useQuery(
     ["comment"],
     async () => (await get("/page/commentlist", { pageid })) as any
@@ -41,13 +46,13 @@ export default function Comment({
       onClose={() => {
         setIsShowComment(false);
       }}
-      width={"40%"}
+      width={isPc ? "40%" : "90%"}
       title="评论区"
       id="comment"
     >
       <div className="flex flex-row mb-6">
         <img
-          src={userInfo?.userImg || "../../../../assets/unlogin.jpg"}
+          src={userInfo?.userImg || unlogin}
           alt="用户头像"
           className="w-8 h-8 rounded"
           style={{ verticalAlign: "top" }}

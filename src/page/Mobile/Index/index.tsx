@@ -6,11 +6,13 @@ import { Outlet } from "react-router-dom";
 export default function MIndex() {
   return (
     <>
-      <TabContextProvide>
-        <MHeader />
-      </TabContextProvide>
-      <Outlet />
-      <Footer />
+      <div className="mobile-box" id="mobile-box-id">
+        <TabContextProvide>
+          <MHeader />
+        </TabContextProvide>
+        <Outlet />
+        <Footer />
+      </div>
     </>
   );
 }

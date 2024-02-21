@@ -2,8 +2,10 @@ import { Page } from "@/page/UserControl/Component/UserPage";
 import { EyeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Empty, Space } from "antd";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 export default function SmallPageList({ data }: { data: Page[] }) {
+  const navigate = useNavigate();
   return (
     <>
       {data.map((item, index) => (
@@ -22,6 +24,9 @@ export default function SmallPageList({ data }: { data: Page[] }) {
                 : "transparent"
             }`,
           }}
+          onClick={() =>
+            navigate(`/mobile/page?pageid=${item.pageid}&page=${item.title}`)
+          }
         >
           <img
             style={{

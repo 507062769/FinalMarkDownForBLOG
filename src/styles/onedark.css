@@ -174,8 +174,8 @@ body {
 }
 
 #write h1 {
-  font-size: 2.5em;
-  padding-bottom: 0.5em;
+  /* font-size: 2.5rem; */
+  padding-bottom: 0.5rem;
   border-bottom: 3px double var(--text-color5);
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
 }
@@ -185,8 +185,8 @@ body {
 }
  */
 #write h2 {
-  font-size: 1.75em;
-  padding-bottom: 0.5em;
+  font-size: 1.75rem;
+  padding-bottom: 0.5rem;
   border-bottom: 2px double var(--text-color5);
 }
 
@@ -195,21 +195,21 @@ body {
 }
  */
 #write h3 {
-  font-size: 1.5em;
-  padding-bottom: 0.5em;
+  font-size: 1.5rem;
+  padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--text-color5);
 }
 
 #write h4 {
-  font-size: 1.3em;
+  font-size: 1.3rem;
 }
 
 #write h5 {
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }
 
 #write h6 {
-  font-size: 1em;
+  font-size: 1rem;
 }
 
 /* horizontal divider */
