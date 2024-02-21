@@ -19,7 +19,6 @@ import { useContext, useState } from "react";
 import { schoolList } from "@/utils/chinaUniversityList";
 import { majorList } from "@/utils/majorList";
 import { fetchFile } from "@/apis";
-import _ from "lodash";
 
 export const beforeUpload = (file: RcFile) => {
   const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";

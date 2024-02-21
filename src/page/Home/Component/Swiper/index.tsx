@@ -1,8 +1,8 @@
 import HOCimgLazy from "@/components/HOCImgLazy";
 import "@/page/Home/index.less";
 import { Page } from "@/page/UserControl/Component/UserPage";
+import { throttle } from "@/utils/miniLodash";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import _ from "lodash";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -22,7 +22,7 @@ export default function Swiper({ list }: { list: Page[] }) {
       (item as any).style.width = containerWidth + "px";
     });
     swiper.style.left = "0px";
-    const handleLeft = _.throttle(() => {
+    const handleLeft = throttle(() => {
       // debugger;
 
       const swiperLeft = Math.ceil(swiper.style.left.split("px")[0]);
@@ -32,7 +32,7 @@ export default function Swiper({ list }: { list: Page[] }) {
         swiper.style.left = "0px";
       }
     }, 1000);
-    const handleRight = _.throttle(() => {
+    const handleRight = throttle(() => {
       const swiperLeft = Math.ceil(swiper.style.left.split("px")[0]);
       swiper.style.left = swiperLeft + containerWidth + "px";
       if (swiperLeft >= 0) {

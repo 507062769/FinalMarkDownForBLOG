@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import { useContext, useEffect, useLayoutEffect } from "react";
+import { Suspense, useContext, useEffect, useLayoutEffect } from "react";
 import Home from "./page/Home";
 import Index from "@/page/Index";
 import PageComponent from "./page/PageComponent";
@@ -13,7 +13,6 @@ import { useQuery } from "react-query";
 import { post } from "./apis";
 import { UserContext } from "./Context/UserContextProvide";
 import moment from "moment";
-import _ from "lodash";
 import AuthGuard from "./components/AuthGuard";
 import OtherPersonalCenter from "./page/OtherPersonalCenter";
 import HOCPageTitle from "./components/HOCPageTitle";
@@ -25,6 +24,7 @@ import MOther from "./page/Mobile/Other";
 import MSearch from "./page/Mobile/Search";
 import { CurrentDeviceContext } from "./Context/CurrentDeviceProvide";
 import MMdContent from "./page/Mobile/MdContent";
+import { omit } from "./utils/miniLodash";
 
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
@@ -39,7 +39,7 @@ export default function App() {
       onSuccess: (data: any) => {
         setIsLogin(data?.isSuccess);
         setUserInfo({
-          ...(_.omit(data, "isSuccess") as any),
+          ...(omit(data, "isSuccess") as any),
           registerDays: moment().diff(Number(data.registerDate), "days"),
         });
       },
@@ -97,68 +97,88 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Index />}>
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<div>加载中</div>}>
+              <Index />
+            </Suspense>
+          }
+        >
           <Route
             index
             element={
-              // 可以利用传入HOC一个字段，然后写一个函数，在函数对参数进行处理，从而达到自定义标题的效果
-              <HOCPageTitle>
-                <Home />
-              </HOCPageTitle>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <HOCPageTitle>
+                  <Home />
+                </HOCPageTitle>
+              </Suspense>
             }
           />
           <Route
             path="page"
             element={
-              <HOCPageTitle>
-                <PageComponent />
-              </HOCPageTitle>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <HOCPageTitle>
+                  <PageComponent />
+                </HOCPageTitle>
+              </Suspense>
             }
           />
           <Route
             path="other"
             element={
-              <HOCPageTitle>
-                <OtherPersonalCenter />
-              </HOCPageTitle>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <HOCPageTitle>
+                  <OtherPersonalCenter />
+                </HOCPageTitle>
+              </Suspense>
             }
           />
           <Route
             path="message"
             element={
-              <AuthGuard>
-                <HOCPageTitle>
-                  <Message />
-                </HOCPageTitle>
-              </AuthGuard>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <AuthGuard>
+                  <HOCPageTitle>
+                    <Message />
+                  </HOCPageTitle>
+                </AuthGuard>
+              </Suspense>
             }
           />
           <Route
             path="search"
             element={
-              <HOCPageTitle>
-                <Search />
-              </HOCPageTitle>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <HOCPageTitle>
+                  <Search />
+                </HOCPageTitle>
+              </Suspense>
             }
           />
           <Route
             path="user"
             element={
-              <AuthGuard>
-                <HOCPageTitle>
-                  <UserControl />
-                </HOCPageTitle>
-              </AuthGuard>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <AuthGuard>
+                  <HOCPageTitle>
+                    <UserControl />
+                  </HOCPageTitle>
+                </AuthGuard>
+              </Suspense>
             }
           />
           <Route
             path="create"
             element={
-              <AuthGuard>
-                <HOCPageTitle>
-                  <Create />
-                </HOCPageTitle>
-              </AuthGuard>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <AuthGuard>
+                  <HOCPageTitle>
+                    <Create />
+                  </HOCPageTitle>
+                </AuthGuard>
+              </Suspense>
             }
           />
           {/* <Route path="ai" element={<AI />} /> */}
@@ -167,27 +187,40 @@ export default function App() {
         <Route
           path="mobile"
           element={
-            <HOCPageTitle>
-              <MIndex />
-            </HOCPageTitle>
+            <Suspense fallback={<div>页面正在加载</div>}>
+              <HOCPageTitle>
+                <MIndex />
+              </HOCPageTitle>
+            </Suspense>
           }
         >
-          <Route index element={<MHome />} />
+          <Route
+            index
+            element={
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <MHome />
+              </Suspense>
+            }
+          />
           <Route path="other" element={<MOther />} />
           <Route
             path="search"
             element={
-              <HOCPageTitle>
-                <Search />
-              </HOCPageTitle>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <HOCPageTitle>
+                  <Search />
+                </HOCPageTitle>
+              </Suspense>
             }
           />
           <Route
             path="page"
             element={
-              <HOCPageTitle>
-                <MMdContent />
-              </HOCPageTitle>
+              <Suspense fallback={<div>页面正在加载</div>}>
+                <HOCPageTitle>
+                  <MMdContent />
+                </HOCPageTitle>
+              </Suspense>
             }
           />
         </Route>

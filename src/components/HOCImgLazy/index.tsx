@@ -25,7 +25,7 @@ const HOCimgLazy = ({
           setTimeout(() => {
             imgRef.current.src = src;
             observer.unobserve(imgRef.current);
-          }, 1000);
+          }, 10);
         }
       });
     });

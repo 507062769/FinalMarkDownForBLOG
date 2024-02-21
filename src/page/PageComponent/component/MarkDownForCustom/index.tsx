@@ -4,7 +4,6 @@ import { animateScroll } from "react-scroll";
 // import "@/styles/newsprint.css";
 import "./index.less";
 import MdPreview from "@/components/MdPreview";
-import _ from "lodash";
 import ButtonList from "../ButtonList";
 
 export default function MarkDownForCustom(props: {
