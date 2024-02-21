@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useLayoutEffect } from "react";
 import Home from "./page/Home";
 import Index from "@/page/Index";
 import PageComponent from "./page/PageComponent";
@@ -45,7 +45,7 @@ export default function App() {
       },
     }
   );
-  useEffect(() => {
+  useLayoutEffect(() => {
     // 在页面加载时检测设备类型并重定向
     window.addEventListener("load", () => {
       // 检测用户代理字符串

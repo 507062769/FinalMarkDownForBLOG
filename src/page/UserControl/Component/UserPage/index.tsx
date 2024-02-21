@@ -35,6 +35,7 @@ import { beforeUpload } from "@/page/UserControl/Component/UserInfo";
 import { useForm } from "antd/es/form/Form";
 import TextArea from "antd/es/input/TextArea";
 import MdPreview from "@/components/MdPreview";
+import HOCimgLazy from "@/components/HOCImgLazy";
 
 export type Page = {
   qq: string;
@@ -103,8 +104,7 @@ export default function UserPage({ isCheck = false }: any) {
                 }
               }}
             >
-              <img
-                className=""
+              <HOCimgLazy
                 src={item.coverUrl}
                 alt="文章封面"
                 style={{ width: "400px", height: "150px" }}

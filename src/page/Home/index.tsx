@@ -6,6 +6,7 @@ import { VerticalAlignTopOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 import { useIndexPage } from "@/hooks/useIndexPage";
+import HOCimgLazy from "@/components/HOCImgLazy";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -34,7 +35,10 @@ export default function Home() {
                     navigate(`/page?pageid=${item.pageid}&page=${item.title}`)
                   }
                 >
-                  <img src={item.coverUrl} className="h-5/6"></img>
+                  <HOCimgLazy
+                    src={item.coverUrl}
+                    style={{ height: "83.33%" }}
+                  />
                   <div
                     className="h-1/6"
                     style={{

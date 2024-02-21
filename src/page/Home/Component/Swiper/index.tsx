@@ -1,3 +1,4 @@
+import HOCimgLazy from "@/components/HOCImgLazy";
 import "@/page/Home/index.less";
 import { Page } from "@/page/UserControl/Component/UserPage";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
@@ -75,7 +76,7 @@ export default function Swiper({ list }: { list: Page[] }) {
               navigate(`/page?pageid=${item.pageid}&page=${item.title}`)
             }
           >
-            <img src={item.coverUrl} alt="图片" />
+            <HOCimgLazy src={item.coverUrl} alt="图片" />
             <span
               style={{
                 overflow: "hidden",

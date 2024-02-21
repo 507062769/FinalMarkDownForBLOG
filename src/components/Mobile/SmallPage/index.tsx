@@ -1,3 +1,4 @@
+import HOCimgLazy from "@/components/HOCImgLazy";
 import { Page } from "@/page/UserControl/Component/UserPage";
 import { EyeOutlined, LikeOutlined } from "@ant-design/icons";
 import { Empty, Space } from "antd";
@@ -28,7 +29,7 @@ export default function SmallPageList({ data }: { data: Page[] }) {
             navigate(`/mobile/page?pageid=${item.pageid}&page=${item.title}`)
           }
         >
-          <img
+          <HOCimgLazy
             style={{
               width: "40%",
               height: "100px",

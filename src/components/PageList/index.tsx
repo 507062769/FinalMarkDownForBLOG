@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import moment from "moment";
 import { Space } from "antd";
 import { Page } from "@/page/UserControl/Component/UserPage";
+import HOCimgLazy from "../HOCImgLazy";
 
 export default function PageList({ data }: { data: Page[] }) {
   return (
@@ -29,7 +30,10 @@ export default function PageList({ data }: { data: Page[] }) {
                   borderBottom: "4px solid #4096ff",
                 }}
               >
-                <img src={item.coverUrl} className="w-2/5 rounded-2xl" />
+                <HOCimgLazy
+                  src={item.coverUrl}
+                  style={{ width: "40%", borderRadius: "1rem" }}
+                />
                 <div className="h-full flex flex-col" style={{ width: "58%" }}>
                   <h2
                     style={{

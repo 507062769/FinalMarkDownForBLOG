@@ -1,3 +1,4 @@
+import HOCimgLazy from "@/components/HOCImgLazy";
 import SmallPage from "@/components/Mobile/SmallPage";
 import { useIndexPage } from "@/hooks/useIndexPage";
 import { SearchOutlined } from "@ant-design/icons";
@@ -57,11 +58,13 @@ export default function MHome() {
                 navigate(`page?pageid=${item.pageid}&page=${item.title}`)
               }
             >
-              <img
+              <HOCimgLazy
                 src={item.coverUrl}
                 alt={item.title}
-                width={"100%"}
-                height={"200px"}
+                style={{
+                  width: "100%",
+                  height: "200px",
+                }}
               />
               <div
                 className="m-0 px-4"
