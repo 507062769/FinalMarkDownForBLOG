@@ -102,38 +102,6 @@
   --border-color: var(--menu-divider-color);
 }
 
-/* font */
-@font-face {
-  font-family: "Open Sans";
-  font-style: normal;
-  font-weight: normal;
-  src: local("Open Sans Regular"),
-    url("../font/onedark/400.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Open Sans";
-  font-style: italic;
-  font-weight: normal;
-  src: local("Open Sans Italic"),
-    url("../font/onedark/400i.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Open Sans";
-  font-style: normal;
-  font-weight: bold;
-  src: local("Open Sans Bold"), url("../font/onedark/700.woff") format("woff");
-}
-
-@font-face {
-  font-family: "Open Sans";
-  font-style: italic;
-  font-weight: bold;
-  src: local("Open Sans Bold Italic"),
-    url("../font/onedark/700i.woff") format("woff");
-}
-
 /* basic style */
 html {
   font-size: 16px;
