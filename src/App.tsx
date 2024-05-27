@@ -29,6 +29,7 @@ import { omit } from "./utils/miniLodash";
 export default function App() {
   const { setIsLogin, setUserInfo } = useContext(UserContext);
   const { setIsPc, isPc } = useContext(CurrentDeviceContext);
+  console.log('卷毛sb',)
   useQuery(
     ["token"],
     async () =>
