@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Footer from "@/components/Footer";
 import { useIndexPage } from "@/hooks/useIndexPage";
 import HOCimgLazy from "@/components/HOCImgLazy";
+import Goods from '@/page/Goods';
 
 export default function Home() {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ export default function Home() {
           tooltip={<span>回到顶部</span>}
         />
       </div>
+      <Goods></Goods>
       <Footer />
     </>
   );
